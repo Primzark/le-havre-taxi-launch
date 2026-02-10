@@ -93,12 +93,12 @@ const Header = () => {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden xl:flex flex-1 items-center justify-center gap-1 min-w-0">
+          <nav className="hidden xl:flex flex-1 items-center justify-center gap-0.5 min-w-0">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-2.5 py-2 rounded-md text-[13px] 2xl:text-sm font-medium whitespace-nowrap transition-colors ${
                   isActiveLink(link.to)
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -128,12 +128,14 @@ const Header = () => {
           <div className="ml-auto hidden md:flex items-center gap-2 xl:ml-0 shrink-0">
             <Button variant="outline" size="sm" asChild>
               <a href={`tel:${CONTACT_PHONE_LINK}`} className="whitespace-nowrap">
-                <Phone className="h-4 w-4 mr-1" /> Appeler
+                <Phone className="h-4 w-4 2xl:mr-1" />
+                <span className="hidden 2xl:inline">Appeler</span>
               </a>
             </Button>
             <Button size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary/90" asChild>
               <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer" className="whitespace-nowrap">
-                <Download className="h-4 w-4 mr-1" /> L'App
+                <Download className="h-4 w-4 2xl:mr-1" />
+                <span className="hidden 2xl:inline">L'App</span>
               </a>
             </Button>
           </div>
