@@ -13,6 +13,7 @@ export type MenuSearchSuggestion = {
 
 export type MenuSearchResolution = {
   route: string | null;
+  autoNavigate: boolean;
   confidence: "high" | "medium" | "low" | "none";
   intentLabel: string | null;
   matchedKeyword: string | null;
@@ -54,13 +55,13 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
     route: "/tarifs",
     label: "Tarifs",
     example: "tarif 2025",
-    keywords: ["tarif", "tarifs", "tarf", "tarfis", "tarif 2025", "prix", "cout", "decret", "arrete", "prefectoral"],
+    keywords: ["tarif", "tarifs", "tarif 2025", "prix", "cout", "decret", "arrete", "prefectoral"],
   },
   {
     route: "/contact",
     label: "Stations et contact",
     example: "station proche",
-    keywords: ["contact", "reservation", "appeler", "telephone", "mail", "email", "station", "stasion", "station proche", "proche"],
+    keywords: ["contact", "reservation", "appeler", "telephone", "mail", "email", "station", "station proche"],
   },
   {
     route: "/circuits-touristiques",
@@ -69,14 +70,11 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
     keywords: [
       "circuit",
       "circuits",
-      "cirkuit",
-      "ciruit",
       "tour",
       "touristique",
       "visite",
       "normandie",
       "etretat",
-      "etreta",
       "honfleur",
       "rouen",
       "giverny",
@@ -241,25 +239,66 @@ const scoreKeyword = (normalizedQuery: string, normalizedKeyword: string): numbe
   return score;
 };
 
+const isStrongMatch = (normalizedQuery: string, normalizedKeyword: string): boolean => {
+  if (!normalizedQuery || !normalizedKeyword) {
+    return false;
+  }
+
+  if (normalizedQuery === normalizedKeyword) {
+    return true;
+  }
+
+  if (normalizedKeyword.length >= 4 && normalizedQuery.includes(normalizedKeyword)) {
+    return true;
+  }
+
+  if (normalizedQuery.length >= 4 && normalizedKeyword.includes(normalizedQuery)) {
+    return true;
+  }
+
+  const queryWords = tokenize(normalizedQuery).filter((word) => word.length >= 3 && /[a-z]/.test(word));
+  const keywordWords = tokenize(normalizedKeyword).filter((word) => word.length >= 3 && /[a-z]/.test(word));
+
+  if (queryWords.length === 0 || keywordWords.length === 0) {
+    return false;
+  }
+
+  const exactMatches = queryWords.filter((word) => keywordWords.includes(word)).length;
+  if (exactMatches === queryWords.length) {
+    return true;
+  }
+
+  return queryWords.length >= 2 && exactMatches >= 2;
+};
+
 type TargetScore = {
   target: MenuSearchTarget;
   score: number;
   matchedKeyword: string;
+  strongMatch: boolean;
 };
 
 const rankSearchTargets = (query: string): TargetScore[] => {
   const normalizedQuery = normalizeSearchText(query);
 
   const scored = MENU_SEARCH_TARGETS.map((target): TargetScore => {
-    let bestScore = scoreKeyword(normalizedQuery, normalizeSearchText(target.label));
-    let bestKeyword = normalizeSearchText(target.label);
+    const normalizedLabel = normalizeSearchText(target.label);
+    let bestScore = scoreKeyword(normalizedQuery, normalizedLabel);
+    let bestKeyword = normalizedLabel;
+    let bestStrongMatch = isStrongMatch(normalizedQuery, normalizedLabel);
 
     for (const keyword of target.keywords) {
       const normalizedKeyword = normalizeSearchText(keyword);
       const keywordScore = scoreKeyword(normalizedQuery, normalizedKeyword);
-      if (keywordScore > bestScore) {
+      const keywordStrongMatch = isStrongMatch(normalizedQuery, normalizedKeyword);
+
+      if (
+        keywordScore > bestScore
+        || (keywordScore === bestScore && keywordStrongMatch && !bestStrongMatch)
+      ) {
         bestScore = keywordScore;
         bestKeyword = normalizedKeyword;
+        bestStrongMatch = keywordStrongMatch;
       }
     }
 
@@ -267,6 +306,7 @@ const rankSearchTargets = (query: string): TargetScore[] => {
       target,
       score: bestScore,
       matchedKeyword: bestKeyword,
+      strongMatch: bestStrongMatch,
     };
   });
 
@@ -292,6 +332,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   if (!normalizedQuery) {
     return {
       route: null,
+      autoNavigate: false,
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
@@ -307,10 +348,11 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   if (!best || best.score < 45) {
     return {
       route: null,
+      autoNavigate: false,
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: "Aucun resultat clair. Essayez un mot-clé comme service medical, tarif 2025, station proche ou circuit etretat.",
+      message: "Aucun resultat clair. Essayez: service medical, tarif 2025, station proche ou circuit etretat.",
       suggestions: buildSuggestions(ranked),
     };
   }
@@ -319,6 +361,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   if (scoreGap < 6 && best.score < 95) {
     return {
       route: null,
+      autoNavigate: false,
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
@@ -328,19 +371,21 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   }
 
   let confidence: MenuSearchResolution["confidence"] = "low";
-  if (best.score >= 130 || (best.score >= 90 && scoreGap >= 18)) {
+  if (best.score >= 140) {
     confidence = "high";
-  } else if (best.score >= 75 || scoreGap >= 10) {
+  } else if (best.score >= 90) {
     confidence = "medium";
   }
 
-  const queryEqualsKeyword = normalizedQuery === best.matchedKeyword;
-  const message = queryEqualsKeyword
+  const autoNavigate = best.strongMatch && (confidence === "high" || confidence === "medium");
+
+  const message = autoNavigate
     ? `Resultat trouve: ${best.target.label}.`
-    : `Recherche interpretee vers ${best.target.label} (mot-clé detecte: ${best.matchedKeyword}).`;
+    : `Recherche approximative. Voulez-vous dire ${best.target.label} ? Choisissez une suggestion.`;
 
   return {
     route: best.target.route,
+    autoNavigate,
     confidence,
     intentLabel: best.target.label,
     matchedKeyword: best.matchedKeyword,

@@ -39,20 +39,13 @@ const Header = () => {
 
     const result = resolveMenuSearch(menuQuery);
 
-    if (!result.route) {
+    if (!result.route || !result.autoNavigate) {
       toast({
-        title: "Recherche non reconnue",
-        description: result.message,
+        title: "Recherche a preciser",
+        description: `${result.message} Suggestions: ${result.suggestions.map((item) => item.label).join(", ")}.`,
         variant: "destructive",
       });
       return;
-    }
-
-    if (result.confidence !== "high") {
-      toast({
-        title: "Recherche interpretee",
-        description: result.message,
-      });
     }
 
     navigate(result.route);

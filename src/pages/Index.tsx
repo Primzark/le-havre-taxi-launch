@@ -88,12 +88,12 @@ const Index = () => {
     event.preventDefault();
     const result = resolveMenuSearch(query);
 
-    if (!result.route) {
+    if (!result.route || !result.autoNavigate) {
       setSearchFeedback(result.message);
       setSearchSuggestions(result.suggestions);
       toast({
-        title: "Recherche non reconnue",
-        description: result.message,
+        title: "Recherche a preciser",
+        description: `${result.message} Suggestions: ${result.suggestions.map((item) => item.label).join(", ")}.`,
         variant: "destructive",
       });
       return;
@@ -101,14 +101,6 @@ const Index = () => {
 
     setSearchFeedback("");
     setSearchSuggestions(MENU_SEARCH_QUICK_LINKS);
-
-    if (result.confidence !== "high") {
-      toast({
-        title: "Recherche interpretee",
-        description: result.message,
-      });
-    }
-
     navigate(result.route);
   };
 
