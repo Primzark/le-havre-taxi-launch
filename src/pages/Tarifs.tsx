@@ -1,8 +1,10 @@
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { toursData } from "@/data/tours";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useSEO } from "@/hooks/use-seo";
+import { useMemo } from "react";
+import { normalizeSearchText, tokenizeSearchText } from "@/utils/menu-search";
 
 const quickPrices = [
   { from: "Le Havre", to: "City Centre", price: "10€" },
@@ -10,7 +12,68 @@ const quickPrices = [
   { from: "Honfleur", to: "One way", price: "70€" },
 ];
 
+const scoreTokens = (value: string, tokens: string[]): number => {
+  const normalizedValue = normalizeSearchText(value);
+
+  return tokens.reduce((score, token) => {
+    if (normalizedValue.includes(token)) {
+      return score + 2;
+    }
+
+    const hasPrefixMatch = normalizedValue.split(" ").some((word) => word.startsWith(token) || token.startsWith(word));
+    return hasPrefixMatch ? score + 1 : score;
+  }, 0);
+};
+
 const Tarifs = () => {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("q")?.trim() ?? "";
+  const tokens = useMemo(() => tokenizeSearchText(query), [query]);
+  const hasFilter = tokens.length > 0;
+
+  const filteredQuickPrices = useMemo(() => {
+    if (!hasFilter) {
+      return quickPrices;
+    }
+
+    return quickPrices.filter((priceRow) => {
+      const indexText = `${priceRow.from} ${priceRow.to} ${priceRow.price}`;
+      return tokens.every((token) => normalizeSearchText(indexText).includes(token));
+    });
+  }, [hasFilter, tokens]);
+
+  const filteredTours = useMemo(() => {
+    if (!hasFilter) {
+      return toursData;
+    }
+
+    return toursData.filter((tour) => {
+      const indexText = `${tour.id} ${tour.name} ${tour.duration} ${tour.price}`;
+      return tokens.every((token) => normalizeSearchText(indexText).includes(token));
+    });
+  }, [hasFilter, tokens]);
+
+  const tariffSuggestions = useMemo(() => {
+    if (!hasFilter || filteredQuickPrices.length > 0 || filteredTours.length > 0) {
+      return [];
+    }
+
+    const priceSuggestions = quickPrices.map((row) => ({
+      label: `${row.from} — ${row.to}`,
+      score: scoreTokens(`${row.from} ${row.to}`, tokens),
+    }));
+    const tourSuggestions = toursData.map((tour) => ({
+      label: `N°${tour.id} — ${tour.name}`,
+      score: scoreTokens(`${tour.name} ${tour.duration}`, tokens),
+    }));
+
+    return [...priceSuggestions, ...tourSuggestions]
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map((item) => item.label);
+  }, [filteredQuickPrices.length, filteredTours.length, hasFilter, tokens]);
+
   useSEO({
     title: "Tarifs",
     description: "Tarifs mis à jour au 01/01/2025, information rapide et 13 circuits touristiques avec durées et prix.",
@@ -20,6 +83,19 @@ const Tarifs = () => {
   return (
     <Layout>
       <PageHero title="Tarifs" subtitle="Tarifs indicatifs et circuits touristiques." />
+
+      {hasFilter && (
+        <section className="bg-muted/40 border-b py-5">
+          <div className="container max-w-4xl flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm">
+              Filtre actif sur les tarifs: <span className="font-medium">&quot;{query}&quot;</span>
+            </p>
+            <Link to="/tarifs" className="text-sm text-primary hover:underline">
+              Effacer le filtre
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Quick prices */}
       <section className="py-16">
@@ -35,13 +111,16 @@ const Tarifs = () => {
               />
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
-              {quickPrices.map((p) => (
+              {filteredQuickPrices.map((p) => (
                 <div key={p.to} className="bg-card border rounded-xl p-5 text-center shadow-sm">
                   <p className="text-sm text-muted-foreground mb-1">{p.from} — {p.to}</p>
                   <p className="font-heading font-extrabold text-2xl text-primary">{p.price}</p>
                 </div>
               ))}
             </div>
+            {hasFilter && filteredQuickPrices.length === 0 && (
+              <p className="text-sm text-muted-foreground">Aucun tarif rapide ne correspond a ce filtre.</p>
+            )}
           </div>
         </div>
       </section>
@@ -62,7 +141,7 @@ const Tarifs = () => {
           </div>
 
           <div className="space-y-3">
-            {toursData.map((tour) => (
+            {filteredTours.map((tour) => (
               <Link
                 key={tour.id}
                 to={`/circuits-touristiques/${tour.id}`}
@@ -78,6 +157,23 @@ const Tarifs = () => {
               </Link>
             ))}
           </div>
+          {hasFilter && filteredTours.length === 0 && (
+            <p className="text-sm text-muted-foreground mt-4">Aucun circuit tarifaire ne correspond a ce filtre.</p>
+          )}
+
+          {hasFilter && filteredQuickPrices.length === 0 && filteredTours.length === 0 && (
+            <div className="rounded-xl border bg-card p-5 mt-5">
+              <p className="font-heading font-semibold">Aucun resultat sur les tarifs.</p>
+              {tariffSuggestions.length > 0 && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Suggestions proches: {tariffSuggestions.join(", ")}.
+                </p>
+              )}
+              <Link to="/tarifs" className="inline-block mt-3 text-sm text-primary hover:underline">
+                Afficher tous les tarifs
+              </Link>
+            </div>
+          )}
 
           <p className="text-muted-foreground text-sm mt-8">
             Price for 1 to 4 people, excluding additional costs (additional passengers and luggage). Museum entrance fees, meals, etc. are not included in the price.

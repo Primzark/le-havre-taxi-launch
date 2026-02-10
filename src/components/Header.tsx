@@ -48,7 +48,7 @@ const Header = () => {
       return;
     }
 
-    navigate(result.route);
+    navigate(result.destination ?? result.route);
     setMenuQuery("");
     setMobileOpen(false);
   };
@@ -108,7 +108,7 @@ const Header = () => {
                 type="search"
                 value={menuQuery}
                 onChange={(event) => setMenuQuery(event.target.value)}
-                placeholder="Rechercher une page"
+                placeholder="Rechercher service, tarif, station ou circuit"
                 className="h-9 w-56 pl-9"
               />
             </div>
@@ -150,7 +150,7 @@ const Header = () => {
                   type="search"
                   value={menuQuery}
                   onChange={(event) => setMenuQuery(event.target.value)}
-                  placeholder="Rechercher une page"
+                  placeholder="Rechercher service, tarif, station ou circuit"
                   className="h-10 pl-9"
                 />
               </div>

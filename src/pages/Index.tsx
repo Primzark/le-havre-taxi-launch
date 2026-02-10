@@ -101,14 +101,15 @@ const Index = () => {
 
     setSearchFeedback("");
     setSearchSuggestions(MENU_SEARCH_QUICK_LINKS);
-    navigate(result.route);
+    navigate(result.destination ?? result.route);
   };
 
   const handleSuggestionClick = (suggestion: MenuSearchSuggestion) => {
+    const resolvedSuggestion = resolveMenuSearch(suggestion.example);
     setSearchFeedback("");
     setSearchSuggestions(MENU_SEARCH_QUICK_LINKS);
     setQuery(suggestion.example);
-    navigate(suggestion.route);
+    navigate(resolvedSuggestion.destination ?? suggestion.route);
   };
 
   return (
