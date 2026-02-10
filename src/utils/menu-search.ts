@@ -1,6 +1,3 @@
-import { stationsData } from "@/data/stations";
-import { toursData } from "@/data/tours";
-
 export type MenuSearchTarget = {
   route: string;
   label: string;
@@ -16,140 +13,15 @@ export type MenuSearchSuggestion = {
 
 export type MenuSearchResolution = {
   route: string | null;
-  destination: string | null;
   autoNavigate: boolean;
   confidence: "high" | "medium" | "low" | "none";
   intentLabel: string | null;
   matchedKeyword: string | null;
-  filterTerm: string | null;
   message: string;
   suggestions: MenuSearchSuggestion[];
 };
 
-const ROUTE_QUERY_PARAM: Record<string, string> = {
-  "/services": "q",
-  "/tarifs": "q",
-  "/circuits-touristiques": "q",
-  "/contact": "station",
-};
-
-const GLOBAL_STOP_WORDS = new Set([
-  "a",
-  "au",
-  "aux",
-  "d",
-  "de",
-  "des",
-  "du",
-  "en",
-  "et",
-  "for",
-  "in",
-  "l",
-  "la",
-  "le",
-  "les",
-  "of",
-  "ou",
-  "par",
-  "pour",
-  "the",
-  "to",
-  "un",
-  "une",
-  "vers",
-]);
-
-const ROUTE_INTENT_TERMS: Record<string, string[]> = {
-  "/services": [
-    "service",
-    "services",
-    "transport",
-    "transfert",
-    "transferts",
-  ],
-  "/tarifs": [
-    "tarif",
-    "tarifs",
-    "prix",
-    "cout",
-    "decret",
-    "arrete",
-    "prefectoral",
-    "prefectoraux",
-    "2025",
-  ],
-  "/contact": [
-    "contact",
-    "station",
-    "stations",
-    "reservation",
-    "telephone",
-    "mail",
-    "email",
-    "proche",
-  ],
-  "/circuits-touristiques": [
-    "circuit",
-    "circuits",
-    "tour",
-    "tours",
-    "touristique",
-    "touristiques",
-    "visite",
-    "decouverte",
-    "round",
-    "trip",
-  ],
-};
-
-const TARIFF_ENTITY_TERMS = [
-  "le havre",
-  "city centre",
-  "train station",
-  "honfleur",
-  "one way",
-  ...toursData.map((tour) => tour.name),
-];
-
-const CIRCUIT_ENTITY_TERMS = [
-  ...toursData.map((tour) => tour.name),
-  ...toursData.map((tour) => `n ${tour.id}`),
-];
-
-const STATION_ENTITY_TERMS = stationsData.flatMap((station) => [station.name, station.address]);
-
-const SERVICE_ENTITY_TERMS = [
-  "medical",
-  "transport medical",
-  "aeroport",
-  "gare",
-  "maritime",
-  "croisiere",
-  "professionnel",
-  "groupes",
-  "pmr",
-  "ford tourneo",
-  "berline",
-  "monospace",
-  "van",
-];
-
-const ENTITY_TERMS_BY_ROUTE: Record<string, string[]> = {
-  "/services": SERVICE_ENTITY_TERMS,
-  "/tarifs": TARIFF_ENTITY_TERMS,
-  "/contact": STATION_ENTITY_TERMS,
-  "/circuits-touristiques": CIRCUIT_ENTITY_TERMS,
-};
-
-const ROUTE_INTENT_WORDS: Record<string, Set<string>> = Object.fromEntries(
-  Object.entries(ROUTE_INTENT_TERMS).map(([route, values]) => {
-    const words = values.flatMap((value) => value.split(/\s+/g)).map((value) => value.trim()).filter(Boolean);
-    return [route, new Set(words)];
-  }),
-) as Record<string, Set<string>>;
-
-export const normalizeSearchText = (value: string): string =>
+const normalizeSearchText = (value: string): string =>
   value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -158,14 +30,7 @@ export const normalizeSearchText = (value: string): string =>
     .replace(/\s+/g, " ")
     .trim();
 
-export const tokenizeSearchText = (value: string): string[] => normalizeSearchText(value).split(" ").filter(Boolean);
-
-const normalizeEntityTerms = (values: string[]): string[] =>
-  Array.from(new Set(values.map((value) => normalizeSearchText(value)).filter(Boolean)));
-
-const NORMALIZED_ENTITY_TERMS_BY_ROUTE: Record<string, string[]> = Object.fromEntries(
-  Object.entries(ENTITY_TERMS_BY_ROUTE).map(([route, values]) => [route, normalizeEntityTerms(values)]),
-) as Record<string, string[]>;
+const tokenize = (value: string): string[] => normalizeSearchText(value).split(" ").filter(Boolean);
 
 const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
   {
@@ -189,36 +54,14 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
   {
     route: "/tarifs",
     label: "Tarifs",
-    example: "tarif honfleur",
-    keywords: [
-      "tarif",
-      "tarifs",
-      "tarif 2025",
-      "prix",
-      "cout",
-      "decret",
-      "arrete",
-      "prefectoral",
-      "prefectoraux",
-      "for your information",
-      "discovery tours",
-    ],
+    example: "tarif 2025",
+    keywords: ["tarif", "tarifs", "tarif 2025", "prix", "cout", "decret", "arrete", "prefectoral"],
   },
   {
     route: "/contact",
     label: "Stations et contact",
-    example: "station gare",
-    keywords: [
-      "contact",
-      "reservation",
-      "appeler",
-      "telephone",
-      "mail",
-      "email",
-      "station",
-      "station proche",
-      "google maps",
-    ],
+    example: "station proche",
+    keywords: ["contact", "reservation", "appeler", "telephone", "mail", "email", "station", "station proche"],
   },
   {
     route: "/circuits-touristiques",
@@ -382,8 +225,8 @@ const scoreKeyword = (normalizedQuery: string, normalizedKeyword: string): numbe
     }
   }
 
-  const queryWords = tokenizeSearchText(normalizedQuery);
-  const keywordWords = tokenizeSearchText(normalizedKeyword);
+  const queryWords = tokenize(normalizedQuery);
+  const keywordWords = tokenize(normalizedKeyword);
 
   for (const queryWord of queryWords) {
     let bestWordScore = 0;
@@ -413,8 +256,8 @@ const isStrongMatch = (normalizedQuery: string, normalizedKeyword: string): bool
     return true;
   }
 
-  const queryWords = tokenizeSearchText(normalizedQuery).filter((word) => word.length >= 3 && /[a-z]/.test(word));
-  const keywordWords = tokenizeSearchText(normalizedKeyword).filter((word) => word.length >= 3 && /[a-z]/.test(word));
+  const queryWords = tokenize(normalizedQuery).filter((word) => word.length >= 3 && /[a-z]/.test(word));
+  const keywordWords = tokenize(normalizedKeyword).filter((word) => word.length >= 3 && /[a-z]/.test(word));
 
   if (queryWords.length === 0 || keywordWords.length === 0) {
     return false;
@@ -432,12 +275,6 @@ type TargetScore = {
   target: MenuSearchTarget;
   score: number;
   matchedKeyword: string;
-  strongMatch: boolean;
-};
-
-type EntityMatch = {
-  term: string;
-  score: number;
   strongMatch: boolean;
 };
 
@@ -489,115 +326,16 @@ const buildSuggestions = (scores: TargetScore[]): MenuSearchSuggestion[] => {
   }));
 };
 
-const isGenericFilterTerm = (route: string, term: string): boolean => {
-  const tokens = tokenizeSearchText(term);
-  if (tokens.length === 0) {
-    return true;
-  }
-
-  const routeWords = ROUTE_INTENT_WORDS[route] ?? new Set<string>();
-  return tokens.every((token) => GLOBAL_STOP_WORDS.has(token) || routeWords.has(token));
-};
-
-const stripIntentWords = (route: string, normalizedQuery: string): string => {
-  const routeWords = ROUTE_INTENT_WORDS[route] ?? new Set<string>();
-  const tokens = tokenizeSearchText(normalizedQuery).filter((token) => {
-    if (GLOBAL_STOP_WORDS.has(token)) {
-      return false;
-    }
-
-    if (routeWords.has(token)) {
-      return false;
-    }
-
-    if (route === "/tarifs" && /^20\d{2}$/.test(token)) {
-      return false;
-    }
-
-    return token.length >= 2;
-  });
-
-  return tokens.join(" ");
-};
-
-const findBestEntityForRoute = (route: string, normalizedQuery: string): EntityMatch | null => {
-  const candidates = NORMALIZED_ENTITY_TERMS_BY_ROUTE[route];
-  if (!candidates || candidates.length === 0 || !normalizedQuery) {
-    return null;
-  }
-
-  let bestCandidate: EntityMatch | null = null;
-
-  for (const candidate of candidates) {
-    const candidateScore = scoreKeyword(normalizedQuery, candidate);
-    const candidateStrongMatch = isStrongMatch(normalizedQuery, candidate);
-
-    if (!bestCandidate) {
-      bestCandidate = { term: candidate, score: candidateScore, strongMatch: candidateStrongMatch };
-      continue;
-    }
-
-    if (
-      candidateScore > bestCandidate.score
-      || (candidateScore === bestCandidate.score && candidateStrongMatch && !bestCandidate.strongMatch)
-    ) {
-      bestCandidate = { term: candidate, score: candidateScore, strongMatch: candidateStrongMatch };
-    }
-  }
-
-  if (!bestCandidate || bestCandidate.score < 45) {
-    return null;
-  }
-
-  if (!bestCandidate.strongMatch && bestCandidate.score < 95) {
-    return null;
-  }
-
-  return bestCandidate;
-};
-
-const resolveFilterTerm = (route: string, normalizedQuery: string, matchedKeyword: string): string | null => {
-  const entityMatch = findBestEntityForRoute(route, normalizedQuery);
-  if (entityMatch && !isGenericFilterTerm(route, entityMatch.term)) {
-    return entityMatch.term;
-  }
-
-  const stripped = stripIntentWords(route, normalizedQuery);
-  if (stripped && !isGenericFilterTerm(route, stripped)) {
-    return stripped;
-  }
-
-  const safeKeyword = normalizeSearchText(matchedKeyword);
-  if (safeKeyword && !isGenericFilterTerm(route, safeKeyword)) {
-    return safeKeyword;
-  }
-
-  return null;
-};
-
-const buildDestination = (route: string, filterTerm: string | null): string => {
-  const paramKey = ROUTE_QUERY_PARAM[route];
-  if (!paramKey || !filterTerm) {
-    return route;
-  }
-
-  const params = new URLSearchParams();
-  params.set(paramKey, filterTerm);
-  return `${route}?${params.toString()}`;
-};
-
 export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   const normalizedQuery = normalizeSearchText(query);
 
   if (!normalizedQuery) {
     return {
       route: null,
-      destination: null,
       autoNavigate: false,
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      filterTerm: null,
       message: "Saisissez un mot-clé (service, tarif, station ou circuit).",
       suggestions: MENU_SEARCH_QUICK_LINKS,
     };
@@ -610,13 +348,11 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   if (!best || best.score < 45) {
     return {
       route: null,
-      destination: null,
       autoNavigate: false,
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      filterTerm: null,
-      message: "Aucun resultat clair. Essayez: service medical, tarif honfleur, station gare ou circuit etretat.",
+      message: "Aucun resultat clair. Essayez: service medical, tarif 2025, station proche ou circuit etretat.",
       suggestions: buildSuggestions(ranked),
     };
   }
@@ -625,12 +361,10 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   if (scoreGap < 6 && best.score < 95) {
     return {
       route: null,
-      destination: null,
       autoNavigate: false,
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      filterTerm: null,
       message: `Recherche ambigue. Precisez votre demande (ex: ${best.target.example}).`,
       suggestions: buildSuggestions(ranked),
     };
@@ -644,8 +378,6 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   }
 
   const autoNavigate = best.strongMatch && (confidence === "high" || confidence === "medium");
-  const filterTerm = resolveFilterTerm(best.target.route, normalizedQuery, best.matchedKeyword);
-  const destination = buildDestination(best.target.route, filterTerm);
 
   const message = autoNavigate
     ? `Resultat trouve: ${best.target.label}.`
@@ -653,16 +385,13 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
 
   return {
     route: best.target.route,
-    destination,
     autoNavigate,
     confidence,
     intentLabel: best.target.label,
     matchedKeyword: best.matchedKeyword,
-    filterTerm,
     message,
     suggestions: buildSuggestions(ranked),
   };
 };
 
 export const resolveMenuSearchRoute = (query: string): string | null => resolveMenuSearch(query).route;
-export const resolveMenuSearchDestination = (query: string): string | null => resolveMenuSearch(query).destination;

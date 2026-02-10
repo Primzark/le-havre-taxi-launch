@@ -44,18 +44,4 @@ describe("Contact page", () => {
 
     fetchMock.mockRestore();
   });
-
-  it("applies station filter from query string", async () => {
-    render(
-      <MemoryRouter initialEntries={["/contact?station=etretat"]}>
-        <Contact />
-      </MemoryRouter>,
-    );
-
-    await waitFor(() => {
-      expect((screen.getByPlaceholderText(/Rechercher une station/i) as HTMLInputElement).value).toBe("etretat");
-    });
-
-    expect(screen.getByText(/Stations \(1\/35\)/i)).toBeInTheDocument();
-  });
 });

@@ -15,15 +15,4 @@ describe("Tours page", () => {
     expect(container.querySelector('a[href="/circuits-touristiques/7"]')).toBeInTheDocument();
     expect(container.querySelector('a[href="/circuits-touristiques/13"]')).toBeInTheDocument();
   });
-
-  it("filters circuits from query string", () => {
-    const { container } = render(
-      <MemoryRouter initialEntries={["/circuits-touristiques?q=le%20havre"]}>
-        <Tours />
-      </MemoryRouter>,
-    );
-
-    expect(container.querySelector('a[href="/circuits-touristiques/1"]')).toBeInTheDocument();
-    expect(container.querySelector('a[href="/circuits-touristiques/5"]')).not.toBeInTheDocument();
-  });
 });

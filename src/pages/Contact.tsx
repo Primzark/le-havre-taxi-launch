@@ -20,8 +20,6 @@ import {
 } from "@/config/site";
 import { useSEO } from "@/hooks/use-seo";
 import { Station, stationsData } from "@/data/stations";
-import { Link, useSearchParams } from "react-router-dom";
-import { normalizeSearchText, tokenizeSearchText } from "@/utils/menu-search";
 
 const MIN_MESSAGE_LENGTH = 10;
 
@@ -38,22 +36,8 @@ const distanceInKm = (fromLat: number, fromLng: number, toLat: number, toLng: nu
   return earthRadius * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 };
 
-const scoreTokens = (value: string, tokens: string[]): number => {
-  const normalizedValue = normalizeSearchText(value);
-
-  return tokens.reduce((score, token) => {
-    if (normalizedValue.includes(token)) {
-      return score + 2;
-    }
-
-    const hasPrefixMatch = normalizedValue.split(" ").some((word) => word.startsWith(token) || token.startsWith(word));
-    return hasPrefixMatch ? score + 1 : score;
-  }, 0);
-};
-
 const Contact = () => {
   const { toast } = useToast();
-  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [stationQuery, setStationQuery] = useState("");
@@ -71,44 +55,17 @@ const Contact = () => {
     robots: "noindex, follow",
   });
 
-  const stationQueryFromUrl = useMemo(() => {
-    const fromStation = searchParams.get("station");
-    const fromQuery = searchParams.get("q");
-    return (fromStation || fromQuery || "").trim();
-  }, [searchParams]);
-
-  useEffect(() => {
-    setStationQuery(stationQueryFromUrl);
-  }, [stationQueryFromUrl]);
-
   const filteredStations = useMemo(() => {
-    const tokens = tokenizeSearchText(stationQuery);
-    if (tokens.length === 0) {
+    const needle = stationQuery.trim().toLowerCase();
+    if (!needle) {
       return stationsData;
     }
 
     return stationsData.filter((station) => {
-      const indexText = normalizeSearchText(`${station.name} ${station.address}`);
-      return tokens.every((token) => indexText.includes(token));
+      const indexText = `${station.name} ${station.address}`.toLowerCase();
+      return indexText.includes(needle);
     });
   }, [stationQuery]);
-
-  const stationSuggestions = useMemo(() => {
-    const tokens = tokenizeSearchText(stationQuery);
-    if (tokens.length === 0 || filteredStations.length > 0) {
-      return [];
-    }
-
-    return stationsData
-      .map((station) => ({
-        station,
-        score: scoreTokens(`${station.name} ${station.address}`, tokens),
-      }))
-      .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3)
-      .map((item) => item.station);
-  }, [filteredStations.length, stationQuery]);
 
   useEffect(() => {
     if (filteredStations.length === 0) {
@@ -280,19 +237,6 @@ const Contact = () => {
     <Layout>
       <PageHero title="Nous contacter" subtitle="Une question ? Contactez-nous par telephone ou via le formulaire ci-dessous." />
 
-      {stationQueryFromUrl && (
-        <section className="bg-muted/40 border-b py-5">
-          <div className="container flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm">
-              Filtre actif sur les stations: <span className="font-medium">&quot;{stationQueryFromUrl}&quot;</span>
-            </p>
-            <Link to="/contact" className="text-sm text-primary hover:underline">
-              Effacer le filtre
-            </Link>
-          </div>
-        </section>
-      )}
-
       <section className="py-16">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-12">
@@ -347,7 +291,7 @@ const Contact = () => {
                 </div>
 
                 <StationsMap
-                  stations={filteredStations}
+                  stations={filteredStations.length > 0 ? filteredStations : stationsData}
                   selectedStationId={selectedStationId}
                   onSelect={(station) => setSelectedStationId(station.id)}
                 />
@@ -380,23 +324,7 @@ const Contact = () => {
 
                   <div className="max-h-64 overflow-auto divide-y">
                     {filteredStations.length === 0 && (
-                      <div className="p-3 text-sm">
-                        <p className="text-muted-foreground">Aucune station ne correspond a votre recherche.</p>
-                        {stationSuggestions.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {stationSuggestions.map((station) => (
-                              <button
-                                key={station.id}
-                                type="button"
-                                className="rounded border px-2 py-1 text-xs hover:bg-muted"
-                                onClick={() => setStationQuery(station.name)}
-                              >
-                                {station.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                      <p className="p-3 text-sm text-muted-foreground">Aucune station ne correspond a votre recherche.</p>
                     )}
 
                     {filteredStations.map((station) => (
