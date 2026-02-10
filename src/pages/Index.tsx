@@ -130,7 +130,12 @@ const Index = () => {
                   <Phone className="h-5 w-5 mr-2" /> {CONTACT_PHONE_DISPLAY}
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-heading" asChild>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-primary-foreground/60 bg-transparent text-primary-foreground hover:border-primary-foreground hover:bg-primary-foreground hover:text-primary focus-visible:ring-primary-foreground font-heading"
+                asChild
+              >
                 <Link to="/contact">
                   <MapPin className="h-5 w-5 mr-2" /> Trouver une station
                 </Link>
