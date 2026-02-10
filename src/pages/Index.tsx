@@ -6,7 +6,12 @@ import Layout from "@/components/Layout";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { APPLE_STORE_URL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_LINK, PLAY_STORE_URL } from "@/config/site";
 import { useSEO } from "@/hooks/use-seo";
-import { resolveMenuSearchRoute } from "@/utils/menu-search";
+import { useToast } from "@/hooks/use-toast";
+import {
+  MenuSearchSuggestion,
+  MENU_SEARCH_QUICK_LINKS,
+  resolveMenuSearch,
+} from "@/utils/menu-search";
 
 const stats = [
   { icon: Clock, label: "Création", value: "1976" },
@@ -54,8 +59,11 @@ const homeSlides = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [query, setQuery] = useState("");
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [searchFeedback, setSearchFeedback] = useState("");
+  const [searchSuggestions, setSearchSuggestions] = useState<MenuSearchSuggestion[]>(MENU_SEARCH_QUICK_LINKS);
 
   useSEO({
     title: "Accueil",
@@ -78,12 +86,37 @@ const Index = () => {
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!query.trim()) {
+    const result = resolveMenuSearch(query);
+
+    if (!result.route) {
+      setSearchFeedback(result.message);
+      setSearchSuggestions(result.suggestions);
+      toast({
+        title: "Recherche non reconnue",
+        description: result.message,
+        variant: "destructive",
+      });
       return;
     }
 
-    const route = resolveMenuSearchRoute(query);
-    navigate(route ?? "/");
+    setSearchFeedback("");
+    setSearchSuggestions(MENU_SEARCH_QUICK_LINKS);
+
+    if (result.confidence !== "high") {
+      toast({
+        title: "Recherche interpretee",
+        description: result.message,
+      });
+    }
+
+    navigate(result.route);
+  };
+
+  const handleSuggestionClick = (suggestion: MenuSearchSuggestion) => {
+    setSearchFeedback("");
+    setSearchSuggestions(MENU_SEARCH_QUICK_LINKS);
+    setQuery(suggestion.example);
+    navigate(suggestion.route);
   };
 
   return (
@@ -132,6 +165,28 @@ const Index = () => {
             </div>
             <Button type="submit" className="h-11 px-7">Rechercher</Button>
           </form>
+          <p className="max-w-3xl mx-auto mt-2 text-xs text-muted-foreground">
+            Exemples: service medical, tarif 2025, station proche, circuit etretat.
+          </p>
+          {searchFeedback && (
+            <p className="max-w-3xl mx-auto mt-2 text-sm text-destructive" role="status" aria-live="polite">
+              {searchFeedback}
+            </p>
+          )}
+          <div className="max-w-3xl mx-auto mt-3 flex flex-wrap gap-2">
+            {searchSuggestions.map((suggestion) => (
+              <Button
+                key={suggestion.route}
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8"
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                {suggestion.label}
+              </Button>
+            ))}
+          </div>
         </div>
       </section>
 

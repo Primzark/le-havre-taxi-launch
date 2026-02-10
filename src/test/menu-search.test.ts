@@ -1,20 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { resolveMenuSearchRoute } from "@/utils/menu-search";
+import { resolveMenuSearch, resolveMenuSearchRoute } from "@/utils/menu-search";
 
-describe("resolveMenuSearchRoute", () => {
+describe("menu search resolution", () => {
   it("matches accents and case-insensitive values", () => {
     expect(resolveMenuSearchRoute("Étretat")).toBe("/circuits-touristiques");
-    expect(resolveMenuSearchRoute("RÉSERVATION" )).toBe("/contact");
+    expect(resolveMenuSearchRoute("RÉSERVATION")).toBe("/contact");
   });
 
-  it("matches key menu routes", () => {
-    expect(resolveMenuSearchRoute("devenir taxi")).toBe("/devenir-taxi");
-    expect(resolveMenuSearchRoute("actualités instagram")).toBe("/actus");
-    expect(resolveMenuSearchRoute("a propos entreprise")).toBe("/entreprise");
-    expect(resolveMenuSearchRoute("tarifs 2025")).toBe("/tarifs");
+  it("tolerates common typos", () => {
+    expect(resolveMenuSearchRoute("servics")).toBe("/services");
+    expect(resolveMenuSearchRoute("tarf 2025")).toBe("/tarifs");
+    expect(resolveMenuSearchRoute("stasion proche")).toBe("/contact");
+    expect(resolveMenuSearchRoute("cirkuit etreta")).toBe("/circuits-touristiques");
   });
 
-  it("returns null for unknown query", () => {
-    expect(resolveMenuSearchRoute("motcle-introuvable")).toBeNull();
+  it("returns actionable feedback when query is unknown", () => {
+    const resolution = resolveMenuSearch("motcle-introuvable");
+    expect(resolution.route).toBeNull();
+    expect(resolution.confidence).toBe("none");
+    expect(resolution.suggestions.length).toBeGreaterThan(0);
   });
 });

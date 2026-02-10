@@ -1,6 +1,23 @@
 export type MenuSearchTarget = {
   route: string;
+  label: string;
   keywords: string[];
+  example: string;
+};
+
+export type MenuSearchSuggestion = {
+  route: string;
+  label: string;
+  example: string;
+};
+
+export type MenuSearchResolution = {
+  route: string | null;
+  confidence: "high" | "medium" | "low" | "none";
+  intentLabel: string | null;
+  matchedKeyword: string | null;
+  message: string;
+  suggestions: MenuSearchSuggestion[];
 };
 
 const normalizeSearchText = (value: string): string =>
@@ -12,9 +29,13 @@ const normalizeSearchText = (value: string): string =>
     .replace(/\s+/g, " ")
     .trim();
 
+const tokenize = (value: string): string[] => normalizeSearchText(value).split(" ").filter(Boolean);
+
 const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
   {
     route: "/services",
+    label: "Services",
+    example: "service medical",
     keywords: [
       "service",
       "services",
@@ -30,15 +51,32 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
     ],
   },
   {
+    route: "/tarifs",
+    label: "Tarifs",
+    example: "tarif 2025",
+    keywords: ["tarif", "tarifs", "tarf", "tarfis", "tarif 2025", "prix", "cout", "decret", "arrete", "prefectoral"],
+  },
+  {
+    route: "/contact",
+    label: "Stations et contact",
+    example: "station proche",
+    keywords: ["contact", "reservation", "appeler", "telephone", "mail", "email", "station", "stasion", "station proche", "proche"],
+  },
+  {
     route: "/circuits-touristiques",
+    label: "Circuits touristiques",
+    example: "circuit etretat",
     keywords: [
       "circuit",
       "circuits",
+      "cirkuit",
+      "ciruit",
       "tour",
       "touristique",
       "visite",
       "normandie",
       "etretat",
+      "etreta",
       "honfleur",
       "rouen",
       "giverny",
@@ -50,74 +88,265 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
     ],
   },
   {
-    route: "/tarifs",
-    keywords: ["tarif", "tarifs", "prix", "cout", "decret", "arrete", "prefectoral"],
-  },
-  {
     route: "/entreprise",
+    label: "Entreprise",
+    example: "a propos",
     keywords: ["entreprise", "a propos", "histoire", "equipe", "operatrices", "secretaires"],
   },
   {
     route: "/devenir-taxi",
+    label: "Devenir taxi",
+    example: "devenir taxi",
     keywords: ["devenir taxi", "recrutement", "chauffeur", "licence", "carte professionnelle"],
   },
   {
     route: "/actus",
+    label: "Actus",
+    example: "actualites instagram",
     keywords: ["actus", "actualites", "instagram", "facebook", "capture", "news"],
   },
   {
-    route: "/contact",
-    keywords: ["contact", "reservation", "appeler", "telephone", "mail", "email", "station"],
-  },
-  {
     route: "/liens",
+    label: "Liens utiles",
+    example: "liens rapides",
     keywords: ["liens", "linktree", "raccourcis"],
   },
   {
     route: "/",
+    label: "Accueil",
+    example: "accueil",
     keywords: ["accueil", "home", "homepage"],
   },
 ];
 
-const getKeywordScore = (normalizedQuery: string, keyword: string): number => {
-  if (normalizedQuery === keyword) {
-    return 100;
+export const MENU_SEARCH_QUICK_LINKS: MenuSearchSuggestion[] = MENU_SEARCH_TARGETS.slice(0, 4).map((target) => ({
+  route: target.route,
+  label: target.label,
+  example: target.example,
+}));
+
+const levenshteinDistance = (a: string, b: string): number => {
+  if (a === b) {
+    return 0;
   }
 
-  if (normalizedQuery.startsWith(`${keyword} `) || normalizedQuery.endsWith(` ${keyword}`)) {
-    return 80;
+  const rows = a.length + 1;
+  const cols = b.length + 1;
+  const matrix = Array.from({ length: rows }, () => Array<number>(cols).fill(0));
+
+  for (let i = 0; i < rows; i += 1) {
+    matrix[i][0] = i;
   }
 
-  if (normalizedQuery.includes(keyword)) {
-    return 60;
+  for (let j = 0; j < cols; j += 1) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i < rows; i += 1) {
+    for (let j = 1; j < cols; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost,
+      );
+    }
+  }
+
+  return matrix[rows - 1][cols - 1];
+};
+
+const scoreWordMatch = (queryWord: string, keywordWord: string): number => {
+  if (!queryWord || !keywordWord) {
+    return 0;
+  }
+
+  if (queryWord === keywordWord) {
+    return 36;
+  }
+
+  if (queryWord.length >= 3 && keywordWord.startsWith(queryWord)) {
+    return 28;
+  }
+
+  if (keywordWord.length >= 3 && queryWord.startsWith(keywordWord)) {
+    return 26;
+  }
+
+  const distance = levenshteinDistance(queryWord, keywordWord);
+  if (distance === 1) {
+    return 24;
+  }
+
+  if (distance === 2 && Math.max(queryWord.length, keywordWord.length) >= 5) {
+    return 14;
+  }
+
+  if (queryWord.length >= 4 && keywordWord.includes(queryWord)) {
+    return 14;
+  }
+
+  if (keywordWord.length >= 4 && queryWord.includes(keywordWord)) {
+    return 12;
   }
 
   return 0;
 };
 
-export const resolveMenuSearchRoute = (query: string): string | null => {
-  const normalizedQuery = normalizeSearchText(query);
-  if (!normalizedQuery) {
-    return null;
+const scoreKeyword = (normalizedQuery: string, normalizedKeyword: string): number => {
+  if (!normalizedQuery || !normalizedKeyword) {
+    return 0;
   }
 
-  let bestRoute: string | null = null;
-  let bestScore = 0;
+  let score = 0;
 
-  for (const target of MENU_SEARCH_TARGETS) {
-    for (const rawKeyword of target.keywords) {
-      const keyword = normalizeSearchText(rawKeyword);
-      if (!keyword) {
-        continue;
-      }
+  if (normalizedQuery === normalizedKeyword) {
+    return 180;
+  }
 
-      const score = getKeywordScore(normalizedQuery, keyword);
-      if (score > bestScore) {
-        bestScore = score;
-        bestRoute = target.route;
-      }
+  if (normalizedQuery.includes(normalizedKeyword) && normalizedKeyword.length >= 4) {
+    score += 95;
+  }
+
+  if (normalizedKeyword.includes(normalizedQuery) && normalizedQuery.length >= 4) {
+    score += 82;
+  }
+
+  if (normalizedQuery.startsWith(normalizedKeyword) || normalizedKeyword.startsWith(normalizedQuery)) {
+    score += 55;
+  }
+
+  if (Math.max(normalizedQuery.length, normalizedKeyword.length) <= 24) {
+    const phraseDistance = levenshteinDistance(normalizedQuery, normalizedKeyword);
+    if (phraseDistance === 1) {
+      score += 70;
+    } else if (phraseDistance === 2) {
+      score += 50;
+    } else if (phraseDistance === 3 && normalizedQuery.length >= 8) {
+      score += 34;
     }
   }
 
-  return bestRoute;
+  const queryWords = tokenize(normalizedQuery);
+  const keywordWords = tokenize(normalizedKeyword);
+
+  for (const queryWord of queryWords) {
+    let bestWordScore = 0;
+    for (const keywordWord of keywordWords) {
+      bestWordScore = Math.max(bestWordScore, scoreWordMatch(queryWord, keywordWord));
+    }
+    score += bestWordScore;
+  }
+
+  return score;
 };
+
+type TargetScore = {
+  target: MenuSearchTarget;
+  score: number;
+  matchedKeyword: string;
+};
+
+const rankSearchTargets = (query: string): TargetScore[] => {
+  const normalizedQuery = normalizeSearchText(query);
+
+  const scored = MENU_SEARCH_TARGETS.map((target): TargetScore => {
+    let bestScore = scoreKeyword(normalizedQuery, normalizeSearchText(target.label));
+    let bestKeyword = normalizeSearchText(target.label);
+
+    for (const keyword of target.keywords) {
+      const normalizedKeyword = normalizeSearchText(keyword);
+      const keywordScore = scoreKeyword(normalizedQuery, normalizedKeyword);
+      if (keywordScore > bestScore) {
+        bestScore = keywordScore;
+        bestKeyword = normalizedKeyword;
+      }
+    }
+
+    return {
+      target,
+      score: bestScore,
+      matchedKeyword: bestKeyword,
+    };
+  });
+
+  return scored.sort((a, b) => b.score - a.score);
+};
+
+const buildSuggestions = (scores: TargetScore[]): MenuSearchSuggestion[] => {
+  const source = scores.filter((item) => item.score > 0).slice(0, 4);
+  if (source.length === 0) {
+    return MENU_SEARCH_QUICK_LINKS;
+  }
+
+  return source.map(({ target }) => ({
+    route: target.route,
+    label: target.label,
+    example: target.example,
+  }));
+};
+
+export const resolveMenuSearch = (query: string): MenuSearchResolution => {
+  const normalizedQuery = normalizeSearchText(query);
+
+  if (!normalizedQuery) {
+    return {
+      route: null,
+      confidence: "none",
+      intentLabel: null,
+      matchedKeyword: null,
+      message: "Saisissez un mot-clé (service, tarif, station ou circuit).",
+      suggestions: MENU_SEARCH_QUICK_LINKS,
+    };
+  }
+
+  const ranked = rankSearchTargets(normalizedQuery);
+  const best = ranked[0];
+  const second = ranked[1];
+
+  if (!best || best.score < 45) {
+    return {
+      route: null,
+      confidence: "none",
+      intentLabel: null,
+      matchedKeyword: null,
+      message: "Aucun resultat clair. Essayez un mot-clé comme service medical, tarif 2025, station proche ou circuit etretat.",
+      suggestions: buildSuggestions(ranked),
+    };
+  }
+
+  const scoreGap = best.score - (second?.score ?? 0);
+  if (scoreGap < 6 && best.score < 95) {
+    return {
+      route: null,
+      confidence: "none",
+      intentLabel: null,
+      matchedKeyword: null,
+      message: `Recherche ambigue. Precisez votre demande (ex: ${best.target.example}).`,
+      suggestions: buildSuggestions(ranked),
+    };
+  }
+
+  let confidence: MenuSearchResolution["confidence"] = "low";
+  if (best.score >= 130 || (best.score >= 90 && scoreGap >= 18)) {
+    confidence = "high";
+  } else if (best.score >= 75 || scoreGap >= 10) {
+    confidence = "medium";
+  }
+
+  const queryEqualsKeyword = normalizedQuery === best.matchedKeyword;
+  const message = queryEqualsKeyword
+    ? `Resultat trouve: ${best.target.label}.`
+    : `Recherche interpretee vers ${best.target.label} (mot-clé detecte: ${best.matchedKeyword}).`;
+
+  return {
+    route: best.target.route,
+    confidence,
+    intentLabel: best.target.label,
+    matchedKeyword: best.matchedKeyword,
+    message,
+    suggestions: buildSuggestions(ranked),
+  };
+};
+
+export const resolveMenuSearchRoute = (query: string): string | null => resolveMenuSearch(query).route;

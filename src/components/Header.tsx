@@ -10,7 +10,8 @@ import {
   FACEBOOK_URL,
   INSTAGRAM_URL,
 } from "@/config/site";
-import { resolveMenuSearchRoute } from "@/utils/menu-search";
+import { useToast } from "@/hooks/use-toast";
+import { resolveMenuSearch } from "@/utils/menu-search";
 
 const navLinks = [
   { to: "/", label: "Accueil" },
@@ -28,16 +29,34 @@ const Header = () => {
   const [menuQuery, setMenuQuery] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleMenuSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (!menuQuery.trim()) {
       return;
     }
 
-    const route = resolveMenuSearchRoute(menuQuery) ?? "/";
-    navigate(route);
+    const result = resolveMenuSearch(menuQuery);
+
+    if (!result.route) {
+      toast({
+        title: "Recherche non reconnue",
+        description: result.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (result.confidence !== "high") {
+      toast({
+        title: "Recherche interpretee",
+        description: result.message,
+      });
+    }
+
+    navigate(result.route);
+    setMenuQuery("");
     setMobileOpen(false);
   };
 
