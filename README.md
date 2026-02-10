@@ -1,73 +1,54 @@
-# Welcome to your Lovable project
+# Taxi Le Havre Website
 
-## Project info
+## Stack
+- Vite + React + TypeScript
+- Tailwind + shadcn/ui
+- PHP APIs in `api/`
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Local run
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+If you need PHP endpoints locally:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+php -S 127.0.0.1:8090 -t .
+```
 
-**Use GitHub Codespaces**
+## API configuration
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Copy `api/config.sample.php` to `api/config.php`.
+2. Set production values for:
+- `CONTACT_FORM_EMAIL`
+- `ACTUS_ADMIN_USERNAME`
+- `ACTUS_ADMIN_PASSWORD_HASH`
+- `MAIL_PROVIDER` + mail provider credentials
+- Optional alerting (`ALERT_WEBHOOK_URL`, `ALERT_EMAIL`)
 
-## What technologies are used for this project?
+Generate an admin password hash:
 
-This project is built with:
+```sh
+php -r 'echo password_hash("your-strong-password", PASSWORD_DEFAULT), PHP_EOL;'
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## API endpoints
+- `GET/POST /api/contact.php`
+- `GET/POST/PUT/DELETE /api/news.php`
+- `GET/POST/DELETE /api/admin.php`
+- `POST /api/upload.php`
 
-## How can I deploy this project?
+## Security and reliability
+- Session-based admin authentication for Actus operations.
+- File upload validation (type + size) and restricted upload directory.
+- IP-based rate limiting for contact submissions and admin login.
+- API structured logs in `var/api.log` and optional alert hooks.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Tests
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```sh
+npm run test
+npm run build
+```

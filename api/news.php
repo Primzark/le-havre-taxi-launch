@@ -46,19 +46,33 @@ function read_news(string $filePath): array
 function write_news(string $filePath, array $items): void
 {
     $json = json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    file_put_contents($filePath, $json ?: "[]", LOCK_EX);
+    @file_put_contents($filePath, $json ?: "[]", LOCK_EX);
 }
 
-function require_admin_token(): void
+function normalize_source_name(string $sourceName): string
 {
-    $expected = get_actus_admin_token();
-    $provided = get_header_value("X-Admin-Token");
-    if ($provided === "") {
-        $provided = trim((string) ($_GET["token"] ?? ""));
+    return $sourceName === "Facebook" ? "Facebook" : "Instagram";
+}
+
+function is_valid_news_image_reference(string $image): bool
+{
+    if (str_starts_with($image, "/images/") || str_starts_with($image, "/uploads/actus/")) {
+        $realPath = get_public_root_path() . $image;
+        return is_file($realPath);
     }
 
-    if ($provided === "" || !hash_equals($expected, $provided)) {
-        json_response(["success" => false, "error" => "Unauthorized"], 401);
+    return is_valid_http_url($image);
+}
+
+function try_delete_uploaded_image(string $imagePath): void
+{
+    if (!str_starts_with($imagePath, "/uploads/actus/")) {
+        return;
+    }
+
+    $realPath = get_public_root_path() . $imagePath;
+    if (is_file($realPath)) {
+        @unlink($realPath);
     }
 }
 
@@ -73,7 +87,9 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     json_response(["success" => true]);
 }
 
-require_admin_token();
+require_admin_auth();
+enforce_rate_limit("news_write", 120, 900);
+
 $payload = get_request_payload();
 $items = read_news($paths["news"]);
 
@@ -81,10 +97,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = sanitize_text((string) ($payload["title"] ?? ""), 160);
     $image = sanitize_text((string) ($payload["image"] ?? ""), 500);
     $sourceUrl = sanitize_text((string) ($payload["sourceUrl"] ?? ""), 500);
-    $sourceName = sanitize_text((string) ($payload["sourceName"] ?? "Instagram"), 30);
+    $sourceName = normalize_source_name(sanitize_text((string) ($payload["sourceName"] ?? "Instagram"), 30));
 
     if ($title === "" || $image === "" || $sourceUrl === "") {
         json_response(["success" => false, "error" => "Missing required fields"], 422);
+    }
+
+    if (!is_valid_news_image_reference($image)) {
+        json_response(["success" => false, "error" => "Invalid image reference"], 422);
+    }
+
+    if (!is_valid_http_url($sourceUrl)) {
+        json_response(["success" => false, "error" => "Invalid source URL"], 422);
     }
 
     $item = [
@@ -92,12 +116,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "title" => $title,
         "image" => $image,
         "sourceUrl" => $sourceUrl,
-        "sourceName" => $sourceName === "Facebook" ? "Facebook" : "Instagram",
+        "sourceName" => $sourceName,
         "created_at" => gmdate("c"),
     ];
 
     array_unshift($items, $item);
     write_news($paths["news"], $items);
+
+    api_log("info", "news_item_created", ["id" => $item["id"], "admin" => get_authenticated_admin_username()]);
+
     json_response(["success" => true, "item" => $item], 201);
 }
 
@@ -107,9 +134,29 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
         json_response(["success" => false, "error" => "Missing id"], 422);
     }
 
-    $filtered = array_values(array_filter($items, static fn(array $item): bool => (string) ($item["id"] ?? "") !== $id));
-    write_news($paths["news"], $filtered);
-    json_response(["success" => true, "items" => $filtered]);
+    $deletedImage = "";
+    $found = false;
+    $filtered = [];
+
+    foreach ($items as $item) {
+        if ((string) ($item["id"] ?? "") === $id) {
+            $found = true;
+            $deletedImage = (string) ($item["image"] ?? "");
+            continue;
+        }
+        $filtered[] = $item;
+    }
+
+    if (!$found) {
+        json_response(["success" => false, "error" => "Item not found"], 404);
+    }
+
+    write_news($paths["news"], array_values($filtered));
+    try_delete_uploaded_image($deletedImage);
+
+    api_log("info", "news_item_deleted", ["id" => $id, "admin" => get_authenticated_admin_username()]);
+
+    json_response(["success" => true, "items" => array_values($filtered)]);
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "PUT") {
@@ -120,6 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT") {
 
     $updated = [];
     $found = false;
+
     foreach ($items as $item) {
         if ((string) ($item["id"] ?? "") !== $id) {
             $updated[] = $item;
@@ -127,11 +175,28 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT") {
         }
 
         $found = true;
-        $item["title"] = sanitize_text((string) ($payload["title"] ?? (string) ($item["title"] ?? "")), 160);
-        $item["image"] = sanitize_text((string) ($payload["image"] ?? (string) ($item["image"] ?? "")), 500);
-        $item["sourceUrl"] = sanitize_text((string) ($payload["sourceUrl"] ?? (string) ($item["sourceUrl"] ?? "")), 500);
-        $sourceName = sanitize_text((string) ($payload["sourceName"] ?? (string) ($item["sourceName"] ?? "Instagram")), 30);
-        $item["sourceName"] = $sourceName === "Facebook" ? "Facebook" : "Instagram";
+
+        $title = sanitize_text((string) ($payload["title"] ?? (string) ($item["title"] ?? "")), 160);
+        $image = sanitize_text((string) ($payload["image"] ?? (string) ($item["image"] ?? "")), 500);
+        $sourceUrl = sanitize_text((string) ($payload["sourceUrl"] ?? (string) ($item["sourceUrl"] ?? "")), 500);
+        $sourceName = normalize_source_name(sanitize_text((string) ($payload["sourceName"] ?? (string) ($item["sourceName"] ?? "Instagram")), 30));
+
+        if ($title === "" || $image === "" || $sourceUrl === "") {
+            json_response(["success" => false, "error" => "Missing required fields"], 422);
+        }
+
+        if (!is_valid_news_image_reference($image)) {
+            json_response(["success" => false, "error" => "Invalid image reference"], 422);
+        }
+
+        if (!is_valid_http_url($sourceUrl)) {
+            json_response(["success" => false, "error" => "Invalid source URL"], 422);
+        }
+
+        $item["title"] = $title;
+        $item["image"] = $image;
+        $item["sourceUrl"] = $sourceUrl;
+        $item["sourceName"] = $sourceName;
         $updated[] = $item;
     }
 
@@ -140,8 +205,10 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT") {
     }
 
     write_news($paths["news"], $updated);
+
+    api_log("info", "news_item_updated", ["id" => $id, "admin" => get_authenticated_admin_username()]);
+
     json_response(["success" => true, "items" => $updated]);
 }
 
 json_response(["success" => false, "error" => "Method not allowed"], 405);
-

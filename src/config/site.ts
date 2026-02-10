@@ -14,3 +14,5 @@ export const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com
 
 export const CONTACT_API_URL = "/api/contact.php";
 export const ACTUS_API_URL = "/api/news.php";
+export const ADMIN_API_URL = "/api/admin.php";
+export const ACTUS_UPLOAD_API_URL = "/api/upload.php";

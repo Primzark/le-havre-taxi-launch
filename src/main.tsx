@@ -1,11 +1,18 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "leaflet/dist/leaflet.css";
 import { PRIMARY_DOMAIN } from "@/config/site";
+import { buildLegacyDomainRedirectUrl } from "@/utils/redirect";
 
-const currentHost = window.location.hostname.toLowerCase();
-if (currentHost === "taxihavre.com" || currentHost === "www.taxihavre.com") {
-  const targetUrl = `${PRIMARY_DOMAIN}${window.location.pathname}${window.location.search}${window.location.hash}`;
+const targetUrl = buildLegacyDomainRedirectUrl(
+  window.location.hostname,
+  window.location.pathname,
+  window.location.search,
+  window.location.hash,
+  PRIMARY_DOMAIN,
+);
+if (targetUrl) {
   window.location.replace(targetUrl);
 }
 

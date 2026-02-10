@@ -4,18 +4,27 @@ import {
   CONTACT_PHONE_LINK,
   FACEBOOK_URL,
   INSTAGRAM_URL,
+  PLAY_STORE_URL,
 } from "@/config/site";
+import { useSEO } from "@/hooks/use-seo";
 
 const links = [
   { icon: Phone, label: "Appeler", href: `tel:${CONTACT_PHONE_LINK}`, primary: true },
   { icon: Euro, label: "Tarifs", href: "/tarifs" },
   { icon: Navigation, label: "Circuits touristiques", href: "/circuits-touristiques" },
   { icon: Map, label: "Trouver une station", href: "/contact" },
-  { icon: Download, label: "Télécharger l'app", href: APPLE_STORE_URL },
+  { icon: Download, label: "App Store", href: APPLE_STORE_URL },
+  { icon: Download, label: "Google Play", href: PLAY_STORE_URL },
   { icon: Mail, label: "Nous contacter", href: "/contact" },
 ];
 
 const Links = () => {
+  useSEO({
+    title: "Liens utiles",
+    description: "Acces rapide aux services Taxi Le Havre, tarifs, contact, application mobile et reseaux.",
+    canonicalPath: "/liens",
+  });
+
   return (
     <div className="min-h-screen bg-primary flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
