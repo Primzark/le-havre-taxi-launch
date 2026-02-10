@@ -25,13 +25,23 @@ const Tarifs = () => {
       <section className="py-16">
         <div className="container max-w-4xl">
           <h2 className="font-heading font-bold text-2xl mb-6">For your information</h2>
-          <div className="grid sm:grid-cols-3 gap-4 mb-6">
-            {quickPrices.map((p) => (
-              <div key={p.to} className="bg-card border rounded-xl p-5 text-center shadow-sm">
-                <p className="text-sm text-muted-foreground mb-1">{p.from} — {p.to}</p>
-                <p className="font-heading font-extrabold text-2xl text-primary">{p.price}</p>
-              </div>
-            ))}
+          <div className="grid gap-6 mb-6">
+            <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
+              <img
+                src="/images/tarifs-page-2.jpg"
+                alt="Grille tarifs For your information"
+                className="w-full h-auto"
+                loading="lazy"
+              />
+            </div>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {quickPrices.map((p) => (
+                <div key={p.to} className="bg-card border rounded-xl p-5 text-center shadow-sm">
+                  <p className="text-sm text-muted-foreground mb-1">{p.from} — {p.to}</p>
+                  <p className="font-heading font-extrabold text-2xl text-primary">{p.price}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -41,6 +51,15 @@ const Tarifs = () => {
         <div className="container max-w-4xl">
           <h2 className="font-heading font-bold text-2xl mb-2">13 Discovery tours (Round trip)</h2>
           <p className="text-muted-foreground text-sm mb-8">Prices updated on 01/01/2025</p>
+
+          <div className="overflow-hidden rounded-xl border bg-card shadow-sm mb-8">
+            <img
+              src="/images/tarifs-page-3.jpg"
+              alt="Liste des 13 Discovery tours"
+              className="w-full h-auto"
+              loading="lazy"
+            />
+          </div>
 
           <div className="space-y-3">
             {toursData.map((tour) => (
