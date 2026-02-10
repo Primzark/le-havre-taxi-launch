@@ -17,7 +17,7 @@ describe("menu search resolution", () => {
     expect(station.route).toBe("/contact");
     expect(station.autoNavigate).toBe(true);
 
-    expect(circuit.route).toBe("/circuits-touristiques");
+    expect(circuit.route).toBe("/circuits-touristiques/2");
     expect(circuit.autoNavigate).toBe(true);
   });
 
@@ -51,7 +51,24 @@ describe("menu search resolution", () => {
   });
 
   it("supports accents and case-insensitive matching", () => {
-    expect(resolveMenuSearchRoute("Étretat")).toBe("/circuits-touristiques");
+    expect(resolveMenuSearchRoute("Étretat")).toBe("/circuits-touristiques/2");
     expect(resolveMenuSearchRoute("RÉSERVATION")).toBe("/contact");
+  });
+
+  it("opens exact circuit detail pages from circuit names", () => {
+    const leHavre = resolveMenuSearch("Le havre");
+    const rouen = resolveMenuSearch("Rouen");
+
+    expect(leHavre.route).toBe("/circuits-touristiques/1");
+    expect(leHavre.autoNavigate).toBe(true);
+
+    expect(rouen.route).toBe("/circuits-touristiques/6");
+    expect(rouen.autoNavigate).toBe(true);
+  });
+
+  it("keeps tariff intent when the query explicitly asks for tariffs", () => {
+    const tarif = resolveMenuSearch("tarif honfleur");
+    expect(tarif.route).toBe("/tarifs");
+    expect(tarif.autoNavigate).toBe(true);
   });
 });

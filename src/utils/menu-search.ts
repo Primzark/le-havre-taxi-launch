@@ -1,3 +1,5 @@
+import { toursData } from "@/data/tours";
+
 export type MenuSearchTarget = {
   route: string;
   label: string;
@@ -122,6 +124,22 @@ export const MENU_SEARCH_QUICK_LINKS: MenuSearchSuggestion[] = MENU_SEARCH_TARGE
   label: target.label,
   example: target.example,
 }));
+
+const CIRCUIT_INTENT_WORDS = new Set(["circuit", "circuits", "tour", "tours", "touristique", "visite"]);
+const NON_CIRCUIT_INTENT_WORDS = new Set([
+  "tarif",
+  "tarifs",
+  "prix",
+  "station",
+  "stations",
+  "contact",
+  "reservation",
+  "service",
+  "services",
+  "mail",
+  "email",
+  "telephone",
+]);
 
 const levenshteinDistance = (a: string, b: string): number => {
   if (a === b) {
@@ -278,6 +296,13 @@ type TargetScore = {
   strongMatch: boolean;
 };
 
+type CircuitScore = {
+  id: number;
+  name: string;
+  score: number;
+  strongMatch: boolean;
+};
+
 const rankSearchTargets = (query: string): TargetScore[] => {
   const normalizedQuery = normalizeSearchText(query);
 
@@ -326,6 +351,55 @@ const buildSuggestions = (scores: TargetScore[]): MenuSearchSuggestion[] => {
   }));
 };
 
+const shouldTryDirectCircuitMatch = (normalizedQuery: string): boolean => {
+  const queryWords = tokenize(normalizedQuery);
+  if (queryWords.length === 0) {
+    return false;
+  }
+
+  const hasCircuitIntent = queryWords.some((word) => CIRCUIT_INTENT_WORDS.has(word));
+  const hasNonCircuitIntent = queryWords.some((word) => NON_CIRCUIT_INTENT_WORDS.has(word));
+
+  return hasCircuitIntent || !hasNonCircuitIntent;
+};
+
+const findDirectCircuitMatch = (normalizedQuery: string): CircuitScore | null => {
+  if (!shouldTryDirectCircuitMatch(normalizedQuery)) {
+    return null;
+  }
+
+  let bestMatch: CircuitScore | null = null;
+
+  for (const tour of toursData) {
+    const normalizedName = normalizeSearchText(tour.name);
+    const score = scoreKeyword(normalizedQuery, normalizedName);
+    const strongMatch = isStrongMatch(normalizedQuery, normalizedName);
+
+    if (!bestMatch || score > bestMatch.score || (score === bestMatch.score && strongMatch && !bestMatch.strongMatch)) {
+      bestMatch = {
+        id: tour.id,
+        name: tour.name,
+        score,
+        strongMatch,
+      };
+    }
+  }
+
+  if (!bestMatch) {
+    return null;
+  }
+
+  if (bestMatch.strongMatch && bestMatch.score >= 90) {
+    return bestMatch;
+  }
+
+  if (bestMatch.score >= 140) {
+    return bestMatch;
+  }
+
+  return null;
+};
+
 export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   const normalizedQuery = normalizeSearchText(query);
 
@@ -337,6 +411,19 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       intentLabel: null,
       matchedKeyword: null,
       message: "Saisissez un mot-clé (service, tarif, station ou circuit).",
+      suggestions: MENU_SEARCH_QUICK_LINKS,
+    };
+  }
+
+  const circuitMatch = findDirectCircuitMatch(normalizedQuery);
+  if (circuitMatch) {
+    return {
+      route: `/circuits-touristiques/${circuitMatch.id}`,
+      autoNavigate: true,
+      confidence: "high",
+      intentLabel: "Circuits touristiques",
+      matchedKeyword: normalizeSearchText(circuitMatch.name),
+      message: `Resultat trouve: circuit ${circuitMatch.name}.`,
       suggestions: MENU_SEARCH_QUICK_LINKS,
     };
   }
