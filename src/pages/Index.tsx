@@ -133,7 +133,7 @@ const Index = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground/60 bg-transparent text-primary-foreground hover:border-primary-foreground hover:bg-primary-foreground hover:text-primary focus-visible:ring-primary-foreground font-heading"
+                className="border-primary-foreground/70 bg-transparent text-primary-foreground hover:border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-primary-foreground font-heading transition-colors"
                 asChild
               >
                 <Link to="/contact">
