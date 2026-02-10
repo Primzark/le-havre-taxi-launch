@@ -1,8 +1,15 @@
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { Users, MapPin, Clock, Phone } from "lucide-react";
+import { useSEO } from "@/hooks/use-seo";
 
 const Entreprise = () => {
+  useSEO({
+    title: "Entreprise",
+    description: "Radio Taxi Le Havre: 115 véhicules, 35 stations, service depuis 1976, 6 opératrices et 2 secrétaires.",
+    canonicalPath: "/entreprise",
+  });
+
   return (
     <Layout>
       <PageHero title="Notre entreprise" subtitle="Depuis 1976, au service des Havrais et des visiteurs." />
@@ -13,7 +20,7 @@ const Entreprise = () => {
           <h2 className="font-heading font-bold text-2xl mb-6">À propos de nous</h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
             Radio Taxi Le Havre est un groupement de taxis présent sur l'agglomération havraise. 
-            Avec notre flotte de véhicules et nos <strong>35 stations</strong> réparties dans la ville, 
+            Avec notre flotte de <strong>115 véhicules</strong> et nos <strong>35 stations</strong> réparties dans la ville, 
             nous assurons un service de proximité rapide et efficace.
           </p>
           <p className="text-muted-foreground leading-relaxed">

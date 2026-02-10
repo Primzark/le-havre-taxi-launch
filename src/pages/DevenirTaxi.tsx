@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useSEO } from "@/hooks/use-seo";
 
 const requirements = [
   "Être titulaire du permis B depuis plus de 3 ans",
@@ -21,6 +22,12 @@ const advantages = [
 ];
 
 const DevenirTaxi = () => {
+  useSEO({
+    title: "Devenir taxi",
+    description: "Conditions pour devenir chauffeur de taxi et rejoindre Radio Taxi Le Havre.",
+    canonicalPath: "/devenir-taxi",
+  });
+
   return (
     <Layout>
       <PageHero title="Devenir taxi" subtitle="Rejoignez le groupement Radio Taxi Le Havre." />

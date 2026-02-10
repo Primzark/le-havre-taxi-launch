@@ -1,12 +1,21 @@
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { toursData } from "./Tours";
+import { toursData } from "@/data/tours";
 import { ArrowLeft, Clock, Euro } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSEO } from "@/hooks/use-seo";
 
 const TourDetail = () => {
   const { id } = useParams();
   const tour = toursData.find((t) => t.id === Number(id));
+
+  useSEO({
+    title: tour ? `Circuit ${tour.name}` : "Circuit non trouvé",
+    description: tour
+      ? `Circuit N°${tour.id} ${tour.name}, durée ${tour.duration}, tarif ${tour.price} € (1 à 4 personnes).`
+      : "Ce circuit touristique n'existe pas.",
+    canonicalPath: tour ? `/circuits-touristiques/${tour.id}` : "/circuits-touristiques",
+  });
 
   if (!tour) {
     return (
@@ -35,9 +44,12 @@ const TourDetail = () => {
       <section className="py-16">
         <div className="container max-w-3xl">
           <div className="bg-card rounded-xl border p-8 shadow-sm">
-            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center mb-8">
-              <span className="text-muted-foreground">[Image du circuit]</span>
-            </div>
+            <img
+              src={tour.image}
+              alt={`Circuit ${tour.name}`}
+              className="aspect-video w-full object-cover rounded-lg mb-8"
+              loading="lazy"
+            />
 
             <div className="flex flex-wrap gap-6 mb-8">
               <div className="flex items-center gap-2">

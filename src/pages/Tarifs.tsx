@@ -1,7 +1,8 @@
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
-import { toursData } from "./Tours";
+import { toursData } from "@/data/tours";
 import { Link } from "react-router-dom";
+import { useSEO } from "@/hooks/use-seo";
 
 const quickPrices = [
   { from: "Le Havre", to: "City Centre", price: "10€" },
@@ -10,6 +11,12 @@ const quickPrices = [
 ];
 
 const Tarifs = () => {
+  useSEO({
+    title: "Tarifs",
+    description: "Tarifs mis à jour au 01/01/2025, information rapide et 13 circuits touristiques avec durées et prix.",
+    canonicalPath: "/tarifs",
+  });
+
   return (
     <Layout>
       <PageHero title="Tarifs" subtitle="Tarifs indicatifs et circuits touristiques." />

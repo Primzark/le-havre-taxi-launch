@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { Car, Plane, Ship, Stethoscope, GraduationCap, Users, Briefcase } from "lucide-react";
+import { useSEO } from "@/hooks/use-seo";
 
 const vehicles = [
   "Berline (Peugeot 508, etc.)",
@@ -44,6 +45,12 @@ const services = [
 ];
 
 const Services = () => {
+  useSEO({
+    title: "Services",
+    description: "Transport médical, transferts gare et aéroport, transport maritimes et croisières, déplacements professionnels et groupes.",
+    canonicalPath: "/services",
+  });
+
   return (
     <Layout>
       <PageHero title="Nos services" subtitle="Une gamme complète de services de transport adaptés à tous vos besoins." />

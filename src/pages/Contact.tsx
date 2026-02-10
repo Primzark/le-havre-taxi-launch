@@ -1,29 +1,124 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  CONTACT_API_URL,
+  APPLE_STORE_URL,
+  CONTACT_EMAIL,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_LINK,
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+  PLAY_STORE_URL,
+} from "@/config/site";
+import { useSEO } from "@/hooks/use-seo";
 
 const Contact = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useSEO({
+    title: "Contact",
+    description:
+      "Contactez Taxi Le Havre par téléphone ou formulaire. 35 stations sur l'agglomération havraise, service 24h/24.",
+    canonicalPath: "/contact",
+    robots: "noindex, follow",
+  });
+
+  const openNearestStation = () => {
+    const fallbackUrl = "https://www.google.com/maps/search/station+taxi+le+havre";
+
+    if (!navigator.geolocation) {
+      window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const mapsUrl = `https://www.google.com/maps/search/station+taxi/@${coords.latitude},${coords.longitude},14z`;
+        window.open(mapsUrl, "_blank", "noopener,noreferrer");
+        setIsLocating(false);
+      },
+      () => {
+        window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+        setIsLocating(false);
+        toast({
+          title: "Position non disponible",
+          description: "Google Maps a été ouvert sur les stations de taxi du Havre.",
+          variant: "destructive",
+        });
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    if (String(formData.get("website") || "").trim()) {
+      return;
+    }
+
+    const payload = {
+      name: String(formData.get("name") || ""),
+      phone: String(formData.get("phone") || ""),
+      email: String(formData.get("email") || ""),
+      subject: String(formData.get("subject") || ""),
+      message: String(formData.get("message") || ""),
+      _subject: "Nouveau message - Taxi Le Havre",
+      _template: "table",
+      _captcha: "false",
+    };
+
     setLoading(true);
-    // Backend will be connected with Lovable Cloud in next phase
-    setTimeout(() => {
+
+    try {
+      const response = await fetch(CONTACT_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json().catch(() => ({} as { success?: boolean; recipient?: string; delivered?: boolean }));
+      if (!response.ok || result?.success !== true) {
+        throw new Error("Contact API request failed");
+      }
+
       toast({
         title: "Message envoyé",
-        description: "Nous vous répondrons dans les meilleurs délais.",
+        description: result.delivered
+          ? `Votre message a été transmis à ${result.recipient ?? CONTACT_EMAIL}.`
+          : `Votre message a été enregistré. Envoi mail en file d'attente vers ${result.recipient ?? CONTACT_EMAIL}.`,
       });
       setLoading(false);
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+      form.reset();
+    } catch {
+      const mailtoSubject = encodeURIComponent(`Nouveau message - ${payload.subject}`);
+      const mailtoBody = encodeURIComponent(
+        `Nom: ${payload.name}\nTéléphone: ${payload.phone}\nEmail: ${payload.email}\n\nMessage:\n${payload.message}`,
+      );
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`;
+
+      toast({
+        title: "Ouverture de votre messagerie",
+        description: `L'envoi direct a échoué. Votre client mail a été ouvert vers ${CONTACT_EMAIL}.`,
+        variant: "destructive",
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,14 +136,14 @@ const Contact = () => {
                   <Phone className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <p className="font-heading font-semibold">Téléphone</p>
-                    <a href="tel:+33235250101" className="text-muted-foreground hover:text-primary transition">02 35 25 01 01</a>
+                    <a href={`tel:${CONTACT_PHONE_LINK}`} className="text-muted-foreground hover:text-primary transition">{CONTACT_PHONE_DISPLAY}</a>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <p className="font-heading font-semibold">Email</p>
-                    <p className="text-muted-foreground">[Email À FOURNIR]</p>
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="text-muted-foreground hover:text-primary transition">{CONTACT_EMAIL}</a>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -67,13 +162,52 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Map placeholder */}
-              <div className="bg-muted rounded-xl p-8 text-center">
-                <MapPin className="h-8 w-8 mx-auto mb-3 text-primary" />
-                <h3 className="font-heading font-semibold mb-2">Trouver une station à proximité</h3>
-                <p className="text-muted-foreground text-sm">
-                  La carte interactive avec géolocalisation sera activée avec Lovable Cloud (OpenStreetMap + base des 35 stations).
-                </p>
+              <div className="bg-muted rounded-xl p-5">
+                <h3 className="font-heading font-semibold mb-3">Trouver une station à proximité</h3>
+                <div className="rounded-lg overflow-hidden border mb-4">
+                  <iframe
+                    title="Stations de taxi au Havre"
+                    src="https://www.google.com/maps?q=stations+taxi+le+havre&output=embed"
+                    className="w-full h-72"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button type="button" onClick={openNearestStation} disabled={isLocating} className="sm:flex-1">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    {isLocating ? "Recherche..." : "Trouver une station proche"}
+                  </Button>
+                  <Button type="button" variant="outline" asChild className="sm:flex-1">
+                    <a href="https://www.google.com/maps/search/station+taxi+le+havre" target="_blank" rel="noopener noreferrer">
+                      Ouvrir Google Maps
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="bg-card border rounded-xl p-5 mt-4">
+                <h3 className="font-heading font-semibold mb-3">Application & réseaux</h3>
+                <div className="grid sm:grid-cols-2 gap-2 mb-3">
+                  <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+                    <Download className="inline h-4 w-4 mr-1" />
+                    Apple App Store
+                  </a>
+                  <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+                    <Download className="inline h-4 w-4 mr-1" />
+                    Google Play Store
+                  </a>
+                </div>
+                <p className="text-sm text-muted-foreground">Instagram: lehavretaxi</p>
+                <p className="text-sm text-muted-foreground">Facebook: taxilehavre</p>
+                <div className="flex gap-3 mt-2">
+                  <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+                    Ouvrir Instagram
+                  </a>
+                  <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+                    Ouvrir Facebook
+                  </a>
+                </div>
               </div>
             </div>
 

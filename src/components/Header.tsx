@@ -2,6 +2,13 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone, Menu, X, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  APPLE_STORE_URL,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_LINK,
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+} from "@/config/site";
 
 const navLinks = [
   { to: "/", label: "Accueil" },
@@ -23,13 +30,13 @@ const Header = () => {
       {/* Top bar - phone CTA */}
       <div className="bg-primary text-primary-foreground">
         <div className="container flex items-center justify-between py-2 text-sm">
-          <a href="tel:+33235250101" className="flex items-center gap-2 font-heading font-semibold hover:opacity-90 transition">
+          <a href={`tel:${CONTACT_PHONE_LINK}`} className="flex items-center gap-2 font-heading font-semibold hover:opacity-90 transition">
             <Phone className="h-4 w-4" />
-            Appelez-nous : 02 35 25 01 01
+            Appelez-nous : {CONTACT_PHONE_DISPLAY}
           </a>
           <div className="hidden md:flex items-center gap-4">
-            <a href="https://www.instagram.com/lehavretaxi" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition">Instagram</a>
-            <a href="https://www.facebook.com/taxilehavre" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition">Facebook</a>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition">Instagram</a>
+            <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition">Facebook</a>
           </div>
         </div>
       </div>
@@ -66,12 +73,12 @@ const Header = () => {
 
           <div className="hidden lg:flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+33235250101">
+              <a href={`tel:${CONTACT_PHONE_LINK}`}>
                 <Phone className="h-4 w-4 mr-1" /> Appeler
               </a>
             </Button>
             <Button size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary/90" asChild>
-              <a href="#app-download">
+              <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer">
                 <Download className="h-4 w-4 mr-1" /> L'App
               </a>
             </Button>
@@ -90,7 +97,7 @@ const Header = () => {
         {/* Mobile nav */}
         {mobileOpen && (
           <nav className="lg:hidden border-t bg-card px-4 pb-4">
-            {navLinks.map((link) => (
+              {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -106,10 +113,10 @@ const Header = () => {
             ))}
             <div className="flex gap-2 mt-3 pt-3 border-t">
               <Button variant="outline" size="sm" className="flex-1" asChild>
-                <a href="tel:+33235250101"><Phone className="h-4 w-4 mr-1" /> Appeler</a>
+                <a href={`tel:${CONTACT_PHONE_LINK}`}><Phone className="h-4 w-4 mr-1" /> Appeler</a>
               </Button>
               <Button size="sm" className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90" asChild>
-                <a href="#app-download"><Download className="h-4 w-4 mr-1" /> L'App</a>
+                <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer"><Download className="h-4 w-4 mr-1" /> L'App</a>
               </Button>
             </div>
           </nav>
