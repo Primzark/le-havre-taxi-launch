@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Phone, Menu, X, Download } from "lucide-react";
+import { FormEvent, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Phone, Menu, X, Download, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   APPLE_STORE_URL,
   CONTACT_PHONE_DISPLAY,
@@ -9,6 +10,7 @@ import {
   FACEBOOK_URL,
   INSTAGRAM_URL,
 } from "@/config/site";
+import { resolveMenuSearchRoute } from "@/utils/menu-search";
 
 const navLinks = [
   { to: "/", label: "Accueil" },
@@ -23,7 +25,21 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuQuery, setMenuQuery] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleMenuSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!menuQuery.trim()) {
+      return;
+    }
+
+    const route = resolveMenuSearchRoute(menuQuery) ?? "/";
+    navigate(route);
+    setMobileOpen(false);
+  };
 
   return (
     <>
@@ -71,6 +87,22 @@ const Header = () => {
             ))}
           </nav>
 
+          <form onSubmit={handleMenuSearch} className="hidden xl:flex items-center gap-2 mr-2">
+            <label htmlFor="menu-search" className="sr-only">Recherche menu</label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="menu-search"
+                type="search"
+                value={menuQuery}
+                onChange={(event) => setMenuQuery(event.target.value)}
+                placeholder="Rechercher une page"
+                className="h-9 w-56 pl-9"
+              />
+            </div>
+            <Button type="submit" size="sm" variant="outline">OK</Button>
+          </form>
+
           <div className="hidden lg:flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
               <a href={`tel:${CONTACT_PHONE_LINK}`}>
@@ -97,6 +129,20 @@ const Header = () => {
         {/* Mobile nav */}
         {mobileOpen && (
           <nav className="lg:hidden border-t bg-card px-4 pb-4">
+            <form onSubmit={handleMenuSearch} className="pt-4 pb-2">
+              <label htmlFor="menu-search-mobile" className="sr-only">Recherche menu</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="menu-search-mobile"
+                  type="search"
+                  value={menuQuery}
+                  onChange={(event) => setMenuQuery(event.target.value)}
+                  placeholder="Rechercher une page"
+                  className="h-10 pl-9"
+                />
+              </div>
+            </form>
               {navLinks.map((link) => (
               <Link
                 key={link.to}

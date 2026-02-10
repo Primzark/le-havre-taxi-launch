@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { APPLE_STORE_URL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_LINK, PLAY_STORE_URL } from "@/config/site";
 import { useSEO } from "@/hooks/use-seo";
+import { resolveMenuSearchRoute } from "@/utils/menu-search";
 
 const stats = [
   { icon: Clock, label: "Création", value: "1976" },
@@ -51,13 +52,6 @@ const homeSlides = [
   },
 ];
 
-const searchTargets = [
-  { route: "/services", keywords: ["service", "médical", "medical", "maritime", "croisière", "croisiere", "aéroport", "aeroport", "gare"] },
-  { route: "/circuits-touristiques", keywords: ["circuit", "touristique", "tour", "visite", "normandie", "etretat", "honfleur"] },
-  { route: "/tarifs", keywords: ["tarif", "prix", "coût", "cout"] },
-  { route: "/contact", keywords: ["contact", "station", "réservation", "reservation", "appel", "mail"] },
-];
-
 const Index = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
@@ -84,17 +78,12 @@ const Index = () => {
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const normalizedQuery = query.trim().toLowerCase();
-
-    if (!normalizedQuery) {
+    if (!query.trim()) {
       return;
     }
 
-    const target = searchTargets.find((entry) =>
-      entry.keywords.some((keyword) => normalizedQuery.includes(keyword)),
-    );
-
-    navigate(target?.route ?? "/");
+    const route = resolveMenuSearchRoute(query);
+    navigate(route ?? "/");
   };
 
   return (
