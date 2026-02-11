@@ -35,21 +35,21 @@ const STORAGE_KEY = "taxi-le-havre-news-cards";
 const defaultCards: NewsCard[] = [
   {
     id: "instagram-1",
-    title: "Capture Instagram",
+    title: "Publication Instagram",
     image: "/images/actus-instagram-1.jpg",
     sourceUrl: INSTAGRAM_URL,
     sourceName: "Instagram",
   },
   {
     id: "facebook-1",
-    title: "Capture Facebook",
+    title: "Publication Facebook",
     image: "/images/actus-facebook-1.png",
     sourceUrl: FACEBOOK_URL,
     sourceName: "Facebook",
   },
   {
     id: "instagram-2",
-    title: "Capture Instagram",
+    title: "Publication Instagram",
     image: "/images/actus-instagram-2.png",
     sourceUrl: INSTAGRAM_URL,
     sourceName: "Instagram",
@@ -87,7 +87,7 @@ const Actus = () => {
   useSEO({
     title: "Actus",
     description:
-      "Actualites Taxi Le Havre: captures Facebook et Instagram, mises a jour manuelles possibles directement depuis la page.",
+      "Retrouvez les actualites Radio Taxi Le Havre publiees depuis Instagram et Facebook.",
     canonicalPath: "/actus",
   });
 
@@ -380,7 +380,7 @@ const Actus = () => {
 
   return (
     <Layout>
-      <PageHero title="Actualites" subtitle="Retrouvez nos dernieres nouvelles et evenements." />
+      <PageHero title="Actualites" subtitle="Les dernieres infos du groupement, en provenance de nos reseaux sociaux." />
 
       <section className="py-16">
         <div className="container max-w-5xl">
@@ -418,7 +418,7 @@ const Actus = () => {
           ) : cards.length === 0 ? (
             <div className="bg-card border rounded-xl p-8 text-center mb-10">
               <p className="font-heading font-semibold">Aucune actualite publiee pour le moment.</p>
-              <p className="text-sm text-muted-foreground mt-2">Connectez-vous en admin pour ajouter une capture.</p>
+              <p className="text-sm text-muted-foreground mt-2">Connectez-vous en admin pour publier une actu.</p>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
@@ -433,7 +433,7 @@ const Actus = () => {
                       rel="noopener noreferrer"
                       className="text-sm text-primary hover:underline"
                     >
-                      Source: {card.sourceName}
+                      Voir sur {card.sourceName}
                     </a>
                     {isAdmin && (
                       <div className="mt-3">
@@ -450,7 +450,7 @@ const Actus = () => {
 
           <div className="bg-muted rounded-xl p-6">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
-              <h2 className="font-heading font-bold text-xl">Administration des actus</h2>
+              <h2 className="font-heading font-bold text-xl">Gestion des actus</h2>
               {isAdmin ? (
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-muted-foreground">Connecte: {adminUsername}</span>
@@ -459,7 +459,7 @@ const Actus = () => {
                   </Button>
                 </div>
               ) : (
-                <span className="text-sm text-muted-foreground">Connexion admin requise pour modifier les actus.</span>
+                <span className="text-sm text-muted-foreground">Connexion admin requise pour ajouter ou supprimer une actu.</span>
               )}
             </div>
 
@@ -493,7 +493,7 @@ const Actus = () => {
                       id="news-title"
                       value={title}
                       onChange={(event) => setTitle(event.target.value)}
-                      placeholder="Ex: Capture Instagram du jour"
+                      placeholder="Ex: Info circulation week-end"
                       required
                     />
                   </div>
@@ -563,7 +563,7 @@ const Actus = () => {
 
             {statusMessage && <p className="text-sm text-primary mt-4">{statusMessage}</p>}
             <p className="text-xs text-muted-foreground mt-4">
-              Les actus sont gerees via `api/news.php`, l'authentification via `api/admin.php`, et les images via `api/upload.php`.
+              Les actus sont gerees via `api/news.php`, l'authentification via `api/admin.php` et les images via `api/upload.php`.
             </p>
           </div>
         </div>

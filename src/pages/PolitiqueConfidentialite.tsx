@@ -5,7 +5,7 @@ import { useSEO } from "@/hooks/use-seo";
 const PolitiqueConfidentialite = () => {
   useSEO({
     title: "Politique de confidentialite",
-    description: "Politique de confidentialite et traitement des donnees personnelles Taxi Le Havre.",
+    description: "Politique de confidentialite et traitement des donnees personnelles de Radio Taxi Le Havre.",
     canonicalPath: "/politique-confidentialite",
     robots: "index, follow",
   });
@@ -17,14 +17,14 @@ const PolitiqueConfidentialite = () => {
         <div className="container max-w-3xl prose prose-sm">
           <h2 className="font-heading font-bold text-xl mb-4">Collecte des donnees</h2>
           <p className="text-muted-foreground mb-6">
-            Nous collectons uniquement les donnees que vous nous fournissez volontairement via notre formulaire de contact :
-            nom, email, telephone et message. Ces donnees sont utilisees exclusivement pour repondre a votre demande.
+            Nous recueillons uniquement les informations que vous nous transmettez volontairement via le formulaire :
+            nom, email, telephone et message. Ces donnees servent exclusivement a repondre a votre demande.
           </p>
 
           <h2 className="font-heading font-bold text-xl mb-4">Utilisation des donnees</h2>
           <p className="text-muted-foreground mb-6">
-            Vos donnees personnelles ne sont jamais vendues, echangees ou louees a des tiers.
-            Elles sont conservees pour la duree necessaire au traitement de votre demande.
+            Vos donnees personnelles ne sont ni vendues, ni louees, ni cedees a des tiers.
+            Elles sont conservees le temps strictement necessaire au suivi de votre demande.
           </p>
 
           <h2 className="font-heading font-bold text-xl mb-4">Vos droits</h2>
@@ -36,8 +36,8 @@ const PolitiqueConfidentialite = () => {
 
           <h2 className="font-heading font-bold text-xl mb-4">Cookies</h2>
           <p className="text-muted-foreground">
-            Ce site n'utilise pas de cookies de suivi. Seuls des cookies techniques essentiels au fonctionnement
-            du site peuvent etre utilises.
+            Ce site n'utilise pas de cookies publicitaires ou de suivi. Seuls des cookies techniques indispensables
+            au bon fonctionnement peuvent etre utilises.
           </p>
         </div>
       </section>

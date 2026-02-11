@@ -7,53 +7,53 @@ const vehicles = [
   "Berline (Peugeot 508, etc.)",
   "Monospace",
   "Van (Ford Tourneo Custom)",
-  "Véhicule adapté PMR",
+  "Vehicule adapte PMR",
 ];
 
 const services = [
   {
     icon: Stethoscope,
     title: "Transport médical",
-    description: "Prise en charge pour vos rendez-vous médicaux, hospitalisations et transports assis professionnalisés.",
+    description: "Rendez-vous, hospitalisations ou retour a domicile : nous organisons vos trajets assis en toute tranquillite.",
   },
   {
     icon: Plane,
     title: "Transferts aéroport & gare",
-    description: "Transferts vers et depuis les aéroports de Paris (CDG, Orly), Deauville, ainsi que la gare du Havre.",
+    description: "Depart ou arrivee : gares locales, aeroport de Deauville, Paris CDG et Orly.",
   },
   {
     icon: Ship,
-    title: "Transport Maritimes et croisières",
+    title: "Croisieres et port",
     description:
-      "Un service exclusif pour les voyageurs en escale maritime dans notre belle ville ! Grâce à nos badges spécifiques, nous avons accès à l'ensemble des terminaux notre vaste zone portuaire jusqu'au nouveau terminal croisière. Nos taxis assurent votre prise en charge sur le quai, garantissant un service de proximité, rapide et sans contrainte pour vos transferts.",
+      "Nos chauffeurs habilites accedent aux terminaux du port du Havre pour une prise en charge directe au quai.",
   },
   {
     icon: Briefcase,
     title: "Transport professionnel",
-    description: "Déplacements professionnels, conventions et séminaires. Facturation entreprise disponible.",
+    description: "Rendez-vous clients, conventions, seminaires : un service fiable avec facturation entreprise.",
   },
   {
     icon: Users,
     title: "Transport de groupes",
-    description: "Véhicules spacieux pour vos déplacements en famille ou entre amis, jusqu'à 8 passagers.",
+    description: "Famille, amis, equipes : des vehicules spacieux pour voyager ensemble, jusqu'a 8 passagers.",
   },
   {
     icon: GraduationCap,
     title: "Événements & loisirs",
-    description: "Mariages, soirées, événements sportifs : nous assurons votre transport en toute sérénité.",
+    description: "Mariage, concert, match ou soiree : on vous depose et on vous recupere au bon moment.",
   },
 ];
 
 const Services = () => {
   useSEO({
     title: "Services",
-    description: "Transport médical, transferts gare et aéroport, transport maritimes et croisières, déplacements professionnels et groupes.",
+    description: "Transport medical, transferts gare et aeroport, prises en charge croisiere, trajets pros et transport de groupes.",
     canonicalPath: "/services",
   });
 
   return (
     <Layout>
-      <PageHero title="Nos services" subtitle="Une gamme complète de services de transport adaptés à tous vos besoins." />
+      <PageHero title="Nos services" subtitle="Des solutions concretes pour vos trajets du quotidien comme pour les deplacements exceptionnels." />
 
       {/* Services grid */}
       <section className="py-16">
@@ -75,7 +75,7 @@ const Services = () => {
       {/* Vehicles */}
       <section className="bg-muted py-16">
         <div className="container">
-          <h2 className="font-heading font-bold text-2xl md:text-3xl mb-8 text-center">Notre flotte de véhicules</h2>
+          <h2 className="font-heading font-bold text-2xl md:text-3xl mb-8 text-center">Notre flotte</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {vehicles.map((v) => (
               <div key={v} className="bg-card rounded-xl p-5 border text-center shadow-sm">

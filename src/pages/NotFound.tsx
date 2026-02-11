@@ -6,7 +6,7 @@ import { useSEO } from "@/hooks/use-seo";
 const NotFound = () => {
   useSEO({
     title: "Page introuvable",
-    description: "La page demandee n'existe pas. Retournez a l'accueil Taxi Le Havre.",
+    description: "La page demandee est introuvable. Revenez a l'accueil Radio Taxi Le Havre.",
     canonicalPath: "/404",
     robots: "noindex, follow",
   });
@@ -18,7 +18,7 @@ const NotFound = () => {
           <p className="text-primary font-heading font-bold text-lg mb-2">Erreur 404</p>
           <h1 className="font-heading font-extrabold text-4xl mb-3">Page introuvable</h1>
           <p className="text-muted-foreground mb-8">
-            Le lien demande est indisponible ou a ete deplace. Utilisez les raccourcis ci-dessous.
+            Le lien que vous avez ouvert n'est plus disponible ou a ete deplace.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Button asChild>

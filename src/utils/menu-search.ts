@@ -410,7 +410,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: "Saisissez un mot-clé (service, tarif, station ou circuit).",
+      message: "Saisissez un mot-cle (service, tarif, station ou circuit).",
       suggestions: MENU_SEARCH_QUICK_LINKS,
     };
   }
@@ -423,7 +423,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "high",
       intentLabel: "Circuits touristiques",
       matchedKeyword: normalizeSearchText(circuitMatch.name),
-      message: `Resultat trouve: circuit ${circuitMatch.name}.`,
+      message: `Resultat trouve : circuit ${circuitMatch.name}.`,
       suggestions: MENU_SEARCH_QUICK_LINKS,
     };
   }
@@ -439,7 +439,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: "Aucun resultat clair. Essayez: service medical, tarif 2025, station proche ou circuit etretat.",
+      message: "Aucun resultat net. Essayez : transport medical, tarif 2025, station proche ou circuit etretat.",
       suggestions: buildSuggestions(ranked),
     };
   }
@@ -452,7 +452,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: `Recherche ambigue. Precisez votre demande (ex: ${best.target.example}).`,
+      message: `Recherche ambigue. Precisez votre demande (ex. ${best.target.example}).`,
       suggestions: buildSuggestions(ranked),
     };
   }
@@ -467,8 +467,8 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   const autoNavigate = best.strongMatch && (confidence === "high" || confidence === "medium");
 
   const message = autoNavigate
-    ? `Resultat trouve: ${best.target.label}.`
-    : `Recherche approximative. Voulez-vous dire ${best.target.label} ? Choisissez une suggestion.`;
+    ? `Resultat trouve : ${best.target.label}.`
+    : `Recherche proche de ${best.target.label}. Choisissez une suggestion pour continuer.`;
 
   return {
     route: best.target.route,

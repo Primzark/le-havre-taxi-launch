@@ -50,7 +50,7 @@ const Contact = () => {
   useSEO({
     title: "Contact",
     description:
-      "Contactez Taxi Le Havre par telephone ou formulaire. 35 stations sur l'agglomeration havraise, service 24h/24.",
+      "Contactez Radio Taxi Le Havre par telephone ou via le formulaire. Consultez aussi les 35 stations de l'agglomeration.",
     canonicalPath: "/contact",
     robots: "noindex, follow",
   });
@@ -119,7 +119,7 @@ const Contact = () => {
 
         toast({
           title: "Station la plus proche trouvee",
-          description: `${nearest.station.name} (${nearest.distanceKm.toFixed(1)} km).`,
+          description: `${nearest.station.name} a environ ${nearest.distanceKm.toFixed(1)} km.`,
         });
       },
       () => {
@@ -201,7 +201,7 @@ const Contact = () => {
 
       const deliveryMessage = result.delivered
         ? `Votre message a ete transmis a ${result.recipient ?? CONTACT_EMAIL}.`
-        : `Votre message a ete enregistre. Envoi en file d'attente vers ${result.recipient ?? CONTACT_EMAIL}.`;
+        : `Votre message a ete enregistre. Il sera transmis a ${result.recipient ?? CONTACT_EMAIL} des que possible.`;
 
       toast({
         title: "Message envoye",
@@ -225,7 +225,7 @@ const Contact = () => {
 
       setFeedback({
         type: "error",
-        message: `Envoi direct indisponible. Votre messagerie locale a ete ouverte vers ${CONTACT_EMAIL}.`,
+        message: `Envoi direct indisponible. Votre messagerie locale s'est ouverte vers ${CONTACT_EMAIL}.`,
       });
     } finally {
       window.clearTimeout(timeout);
@@ -235,7 +235,7 @@ const Contact = () => {
 
   return (
     <Layout>
-      <PageHero title="Nous contacter" subtitle="Une question ? Contactez-nous par telephone ou via le formulaire ci-dessous." />
+      <PageHero title="Nous contacter" subtitle="Un renseignement, une reservation ou un besoin precis ? Nous vous repondons rapidement." />
 
       <section className="py-16">
         <div className="container">
@@ -265,7 +265,7 @@ const Contact = () => {
                   <MapPin className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <p className="font-heading font-semibold">35 stations</p>
-                    <p className="text-muted-foreground">Annuaire interactif avec recherche et itineraire</p>
+                    <p className="text-muted-foreground">Recherche rapide par nom ou adresse, avec itineraire direct</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -285,7 +285,7 @@ const Contact = () => {
                   <Input
                     value={stationQuery}
                     onChange={(event) => setStationQuery(event.target.value)}
-                    placeholder="Rechercher une station par nom ou adresse"
+                    placeholder="Ex: gare, hotel de ville, avenue Foch"
                     className="pl-9"
                   />
                 </div>
@@ -299,7 +299,7 @@ const Contact = () => {
                 <div className="flex flex-col sm:flex-row gap-2 mt-4 mb-4">
                   <Button type="button" onClick={openNearestStation} disabled={isLocating} className="sm:flex-1">
                     <MapPin className="h-4 w-4 mr-2" />
-                    {isLocating ? "Recherche..." : "Station la plus proche"}
+                    {isLocating ? "Recherche..." : "Trouver la plus proche"}
                   </Button>
                   <Button type="button" variant="outline" asChild className="sm:flex-1">
                     <a href="https://www.google.com/maps/search/station+taxi+le+havre" target="_blank" rel="noopener noreferrer">
@@ -317,7 +317,7 @@ const Contact = () => {
                         className="text-primary hover:underline"
                         onClick={() => openDirections(selectedStation)}
                       >
-                        Itineraire vers {selectedStation.name}
+                        Ouvrir l'itineraire vers {selectedStation.name}
                       </button>
                     )}
                   </div>
@@ -360,10 +360,10 @@ const Contact = () => {
                 <p className="text-sm text-muted-foreground">Facebook: taxilehavre</p>
                 <div className="flex gap-3 mt-2">
                   <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-                    Ouvrir Instagram
+                    Voir Instagram
                   </a>
                   <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-                    Ouvrir Facebook
+                    Voir Facebook
                   </a>
                 </div>
               </div>
@@ -371,7 +371,7 @@ const Contact = () => {
 
             <div>
               <h2 className="font-heading font-bold text-2xl mb-2">Envoyez-nous un message</h2>
-              <p className="text-sm text-muted-foreground mb-6">Les messages sont envoyes vers {CONTACT_EMAIL}.</p>
+              <p className="text-sm text-muted-foreground mb-6">Vos messages sont transmis a {CONTACT_EMAIL}.</p>
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
@@ -394,7 +394,7 @@ const Contact = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="subject">Sujet *</Label>
-                  <Input id="subject" name="subject" required maxLength={200} placeholder="Objet de votre message" />
+                  <Input id="subject" name="subject" required maxLength={200} placeholder="Ex: reservation aeroport demain matin" />
                 </div>
 
                 <div className="space-y-2">
@@ -406,7 +406,7 @@ const Contact = () => {
                     maxLength={2000}
                     rows={5}
                     minLength={MIN_MESSAGE_LENGTH}
-                    placeholder="Votre message..."
+                    placeholder="Indiquez votre demande, la date et toute precision utile."
                   />
                 </div>
 

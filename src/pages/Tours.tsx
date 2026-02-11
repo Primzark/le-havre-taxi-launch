@@ -7,13 +7,13 @@ import { toursData } from "@/data/tours";
 const Tours = () => {
   useSEO({
     title: "Circuits touristiques",
-    description: "13 circuits découverte avec tarifs 2025: Le Havre, Étretat, Honfleur, Rouen, Giverny, Paris, Versailles et plus.",
+    description: "13 circuits touristiques au depart du Havre : Etretat, Honfleur, Rouen, Giverny, Paris, Versailles et plus.",
     canonicalPath: "/circuits-touristiques",
   });
 
   return (
     <Layout>
-      <PageHero title="Circuits touristiques" subtitle="13 circuits découverte pour explorer la Normandie et au-delà." />
+      <PageHero title="Circuits touristiques" subtitle="Treize idees de sorties pour visiter la Normandie et ses incontournables." />
 
       <section className="py-16">
         <div className="container">
@@ -41,7 +41,7 @@ const Tours = () => {
             ))}
           </div>
           <p className="text-muted-foreground text-sm text-center mt-10 max-w-2xl mx-auto">
-            Price for 1 to 4 people, excluding additional costs (additional passengers and luggage). Museum entrance fees, meals, etc. are not included in the price.
+            Tarif valable pour 1 a 4 personnes, hors supplements eventuels. Les billets d'entree, repas et depenses personnelles restent a votre charge.
           </p>
         </div>
       </section>

@@ -5,31 +5,31 @@ import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/use-seo";
 
 const quickPrices = [
-  { from: "Le Havre", to: "City Centre", price: "10€" },
-  { from: "Le Havre", to: "Train Station", price: "10€" },
-  { from: "Honfleur", to: "One way", price: "70€" },
+  { from: "Le Havre", to: "Centre-ville", price: "10 €" },
+  { from: "Le Havre", to: "Gare", price: "10 €" },
+  { from: "Honfleur", to: "Aller simple", price: "70 €" },
 ];
 
 const Tarifs = () => {
   useSEO({
     title: "Tarifs",
-    description: "Tarifs mis à jour au 01/01/2025, information rapide et 13 circuits touristiques avec durées et prix.",
+    description: "Tarifs indicatifs mis a jour au 1er janvier 2025, plus 13 circuits touristiques avec durees et prix.",
     canonicalPath: "/tarifs",
   });
 
   return (
     <Layout>
-      <PageHero title="Tarifs" subtitle="Tarifs indicatifs et circuits touristiques." />
+      <PageHero title="Tarifs" subtitle="Reperez rapidement les prix indicatifs et les circuits proposes." />
 
       {/* Quick prices */}
       <section className="py-16">
         <div className="container max-w-4xl">
-          <h2 className="font-heading font-bold text-2xl mb-6">For your information</h2>
+          <h2 className="font-heading font-bold text-2xl mb-6">Informations utiles</h2>
           <div className="grid gap-6 mb-6">
             <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
               <img
                 src="/images/tarifs-page-2.jpg"
-                alt="Grille tarifs For your information"
+                alt="Grille tarifaire"
                 className="w-full h-auto"
                 loading="lazy"
               />
@@ -49,13 +49,13 @@ const Tarifs = () => {
       {/* Discovery tours */}
       <section className="bg-muted py-16">
         <div className="container max-w-4xl">
-          <h2 className="font-heading font-bold text-2xl mb-2">13 Discovery tours (Round trip)</h2>
-          <p className="text-muted-foreground text-sm mb-8">Prices updated on 01/01/2025</p>
+          <h2 className="font-heading font-bold text-2xl mb-2">13 circuits touristiques (aller-retour)</h2>
+          <p className="text-muted-foreground text-sm mb-8">Tarifs mis a jour le 01/01/2025</p>
 
           <div className="overflow-hidden rounded-xl border bg-card shadow-sm mb-8">
             <img
               src="/images/tarifs-page-3.jpg"
-              alt="Liste des 13 Discovery tours"
+              alt="Liste des 13 circuits touristiques"
               className="w-full h-auto"
               loading="lazy"
             />
@@ -80,10 +80,10 @@ const Tarifs = () => {
           </div>
 
           <p className="text-muted-foreground text-sm mt-8">
-            Price for 1 to 4 people, excluding additional costs (additional passengers and luggage). Museum entrance fees, meals, etc. are not included in the price.
+            Tarif valable pour 1 a 4 personnes, hors supplements eventuels (passagers ou bagages supplementaires). Les entrees de sites, repas et depenses personnelles ne sont pas inclus.
           </p>
 
-          <p className="text-sm mt-4 font-medium">Arrêté préfectoral 2025</p>
+          <p className="text-sm mt-4 font-medium">Arrete prefectoral 2025</p>
         </div>
       </section>
     </Layout>

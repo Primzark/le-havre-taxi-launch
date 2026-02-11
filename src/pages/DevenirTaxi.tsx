@@ -6,19 +6,19 @@ import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/use-seo";
 
 const requirements = [
-  "Être titulaire du permis B depuis plus de 3 ans",
-  "Obtenir la carte professionnelle de taxi (examen préfectoral)",
-  "Disposer d'un véhicule conforme aux normes en vigueur",
-  "Posséder une autorisation de stationnement (licence)",
-  "Être inscrit au registre des métiers ou au registre du commerce",
+  "Etre titulaire du permis B depuis plus de 3 ans",
+  "Obtenir la carte professionnelle de taxi (examen prefectoral)",
+  "Disposer d'un vehicule conforme a la reglementation",
+  "Posseder une autorisation de stationnement (licence)",
+  "Etre inscrit au registre des metiers ou du commerce",
 ];
 
 const advantages = [
-  "Intégrer un groupement reconnu depuis 1976",
-  "Bénéficier d'une centrale de réservation performante 24h/24",
-  "Accéder à une clientèle diversifiée (particuliers, entreprises, tourisme, médical)",
-  "Profiter de 35 stations réparties dans l'agglomération",
-  "Rejoindre un réseau solidaire de 115 taxis",
+  "Integrer un groupement reconnu depuis 1976",
+  "Profiter d'une centrale de reservation active 24h/24",
+  "Acceder a une clientele variee (particuliers, entreprises, tourisme, medical)",
+  "S'appuyer sur 35 stations dans l'agglomeration",
+  "Rejoindre un reseau de 115 taxis",
 ];
 
 const DevenirTaxi = () => {
@@ -30,7 +30,7 @@ const DevenirTaxi = () => {
 
   return (
     <Layout>
-      <PageHero title="Devenir taxi" subtitle="Rejoignez le groupement Radio Taxi Le Havre." />
+      <PageHero title="Devenir taxi" subtitle="Vous souhaitez exercer au Havre ? Voici les bases pour rejoindre le groupement." />
 
       <section className="py-16">
         <div className="container max-w-4xl">
@@ -38,10 +38,9 @@ const DevenirTaxi = () => {
           <div className="mb-12">
             <h2 className="font-heading font-bold text-2xl mb-4">Qui est le chauffeur de taxi ?</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Le chauffeur de taxi est un professionnel du transport de personnes. 
-              Il assure des courses à la demande sur l'ensemble de l'agglomération havraise et au-delà. 
-              Polyvalent, il maîtrise la géographie locale, les réglementations en vigueur et offre un service 
-              courtois et sécurisé à chaque client.
+              Le chauffeur de taxi accompagne ses passagers sur des trajets tres varies : domicile, travail, gare,
+              rendez-vous medical, aeroport ou sortie. C'est un metier de terrain qui demande ponctualite, sens du service
+              et bonne connaissance du secteur havrais.
             </p>
           </div>
 

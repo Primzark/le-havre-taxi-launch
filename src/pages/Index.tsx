@@ -14,27 +14,27 @@ import {
 } from "@/utils/menu-search";
 
 const stats = [
-  { icon: Clock, label: "Création", value: "1976" },
-  { icon: Car, label: "Taxis dans le groupement", value: "115" },
-  { icon: Clock, label: "Disponibilité", value: "24h/7j" },
-  { icon: Users, label: "Courses distribuées en 2024", value: "101 000" },
+  { icon: Clock, label: "Depuis", value: "1976" },
+  { icon: Car, label: "Taxis dans le réseau", value: "115" },
+  { icon: Clock, label: "Service continu", value: "24h/7j" },
+  { icon: Users, label: "Courses traitées en 2024", value: "101 000" },
 ];
 
 const appFeatures = [
   {
     icon: MapPin,
-    title: "Station à proximité",
-    description: "Localisez la station de taxi la plus proche de vous en un instant.",
+    title: "Une station près de vous",
+    description: "Repérez en quelques secondes la station la plus pratique autour de vous.",
   },
   {
     icon: Car,
-    title: "Réservation facile",
-    description: "Réservez un taxi rapidement par téléphone ou via notre application.",
+    title: "Réserver sans attendre",
+    description: "Une course se commande rapidement, par téléphone ou depuis l'application.",
   },
   {
     icon: Star,
-    title: "Service de qualité",
-    description: "Des chauffeurs professionnels pour un transport confortable et sûr.",
+    title: "Des chauffeurs expérimentés",
+    description: "Ponctualité, courtoisie et conduite sereine, au quotidien comme pour les longs trajets.",
   },
 ];
 
@@ -68,7 +68,7 @@ const Index = () => {
   useSEO({
     title: "Accueil",
     description:
-      "Taxi Le Havre: 115 taxis, 35 stations, service 24h/24 et 7j/7. Réservez votre course et consultez nos tarifs.",
+      "Radio Taxi Le Havre : 115 taxis, 35 stations, service 24h/24 et 7j/7. Réservation immédiate et tarifs clairs.",
     canonicalPath: "/",
   });
 
@@ -92,7 +92,7 @@ const Index = () => {
       setSearchFeedback(result.message);
       setSearchSuggestions(result.suggestions);
       toast({
-        title: "Recherche a preciser",
+        title: "Recherche à préciser",
         description: `${result.message} Suggestions: ${result.suggestions.map((item) => item.label).join(", ")}.`,
         variant: "destructive",
       });
@@ -122,7 +122,7 @@ const Index = () => {
               <span className="text-secondary">24h/24</span>
             </h1>
             <p className="text-lg md:text-xl opacity-90 mb-7 leading-relaxed">
-              Radio Taxi Le Havre, votre partenaire transport depuis 1976. 115 taxis à votre service, 7 jours sur 7.
+              Depuis 1976, Radio Taxi Le Havre accompagne les Havrais et les visiteurs, avec une centrale joignable jour et nuit.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-heading font-semibold" asChild>
@@ -137,7 +137,7 @@ const Index = () => {
                 asChild
               >
                 <Link to="/contact">
-                  <MapPin className="h-5 w-5 mr-2" /> Trouver une station
+                  <MapPin className="h-5 w-5 mr-2" /> Voir les stations
                 </Link>
               </Button>
             </div>
@@ -163,7 +163,7 @@ const Index = () => {
             <Button type="submit" className="h-11 px-7">Rechercher</Button>
           </form>
           <p className="max-w-3xl mx-auto mt-2 text-xs text-muted-foreground">
-            Exemples: service medical, tarif 2025, station proche, circuit etretat.
+            Exemples : transport medical, tarif 2025, station gare, circuit etretat.
           </p>
           {searchFeedback && (
             <p className="max-w-3xl mx-auto mt-2 text-sm text-destructive" role="status" aria-live="polite">
@@ -194,7 +194,7 @@ const Index = () => {
             className="flex items-center justify-center gap-2 text-sm md:text-base font-heading font-bold"
           >
             <Phone className="h-4 w-4" />
-            Appelez-nous directement : {CONTACT_PHONE_DISPLAY}
+            Appelez la centrale : {CONTACT_PHONE_DISPLAY}
           </a>
         </div>
       </section>
@@ -227,9 +227,9 @@ const Index = () => {
       <section className="py-16 md:py-20">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Fonctionnalités de l'application</h2>
+            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">L'application au quotidien</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Commandez votre taxi en quelques secondes et trouvez rapidement la station la plus proche.
+              Pour réserver vite, retrouver une station et garder vos repères où que vous soyez au Havre.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -271,9 +271,9 @@ const Index = () => {
               />
             </div>
             <div>
-              <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Un service de qualité</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Une equipe locale et reactive</h2>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                Une flotte de 115 taxis, 35 stations et un standard disponible 24h/24 pour assurer vos déplacements.
+                115 taxis, 35 stations et une centrale disponible 24h/24 pour organiser vos deplacements sans attente inutile.
               </p>
               <Button size="lg" asChild>
                 <Link to="/services">Découvrir nos services</Link>
@@ -287,9 +287,9 @@ const Index = () => {
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
             <Download className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Téléchargez notre application</h2>
+            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">L'app officielle sur iPhone et Android</h2>
             <p className="text-muted-foreground mb-6">
-              Commandez votre taxi en quelques clics depuis votre smartphone.
+              Réservez en quelques clics, puis suivez les infos pratiques directement depuis votre téléphone.
             </p>
             <div className="flex flex-wrap justify-center items-center gap-4">
               <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer">
@@ -320,19 +320,19 @@ const Index = () => {
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Circuits touristiques <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">13 circuits découverte pour explorer la Normandie.</p>
+              <p className="text-muted-foreground text-sm">13 idees de sorties pour decouvrir la Normandie en taxi.</p>
             </Link>
             <Link to="/tarifs" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Nos tarifs <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">Consultez nos tarifs et circuits touristiques.</p>
+              <p className="text-muted-foreground text-sm">Consultez les prix indicatifs, simples et transparents.</p>
             </Link>
             <Link to="/services" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Nos services <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">Transport médical, aéroport, maritime et plus.</p>
+              <p className="text-muted-foreground text-sm">Medical, gare, aeroport, croisiere, groupes et trajets pros.</p>
             </Link>
           </div>
         </div>

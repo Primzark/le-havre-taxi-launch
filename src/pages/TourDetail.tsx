@@ -63,11 +63,11 @@ const TourDetail = () => {
             </div>
 
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Découvrez {tour.name} avec nos chauffeurs professionnels. Un circuit confortable et enrichissant pour découvrir les trésors de la Normandie.
+              Profitez de {tour.name} avec un chauffeur qui connait parfaitement la region. Vous avancez a votre rythme, sans contrainte de stationnement ni stress de circulation.
             </p>
 
             <p className="text-sm text-muted-foreground border-t pt-4">
-              Price for 1 to 4 people, excluding additional costs (additional passengers and luggage). Museum entrance fees, meals, etc. are not included in the price.
+              Tarif valable pour 1 a 4 personnes, hors supplements eventuels. Entrees de musees, repas et autres frais personnels non inclus.
             </p>
           </div>
 

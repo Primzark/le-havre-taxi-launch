@@ -9,19 +9,19 @@ import {
 import { useSEO } from "@/hooks/use-seo";
 
 const links = [
-  { icon: Phone, label: "Appeler", href: `tel:${CONTACT_PHONE_LINK}`, primary: true },
-  { icon: Euro, label: "Tarifs", href: "/tarifs" },
-  { icon: Navigation, label: "Circuits touristiques", href: "/circuits-touristiques" },
+  { icon: Phone, label: "Appeler la centrale", href: `tel:${CONTACT_PHONE_LINK}`, primary: true },
+  { icon: Euro, label: "Consulter les tarifs", href: "/tarifs" },
+  { icon: Navigation, label: "Voir les circuits", href: "/circuits-touristiques" },
   { icon: Map, label: "Trouver une station", href: "/contact" },
-  { icon: Download, label: "App Store", href: APPLE_STORE_URL },
-  { icon: Download, label: "Google Play", href: PLAY_STORE_URL },
-  { icon: Mail, label: "Nous contacter", href: "/contact" },
+  { icon: Download, label: "Telecharger sur l'App Store", href: APPLE_STORE_URL },
+  { icon: Download, label: "Telecharger sur Google Play", href: PLAY_STORE_URL },
+  { icon: Mail, label: "Envoyer un message", href: "/contact" },
 ];
 
 const Links = () => {
   useSEO({
     title: "Liens utiles",
-    description: "Acces rapide aux services Taxi Le Havre, tarifs, contact, application mobile et reseaux.",
+    description: "Tous les raccourcis utiles de Radio Taxi Le Havre : appel, tarifs, stations, application et reseaux.",
     canonicalPath: "/liens",
   });
 

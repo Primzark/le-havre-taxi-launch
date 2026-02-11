@@ -70,7 +70,7 @@ const Header = () => {
             className="inline-flex min-w-0 items-center gap-2 font-heading font-semibold transition hover:opacity-90"
           >
             <Phone className="h-4 w-4" />
-            <span className="truncate">Appelez-nous : {CONTACT_PHONE_DISPLAY}</span>
+            <span className="truncate">Centrale de reservation : {CONTACT_PHONE_DISPLAY}</span>
           </a>
           <div className="hidden lg:flex items-center gap-4 shrink-0">
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Instagram</a>
@@ -118,7 +118,7 @@ const Header = () => {
                 type="search"
                 value={menuQuery}
                 onChange={(event) => setMenuQuery(event.target.value)}
-                placeholder="Rechercher service, tarif, station ou circuit"
+                placeholder="Service, tarif, station ou circuit"
                 className="h-9 pl-9"
               />
             </div>
@@ -165,7 +165,7 @@ const Header = () => {
                     type="search"
                     value={menuQuery}
                     onChange={(event) => setMenuQuery(event.target.value)}
-                    placeholder="Rechercher service, tarif, station ou circuit"
+                    placeholder="Service, tarif, station ou circuit"
                     className="h-10 pl-9"
                   />
                 </div>

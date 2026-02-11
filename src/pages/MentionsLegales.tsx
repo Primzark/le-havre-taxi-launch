@@ -13,7 +13,7 @@ import {
 const MentionsLegales = () => {
   useSEO({
     title: "Mentions legales",
-    description: "Mentions legales du site Taxi Le Havre.",
+    description: "Mentions legales du site Radio Taxi Le Havre.",
     canonicalPath: "/mentions-legales",
     robots: "index, follow",
   });
@@ -41,15 +41,15 @@ const MentionsLegales = () => {
 
           <h2 className="font-heading font-bold text-xl mb-4">Propriete intellectuelle</h2>
           <p className="text-muted-foreground mb-6">
-            L'ensemble du contenu de ce site (textes, images, videos) est protege par le droit d'auteur.
-            Toute reproduction est interdite sans autorisation prealable.
+            Les textes, visuels et contenus publies sur ce site sont proteges par le droit d'auteur.
+            Toute reutilisation, totale ou partielle, necessite un accord prealable.
           </p>
 
           <h2 className="font-heading font-bold text-xl mb-4">Donnees personnelles</h2>
           <p className="text-muted-foreground">
-            Les informations recueillies via le formulaire de contact sont destinees exclusivement a {LEGAL_ENTITY_NAME}
-            pour le traitement de votre demande. Conformement au RGPD, vous disposez d'un droit d'acces,
-            de rectification et de suppression de vos donnees.
+            Les donnees recueillies via le formulaire de contact sont utilisees uniquement pour traiter votre demande.
+            Conformement au RGPD, vous pouvez demander l'acces, la rectification ou la suppression de vos donnees
+            en contactant {LEGAL_ENTITY_NAME}.
           </p>
         </div>
       </section>
