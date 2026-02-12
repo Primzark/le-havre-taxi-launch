@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { toursData } from "@/data/tours";
-import { ArrowLeft, CheckCircle2, Clock, Euro, MapPin, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Euro, Expand, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/use-seo";
 import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 const TourDetail = () => {
@@ -15,8 +16,12 @@ const TourDetail = () => {
   const navigate = useNavigate();
   const [galleryApi, setGalleryApi] = useState<CarouselApi>();
   const [circuitApi, setCircuitApi] = useState<CarouselApi>();
+  const [lightboxApi, setLightboxApi] = useState<CarouselApi>();
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [activeCircuitIndex, setActiveCircuitIndex] = useState(0);
+  const [activeLightboxIndex, setActiveLightboxIndex] = useState(0);
+  const [lightboxStartIndex, setLightboxStartIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const currentTourIndex = toursData.findIndex((candidate) => candidate.id === tour?.id);
 
   useEffect(() => {
@@ -78,6 +83,49 @@ const TourDetail = () => {
       circuitApi.off("reInit", onSelect);
     };
   }, [circuitApi, currentTourIndex, navigate]);
+
+  useEffect(() => {
+    if (!lightboxApi) {
+      return;
+    }
+
+    const onLightboxSelect = () => {
+      setActiveLightboxIndex(lightboxApi.selectedScrollSnap());
+    };
+
+    onLightboxSelect();
+    lightboxApi.on("select", onLightboxSelect);
+    lightboxApi.on("reInit", onLightboxSelect);
+
+    return () => {
+      lightboxApi.off("select", onLightboxSelect);
+      lightboxApi.off("reInit", onLightboxSelect);
+    };
+  }, [lightboxApi]);
+
+  useEffect(() => {
+    if (!isLightboxOpen || !lightboxApi) {
+      return;
+    }
+
+    lightboxApi.scrollTo(lightboxStartIndex, true);
+  }, [isLightboxOpen, lightboxApi, lightboxStartIndex]);
+
+  useEffect(() => {
+    if (isLightboxOpen) {
+      return;
+    }
+
+    setActiveSlideIndex(activeLightboxIndex);
+    galleryApi?.scrollTo(activeLightboxIndex, true);
+  }, [activeLightboxIndex, galleryApi, isLightboxOpen]);
+
+  const openGalleryFullscreen = (index: number) => {
+    setLightboxStartIndex(index);
+    setActiveLightboxIndex(index);
+    galleryApi?.scrollTo(index, true);
+    setIsLightboxOpen(true);
+  };
 
   useSEO(
     tour
@@ -290,48 +338,67 @@ const TourDetail = () => {
               </div>
             </article>
 
-            <div className="tour-card-enter rounded-2xl border bg-card/95 p-4 shadow-[0_22px_44px_-26px_hsl(var(--primary)/0.6)] backdrop-blur-sm md:p-5" style={{ animationDelay: "120ms" }}>
-              <Carousel setApi={setGalleryApi} opts={{ loop: true }} className="tour-gallery-carousel">
-                <CarouselContent className="ml-0">
-                  {tour.story.gallery.map((slide, index) => (
-                    <CarouselItem key={`${slide.src}-${slide.caption}`} className="pl-0">
-                      <figure className={cn("tour-gallery-slide", activeSlideIndex === index && "is-active")}>
-                        <img
-                          src={slide.src}
-                          alt={slide.alt}
-                          className={cn(
-                            "tour-gallery-image",
-                            activeSlideIndex === index ? "scale-110" : "scale-100",
-                          )}
-                          style={{ transitionDuration: "5200ms" }}
-                          loading="lazy"
-                        />
-                        <div className="tour-gallery-light" aria-hidden="true" />
-                        <figcaption className="tour-gallery-caption">{slide.caption}</figcaption>
-                      </figure>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-3 top-auto bottom-3 h-9 w-9 border-white/45 bg-black/35 text-white hover:bg-black/50 hover:text-white" />
-                <CarouselNext className="right-3 top-auto bottom-3 h-9 w-9 border-white/45 bg-black/35 text-white hover:bg-black/50 hover:text-white" />
-              </Carousel>
+            <div className="-mx-8 sm:mx-0">
+              <div
+                className="tour-card-enter border-y bg-card/95 p-4 shadow-[0_22px_44px_-26px_hsl(var(--primary)/0.6)] backdrop-blur-sm sm:rounded-2xl sm:border md:p-5"
+                style={{ animationDelay: "120ms" }}
+              >
+                <Carousel setApi={setGalleryApi} opts={{ loop: true }} className="tour-gallery-carousel">
+                  <CarouselContent className="ml-0">
+                    {tour.story.gallery.map((slide, index) => (
+                      <CarouselItem key={`${slide.src}-${slide.caption}`} className="pl-0">
+                        <button
+                          type="button"
+                          onClick={() => openGalleryFullscreen(index)}
+                          className="group relative block w-full text-left"
+                          aria-label={`Ouvrir la galerie en plein écran, image ${index + 1}`}
+                        >
+                          <figure className={cn("tour-gallery-slide", activeSlideIndex === index && "is-active")}>
+                            <img
+                              src={slide.src}
+                              alt={slide.alt}
+                              className={cn(
+                                "tour-gallery-image",
+                                activeSlideIndex === index ? "scale-110" : "scale-100",
+                              )}
+                              style={{ transitionDuration: "5200ms" }}
+                              loading="lazy"
+                            />
+                            <div className="tour-gallery-light" aria-hidden="true" />
+                            <figcaption className="tour-gallery-caption">{slide.caption}</figcaption>
+                          </figure>
+                          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/35 bg-black/45 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm transition group-hover:bg-black/60">
+                            <Expand className="h-3.5 w-3.5" />
+                            Plein écran
+                          </span>
+                        </button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-3 top-auto bottom-3 h-9 w-9 border-white/45 bg-black/35 text-white hover:bg-black/50 hover:text-white" />
+                  <CarouselNext className="right-3 top-auto bottom-3 h-9 w-9 border-white/45 bg-black/35 text-white hover:bg-black/50 hover:text-white" />
+                </Carousel>
 
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Galerie immersive</p>
-                <div className="flex items-center gap-2">
-                  {tour.story.gallery.map((slide, index) => (
-                    <button
-                      key={`${slide.caption}-dot`}
-                      type="button"
-                      onClick={() => galleryApi?.scrollTo(index)}
-                      aria-label={`Aller à l'image ${index + 1} : ${slide.caption}`}
-                      className={cn(
-                        "h-2.5 rounded-full transition-all",
-                        activeSlideIndex === index ? "w-8 bg-primary" : "w-2.5 bg-border hover:bg-primary/45",
-                      )}
-                    />
-                  ))}
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Galerie immersive</p>
+                  <div className="flex items-center gap-2">
+                    {tour.story.gallery.map((slide, index) => (
+                      <button
+                        key={`${slide.caption}-dot`}
+                        type="button"
+                        onClick={() => galleryApi?.scrollTo(index)}
+                        aria-label={`Aller à l'image ${index + 1} : ${slide.caption}`}
+                        className={cn(
+                          "h-2.5 rounded-full transition-all",
+                          activeSlideIndex === index ? "w-8 bg-primary" : "w-2.5 bg-border hover:bg-primary/45",
+                        )}
+                      />
+                    ))}
+                  </div>
                 </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Touchez une image pour ouvrir la galerie en plein écran.
+                </p>
               </div>
             </div>
           </div>
@@ -363,6 +430,40 @@ const TourDetail = () => {
           </div>
         </div>
       </section>
+
+      <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+        <DialogContent className="left-0 top-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 border-0 bg-black/95 p-0 text-white sm:rounded-none">
+          <DialogTitle className="sr-only">Galerie immersive du circuit {tour.name}</DialogTitle>
+
+          <div className="relative h-full w-full">
+            <Carousel
+              key={`${tour.id}-${lightboxStartIndex}`}
+              setApi={setLightboxApi}
+              opts={{ loop: true, startIndex: lightboxStartIndex }}
+              className="h-full w-full"
+            >
+              <CarouselContent className="ml-0 h-full">
+                {tour.story.gallery.map((slide) => (
+                  <CarouselItem key={`fullscreen-${slide.src}-${slide.caption}`} className="h-full pl-0">
+                    <figure className="relative h-[100dvh] w-full overflow-hidden bg-black">
+                      <img src={slide.src} alt={slide.alt} className="h-full w-full object-contain" loading="eager" />
+                      <figcaption className="absolute bottom-6 left-1/2 w-[min(92vw,760px)] -translate-x-1/2 rounded-xl border border-white/30 bg-black/55 px-4 py-2 text-center text-sm font-medium text-white backdrop-blur-sm md:text-base">
+                        {slide.caption}
+                      </figcaption>
+                    </figure>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-4 top-1/2 h-10 w-10 border-white/45 bg-black/40 text-white hover:bg-black/55 hover:text-white" />
+              <CarouselNext className="right-4 top-1/2 h-10 w-10 border-white/45 bg-black/40 text-white hover:bg-black/55 hover:text-white" />
+            </Carousel>
+
+            <p className="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-full border border-white/35 bg-black/45 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+              {activeLightboxIndex + 1} / {tour.story.gallery.length}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
