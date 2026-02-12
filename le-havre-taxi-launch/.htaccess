@@ -1,0 +1,32 @@
+RewriteEngine On
+
+# Force favicon requests to the generated taxi logo files.
+RewriteRule ^favicon\.ico$ favicon.ico [L]
+RewriteRule ^favicon\.png$ favicon.png [L]
+
+# Permanent redirect from legacy domain to primary domain.
+RewriteCond %{HTTP_HOST} ^(www\.)?taxihavre\.com$ [NC]
+RewriteRule ^ https://taxis-lehavre.com%{REQUEST_URI} [R=301,L,NE]
+
+# Avoid browser/favicon DB stale cache for icon assets.
+<IfModule mod_headers.c>
+  <FilesMatch "^favicon\.(ico|png)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
+
+# Keep old contact slugs landing on homepage.
+RewriteRule ^nous-contact/?$ / [R=301,L]
+RewriteRule ^nous-contacter/?$ / [R=301,L]
+
+# SPA fallback for React Router.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
