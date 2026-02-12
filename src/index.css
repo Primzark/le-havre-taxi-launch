@@ -112,3 +112,29 @@
     font-family: 'Open Sans', sans-serif;
   }
 }
+
+@layer components {
+  .scroll-reveal {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0) scale(0.99);
+    transition-property: opacity, transform;
+    transition-duration: 620ms, 860ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
