@@ -140,10 +140,8 @@
 }
 
 @media (max-width: 767px) {
-  .scroll-reveal,
-  .scroll-reveal.is-visible {
-    opacity: 1;
-    transform: none;
-    transition: none;
+  .scroll-reveal {
+    transform: translate3d(0, 16px, 0) scale(0.995);
+    transition-duration: 360ms, 520ms;
   }
 }

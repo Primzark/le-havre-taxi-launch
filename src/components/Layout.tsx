@@ -1,4 +1,5 @@
 import { ReactNode, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 
@@ -6,7 +7,30 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+const isScrollRevealSafePath = (pathname: string): boolean => {
+  if (
+    pathname.startsWith("/services")
+    || pathname.startsWith("/contact")
+    || pathname.startsWith("/actus")
+  ) {
+    return false;
+  }
+
+  return (
+    pathname === "/"
+    || pathname === "/entreprise"
+    || pathname === "/devenir-taxi"
+    || pathname === "/tarifs"
+    || pathname.startsWith("/circuits-touristiques")
+    || pathname === "/mentions-legales"
+    || pathname === "/politique-confidentialite"
+    || pathname === "/liens"
+  );
+};
+
 const Layout = ({ children }: LayoutProps) => {
+  const { pathname } = useLocation();
+
   useEffect(() => {
     const main = document.getElementById("main-content");
     if (!main) {
@@ -15,6 +39,19 @@ const Layout = ({ children }: LayoutProps) => {
 
     const targets = Array.from(main.querySelectorAll<HTMLElement>("section")).slice(1);
     if (targets.length === 0) {
+      return;
+    }
+
+    const cleanupTargets = () => {
+      targets.forEach((target) => {
+        target.classList.remove("scroll-reveal");
+        target.classList.remove("is-visible");
+        target.style.removeProperty("--reveal-delay");
+      });
+    };
+
+    if (!isScrollRevealSafePath(pathname)) {
+      cleanupTargets();
       return;
     }
 
@@ -64,8 +101,9 @@ const Layout = ({ children }: LayoutProps) => {
 
     return () => {
       observer.disconnect();
+      cleanupTargets();
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <div className="flex flex-col min-h-screen">
