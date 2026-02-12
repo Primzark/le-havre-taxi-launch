@@ -6,12 +6,14 @@
     <meta name="theme-color" content="#0f5eb6" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    <link rel="icon" type="image/x-icon" href="./favicon.ico?v=20260212-taxilogo-force2" />
-    <link rel="shortcut icon" href="./favicon.ico?v=20260212-taxilogo-force2" />
-    <link rel="apple-touch-icon" href="./favicon.ico?v=20260212-taxilogo-force2" />
+    <link rel="icon" type="image/png" sizes="512x512" href="./favicon.png?v=20260212-taxilogo-force4" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico?v=20260212-taxilogo-force4" />
+    <link rel="shortcut icon" href="./favicon.ico?v=20260212-taxilogo-force4" />
+    <link rel="apple-touch-icon" href="./favicon.png?v=20260212-taxilogo-force4" />
     <script>
       (function () {
-        var href = "./favicon.ico?v=20260212-taxilogo-force3-" + Date.now();
+        var hrefPng = "./favicon.png?v=20260212-taxilogo-force4-" + Date.now();
+        var hrefIco = "./favicon.ico?v=20260212-taxilogo-force4-" + Date.now();
         var selectors = 'link[rel~="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]';
         var links = document.querySelectorAll(selectors);
         for (var i = 0; i < links.length; i += 1) {
@@ -23,8 +25,19 @@
         for (var j = 0; j < rels.length; j += 1) {
           var link = document.createElement("link");
           link.setAttribute("rel", rels[j]);
-          link.setAttribute("href", href);
+          link.setAttribute("href", rels[j] === "shortcut icon" ? hrefIco : hrefPng);
           if (rels[j] === "icon") {
+            link.setAttribute("type", "image/png");
+            link.setAttribute("sizes", "512x512");
+            document.head.appendChild(link);
+            var fallback = document.createElement("link");
+            fallback.setAttribute("rel", "icon");
+            fallback.setAttribute("type", "image/x-icon");
+            fallback.setAttribute("href", hrefIco);
+            document.head.appendChild(fallback);
+            continue;
+          }
+          if (rels[j] === "shortcut icon") {
             link.setAttribute("type", "image/x-icon");
           }
           document.head.appendChild(link);
