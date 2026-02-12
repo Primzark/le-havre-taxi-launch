@@ -288,7 +288,7 @@ const Tarifs = () => {
           </Badge>
 
           <h1 className="mt-4 max-w-4xl font-heading text-3xl font-extrabold leading-tight md:text-5xl">
-            Tarifs repensés pour une lecture claire, rapide et actionnable.
+            Tarifs.
           </h1>
           <p className="mt-4 max-w-3xl text-base text-white/90 md:text-lg">
             Estimez une course en direct, comparez les circuits par budget et gardez une vision
