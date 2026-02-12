@@ -1,11 +1,4 @@
-export const LEGACY_HOSTS = new Set([
-  "taxi-le-havre-hub.lovable.app",
-  "taxihavre.com",
-  "www.taxihavre.com",
-  "taxis-lehavre.com",
-  "www.taxis-lehavre.com",
-  "www.taxi-le-havre.com",
-]);
+export const LEGACY_HOSTS = new Set(["taxihavre.com", "www.taxihavre.com"]);
 
 export const buildLegacyDomainRedirectUrl = (
   hostname: string,

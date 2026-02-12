@@ -8,31 +8,19 @@ describe("buildLegacyDomainRedirectUrl", () => {
       "/contact",
       "?source=google",
       "#section",
-      "https://taxi-le-havre.com",
+      "https://taxis-lehavre.com",
     );
 
-    expect(result).toBe("https://taxi-le-havre.com/contact?source=google#section");
-  });
-
-  it("returns a redirect url for lovable host", () => {
-    const result = buildLegacyDomainRedirectUrl(
-      "taxi-le-havre-hub.lovable.app",
-      "/tarifs",
-      "",
-      "",
-      "https://taxi-le-havre.com",
-    );
-
-    expect(result).toBe("https://taxi-le-havre.com/tarifs");
+    expect(result).toBe("https://taxis-lehavre.com/contact?source=google#section");
   });
 
   it("returns null for non-legacy hosts", () => {
     const result = buildLegacyDomainRedirectUrl(
-      "taxi-le-havre.com",
+      "taxis-lehavre.com",
       "/",
       "",
       "",
-      "https://taxi-le-havre.com",
+      "https://taxis-lehavre.com",
     );
 
     expect(result).toBeNull();

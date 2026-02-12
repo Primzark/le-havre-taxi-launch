@@ -17,7 +17,7 @@ define("ACTUS_UPLOAD_MAX_MB", 5);
 
 // Mail transport: "resend" (recommended) or "mail".
 define("MAIL_PROVIDER", "resend");
-define("MAIL_FROM_EMAIL", "no-reply@taxi-le-havre.com");
+define("MAIL_FROM_EMAIL", "no-reply@taxis-lehavre.com");
 define("MAIL_FROM_NAME", "Taxi Le Havre");
 define("RESEND_API_KEY", "re_xxxxxxxxxxxxxxxxxxxxx");
 
