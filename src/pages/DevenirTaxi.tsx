@@ -30,7 +30,11 @@ const DevenirTaxi = () => {
 
   return (
     <Layout>
-      <PageHero title="Devenir taxi" subtitle="Vous souhaitez exercer au Havre ? Voici les bases pour rejoindre le groupement." />
+      <PageHero
+        title="Devenir taxi"
+        subtitle="Vous souhaitez exercer au Havre ? Voici les bases pour rejoindre le groupement."
+        backgroundImage="/images/services/classe-affaire.jpg"
+      />
 
       <section className="py-16">
         <div className="container max-w-4xl">

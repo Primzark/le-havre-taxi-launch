@@ -13,7 +13,11 @@ const Tours = () => {
 
   return (
     <Layout>
-      <PageHero title="Circuits touristiques" subtitle="Treize idees de sorties pour visiter la Normandie et ses incontournables." />
+      <PageHero
+        title="Circuits touristiques"
+        subtitle="Treize idees de sorties pour visiter la Normandie et ses incontournables."
+        backgroundImage="/images/tour-03-normandie.jpg"
+      />
 
       <section className="py-16">
         <div className="container">

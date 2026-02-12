@@ -19,7 +19,11 @@ const Tarifs = () => {
 
   return (
     <Layout>
-      <PageHero title="Tarifs" subtitle="Reperez rapidement les prix indicatifs et les circuits proposes." />
+      <PageHero
+        title="Tarifs"
+        subtitle="Reperez rapidement les prix indicatifs et les circuits proposes."
+        backgroundImage="/images/services/navette-aeroport.jpg"
+      />
 
       {/* Quick prices */}
       <section className="py-16">

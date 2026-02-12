@@ -12,7 +12,7 @@ const PolitiqueConfidentialite = () => {
 
   return (
     <Layout>
-      <PageHero title="Politique de confidentialite" />
+      <PageHero title="Politique de confidentialite" backgroundImage="/images/home-pont-normandie.jpg" />
       <section className="py-16">
         <div className="container max-w-3xl prose prose-sm">
           <h2 className="font-heading font-bold text-xl mb-4">Collecte des donnees</h2>

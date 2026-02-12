@@ -12,7 +12,11 @@ const Entreprise = () => {
 
   return (
     <Layout>
-      <PageHero title="Notre entreprise" subtitle="Un groupement local, au service des Havrais comme des visiteurs depuis 1976." />
+      <PageHero
+        title="Notre entreprise"
+        subtitle="Un groupement local, au service des Havrais comme des visiteurs depuis 1976."
+        backgroundImage="/images/services/transport-entreprise.jpg"
+      />
 
       {/* À propos */}
       <section className="py-16">

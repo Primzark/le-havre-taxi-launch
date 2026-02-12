@@ -20,7 +20,7 @@ const MentionsLegales = () => {
 
   return (
     <Layout>
-      <PageHero title="Mentions legales" />
+      <PageHero title="Mentions legales" backgroundImage="/images/home-bassin-commerce.jpg" />
       <section className="py-16">
         <div className="container max-w-3xl prose prose-sm">
           <h2 className="font-heading font-bold text-xl mb-4">Editeur du site</h2>

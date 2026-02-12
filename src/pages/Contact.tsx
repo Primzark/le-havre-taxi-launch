@@ -235,7 +235,11 @@ const Contact = () => {
 
   return (
     <Layout>
-      <PageHero title="Nous contacter" subtitle="Un renseignement, une reservation ou un besoin precis ? Nous vous repondons rapidement." />
+      <PageHero
+        title="Nous contacter"
+        subtitle="Un renseignement, une reservation ou un besoin precis ? Nous vous repondons rapidement."
+        backgroundImage="/images/home-mairie.jpg"
+      />
 
       <section className="py-16">
         <div className="container">

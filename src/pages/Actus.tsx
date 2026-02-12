@@ -380,7 +380,11 @@ const Actus = () => {
 
   return (
     <Layout>
-      <PageHero title="Actualites" subtitle="Les dernieres infos du groupement, en provenance de nos reseaux sociaux." />
+      <PageHero
+        title="Actualites"
+        subtitle="Les dernieres infos du groupement, en provenance de nos reseaux sociaux."
+        backgroundImage="/images/home-catene.jpg"
+      />
 
       <section className="py-16">
         <div className="container max-w-5xl">
