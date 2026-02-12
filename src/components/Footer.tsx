@@ -35,9 +35,11 @@ const Footer = () => {
           <div>
             <h3 className="font-heading font-semibold mb-4 text-secondary">Navigation</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/" className="opacity-80 hover:opacity-100 transition">Accueil</Link></li>
-              <li><Link to="/circuits-touristiques" className="opacity-80 hover:opacity-100 transition">Nos circuits</Link></li>
-              <li><Link to="/services" className="opacity-80 hover:opacity-100 transition">Nos services</Link></li>
+              <li><Link to="/services" className="opacity-80 hover:opacity-100 transition">Services</Link></li>
+              <li><Link to="/circuits-touristiques" className="opacity-80 hover:opacity-100 transition">Circuits touristiques</Link></li>
+              <li><Link to="/tarifs" className="opacity-80 hover:opacity-100 transition">Tarifs</Link></li>
+              <li><Link to="/entreprise" className="opacity-80 hover:opacity-100 transition">Entreprise</Link></li>
+              <li><Link to="/devenir-taxi" className="opacity-80 hover:opacity-100 transition">Devenir taxi</Link></li>
               <li><Link to="/contact" className="opacity-80 hover:opacity-100 transition">Contact</Link></li>
             </ul>
           </div>
@@ -93,7 +95,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-background/10 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-70">
-          <p>© {new Date().getFullYear()} TAXI LE HAVRE | AGENCE CREATIVE : CREATION DE SITES WEB & REFERENCEMENT</p>
+          <p>© {new Date().getFullYear()} Radio Taxi Le Havre. Tous droits réservés.</p>
           <div className="flex gap-4">
             <Link to="/mentions-legales" className="hover:opacity-100 transition">Mentions légales</Link>
             <Link to="/politique-confidentialite" className="hover:opacity-100 transition">Politique de confidentialité</Link>

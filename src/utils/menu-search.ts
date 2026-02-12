@@ -389,11 +389,11 @@ const findDirectCircuitMatch = (normalizedQuery: string): CircuitScore | null =>
     return null;
   }
 
-  if (bestMatch.strongMatch && bestMatch.score >= 70) {
+  if (bestMatch.strongMatch && bestMatch.score >= 90) {
     return bestMatch;
   }
 
-  if (bestMatch.score >= 120) {
+  if (bestMatch.score >= 140) {
     return bestMatch;
   }
 

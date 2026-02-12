@@ -4,72 +4,61 @@ import { Car, Plane, Ship, Stethoscope, GraduationCap, Users, Briefcase } from "
 import { useSEO } from "@/hooks/use-seo";
 
 const vehicles = [
-  "Flotte de 125 vehicules de 4 a 8 places",
-  "Berlines, break et monospaces",
-  "Vehicules discrets, confortables et entretenus",
-  "6 taxis equipes pour la mobilite reduite",
+  "Berline (Peugeot 508, etc.)",
+  "Monospace",
+  "Van (Ford Tourneo Custom)",
+  "Vehicule adapte PMR",
 ];
 
 const services = [
   {
-    icon: Plane,
-    title: "Navette aeroport",
-    description:
-      "Pour tous vos deplacements professionnels ou prives, nous assurons les transferts de/vers les aeroports (Paris, Le Havre, Deauville, Rouen). Reservation de 1 a 8 personnes.",
-  },
-  {
-    icon: Car,
-    title: "Mariage",
-    description:
-      "Location de voiture avec chauffeur pour vos grandes occasions. Vehicules de standing et prestation personnalisee pour vos evenements.",
-  },
-  {
     icon: Stethoscope,
-    title: "Transport sanitaire",
-    description:
-      "Transport medical en taxi conventionne avec prise en charge ALD, carte vitale et prescription medicale. Vous ne faites pas l'avance des frais selon votre dossier.",
+    title: "Transport médical",
+    description: "Rendez-vous, hospitalisations ou retour a domicile : nous organisons vos trajets assis en toute tranquillite.",
   },
   {
-    icon: Briefcase,
-    title: "Classe affaire",
-    description:
-      "Service VIP pour prestations evenementielles, voyages d'affaires et visites touristiques : chauffeurs selectionnes, vehicules haut de gamme et accueil personnalise.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Transport scolaire",
-    description:
-      "Accompagnement sur mesure et securise des enfants, du domicile a leur destination, avec possibilite de retour et prise en charge des activites extrascolaires.",
+    icon: Plane,
+    title: "Transferts aéroport & gare",
+    description: "Depart ou arrivee : gares locales, aeroport de Deauville, Paris CDG et Orly.",
   },
   {
     icon: Ship,
-    title: "Transport professionnel et entreprise",
+    title: "Croisieres et port",
     description:
-      "Facturation entreprise, transferts gares/aeroports, transport de groupes jusqu'a 8 personnes, transport de plis urgents et transport de personnel.",
+      "Nos chauffeurs habilites accedent aux terminaux du port du Havre pour une prise en charge directe au quai.",
+  },
+  {
+    icon: Briefcase,
+    title: "Transport professionnel",
+    description: "Rendez-vous clients, conventions, seminaires : un service fiable avec facturation entreprise.",
   },
   {
     icon: Users,
-    title: "Personne a mobilite reduite",
-    description:
-      "Taxis equipes de rampes manuelles, chauffeurs sensibilises et accompagnement jusqu'a la porte de votre domicile.",
+    title: "Transport de groupes",
+    description: "Famille, amis, equipes : des vehicules spacieux pour voyager ensemble, jusqu'a 8 passagers.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Événements & loisirs",
+    description: "Mariage, concert, match ou soiree : on vous depose et on vous recupere au bon moment.",
   },
 ];
 
 const Services = () => {
   useSEO({
     title: "Services",
-    description: "Services historiques Taxi Le Havre : aeroport, mariage, sanitaire, classe affaire, scolaire, entreprise et PMR.",
+    description: "Transport medical, transferts gare et aeroport, prises en charge croisiere, trajets pros et transport de groupes.",
     canonicalPath: "/services",
   });
 
   return (
     <Layout>
-      <PageHero title="Nos services" subtitle="Services personnalises aux particuliers et aux entreprises, 365 jours sur 365." />
+      <PageHero title="Nos services" subtitle="Des solutions concretes pour vos trajets du quotidien comme pour les deplacements exceptionnels." />
 
       {/* Services grid */}
       <section className="py-16">
         <div className="container">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((s) => (
               <div key={s.title} className="bg-card rounded-xl p-6 border shadow-sm hover:shadow-md transition">
                 <div className="bg-accent rounded-lg p-3 w-fit mb-4">
@@ -80,10 +69,6 @@ const Services = () => {
               </div>
             ))}
           </div>
-          <p className="text-muted-foreground text-sm mt-8 max-w-3xl">
-            Nos tarifs sont fixes et forfaitaires, convenus a l'avance et sans aucune surtaxe. En cas de bouchons ou
-            d'evenements, les prix ne changent pas.
-          </p>
         </div>
       </section>
 

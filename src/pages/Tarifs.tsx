@@ -5,21 +5,21 @@ import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/use-seo";
 
 const quickPrices = [
-  { from: "Circuit n°1", to: "Le Havre", price: "60 €" },
-  { from: "Circuit n°2", to: "Étretat", price: "125 €" },
-  { from: "Circuit n°4", to: "Mont St Michel", price: "460 €" },
+  { from: "Le Havre", to: "Centre-ville", price: "10 €" },
+  { from: "Le Havre", to: "Gare", price: "10 €" },
+  { from: "Honfleur", to: "Aller simple", price: "70 €" },
 ];
 
 const Tarifs = () => {
   useSEO({
     title: "Tarifs",
-    description: "Tarifs forfaitaires historiques des circuits touristiques Taxi Le Havre.",
+    description: "Tarifs indicatifs mis a jour au 1er janvier 2025, plus 13 circuits touristiques avec durees et prix.",
     canonicalPath: "/tarifs",
   });
 
   return (
     <Layout>
-      <PageHero title="Tarifs" subtitle="Tarifs forfaitaires et circuits touristiques historiques." />
+      <PageHero title="Tarifs" subtitle="Reperez rapidement les prix indicatifs et les circuits proposes." />
 
       {/* Quick prices */}
       <section className="py-16">
@@ -49,13 +49,13 @@ const Tarifs = () => {
       {/* Discovery tours */}
       <section className="bg-muted py-16">
         <div className="container max-w-4xl">
-          <h2 className="font-heading font-bold text-2xl mb-2">12 circuits touristiques (aller-retour)</h2>
-          <p className="text-muted-foreground text-sm mb-8">Prix forfaitaires 1 a 4 et 5 a 6 personnes</p>
+          <h2 className="font-heading font-bold text-2xl mb-2">13 circuits touristiques (aller-retour)</h2>
+          <p className="text-muted-foreground text-sm mb-8">Tarifs mis a jour le 01/01/2025</p>
 
           <div className="overflow-hidden rounded-xl border bg-card shadow-sm mb-8">
             <img
               src="/images/tarifs-page-3.jpg"
-              alt="Liste des circuits touristiques"
+              alt="Liste des 13 circuits touristiques"
               className="w-full h-auto"
               loading="lazy"
             />
@@ -74,19 +74,16 @@ const Tarifs = () => {
                   </span>
                   <span className="text-muted-foreground text-sm ml-2">({tour.duration})</span>
                 </div>
-                <div className="text-right">
-                  <p className="font-heading font-bold text-primary text-lg">{tour.price1To4} €</p>
-                  <p className="text-xs text-muted-foreground">1 a 4 pers.</p>
-                </div>
+                <span className="font-heading font-bold text-primary text-lg">{tour.price} €</span>
               </Link>
             ))}
           </div>
 
           <p className="text-muted-foreground text-sm mt-8">
-            Les tarifs sont fixes et forfaitaires, convenus a l'avance et sans surtaxe. Les prix peuvent varier selon le nombre de passagers.
+            Tarif valable pour 1 a 4 personnes, hors supplements eventuels (passagers ou bagages supplementaires). Les entrees de sites, repas et depenses personnelles ne sont pas inclus.
           </p>
 
-          <p className="text-sm mt-4 font-medium">Tarifs historiques Taxi Le Havre</p>
+          <p className="text-sm mt-4 font-medium">Arrete prefectoral 2025</p>
         </div>
       </section>
     </Layout>
