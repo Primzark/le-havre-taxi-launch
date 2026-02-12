@@ -42,6 +42,11 @@ const buildContactApiCandidates = (): string[] => {
   const candidates: string[] = [];
   const seen = new Set<string>();
 
+  const toApiPath = (root: string) => {
+    const normalizedRoot = root.trim().replace(/\/+$/, "");
+    return `${normalizedRoot}/api/contact.php`.replace(/\/{2,}/g, "/");
+  };
+
   const addCandidate = (value: string) => {
     const normalized = value.trim();
     if (!normalized || seen.has(normalized)) {
@@ -59,14 +64,20 @@ const buildContactApiCandidates = (): string[] => {
   }
 
   const baseUrl = String(import.meta.env.BASE_URL ?? "/");
-  const normalizedBase = baseUrl.startsWith("/") ? baseUrl : `/${baseUrl}`;
-  addCandidate(`${normalizedBase.replace(/\/+$/, "")}/api/contact.php`);
+  const normalizedBase = (baseUrl.startsWith("/") ? baseUrl : `/${baseUrl}`).replace(/\/+$/, "");
+  addCandidate(toApiPath(normalizedBase || "/"));
 
   // Common local deployment paths (MAMP/XAMPP style).
   addCandidate("/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
   addCandidate("/le-havre-taxi-launch/api/contact.php");
+  addCandidate("/TaxiWebsite/api/contact.php");
 
   if (typeof window !== "undefined") {
+    addCandidate(`${window.location.origin}/api/contact.php`);
+    addCandidate(`${window.location.origin}/TaxiWebsite/le-havre-taxi-launch/api/contact.php`);
+    addCandidate(`${window.location.origin}/le-havre-taxi-launch/api/contact.php`);
+    addCandidate(`${window.location.origin}/TaxiWebsite/api/contact.php`);
+
     const segments = window.location.pathname.split("/").filter(Boolean);
 
     // Try project roots only, not the current page route itself.
@@ -74,12 +85,36 @@ const buildContactApiCandidates = (): string[] => {
     // /api/contact.php, /TaxiWebsite/api/contact.php, /TaxiWebsite/le-havre-taxi-launch/api/contact.php
     for (let i = 0; i < segments.length; i += 1) {
       const prefix = segments.slice(0, i).join("/");
-      addCandidate(`${prefix ? `/${prefix}` : ""}/api/contact.php`);
+      addCandidate(toApiPath(prefix ? `/${prefix}` : "/"));
+    }
+
+    const projectToken = "le-havre-taxi-launch";
+    const projectTokenIndex = segments.indexOf(projectToken);
+    if (projectTokenIndex >= 0) {
+      const projectRoot = `/${segments.slice(0, projectTokenIndex + 1).join("/")}`;
+      addCandidate(toApiPath(projectRoot));
+      addCandidate(`${window.location.origin}${toApiPath(projectRoot)}`);
+    }
+
+    try {
+      const modulePath = new URL(import.meta.url).pathname;
+      const assetsIndex = modulePath.indexOf("/assets/");
+      if (assetsIndex > 0) {
+        const bundleRoot = modulePath.slice(0, assetsIndex);
+        addCandidate(toApiPath(bundleRoot));
+        addCandidate(`${window.location.origin}${toApiPath(bundleRoot)}`);
+      }
+    } catch {
+      // Ignore import.meta.url parsing failures.
     }
 
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
       addCandidate("http://localhost:8888/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
       addCandidate("http://127.0.0.1:8888/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
+      addCandidate("http://localhost:8888/le-havre-taxi-launch/api/contact.php");
+      addCandidate("http://127.0.0.1:8888/le-havre-taxi-launch/api/contact.php");
+      addCandidate("http://localhost:8888/api/contact.php");
+      addCandidate("http://127.0.0.1:8888/api/contact.php");
     }
   }
 
