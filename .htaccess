@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# Permanent redirect from legacy domain to primary domain.
+RewriteCond %{HTTP_HOST} ^(www\.)?taxihavre\.com$ [NC]
+RewriteRule ^ https://taxis-lehavre.com%{REQUEST_URI} [R=301,L,NE]
+
+# Keep old contact slugs landing on homepage.
+RewriteRule ^nous-contact/?$ / [R=301,L]
+RewriteRule ^nous-contacter/?$ / [R=301,L]
+
+# SPA fallback for React Router.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]

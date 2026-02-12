@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /var/
+
+Sitemap: https://taxis-lehavre.com/sitemap.xml
+Host: taxis-lehavre.com
