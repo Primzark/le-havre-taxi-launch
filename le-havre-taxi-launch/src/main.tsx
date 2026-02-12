@@ -53,6 +53,65 @@ const startLovableBadgeCleanup = () => {
   window.addEventListener("beforeunload", () => observer.disconnect(), { once: true });
 };
 
+const clearStaleBrowserCaches = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((registration) => {
+        registration.unregister();
+      });
+    });
+  }
+
+  if ("caches" in window) {
+    caches.keys().then((keys) => {
+      keys.forEach((key) => {
+        caches.delete(key);
+      });
+    });
+  }
+};
+
+const forceTaxiFavicon = () => {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  const stamp = Date.now();
+  const pngHref = `./favicon.png?v=taxi-runtime-${stamp}`;
+  const icoHref = `./favicon.ico?v=taxi-runtime-${stamp}`;
+
+  document
+    .querySelectorAll<HTMLLinkElement>('link[rel~="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]')
+    .forEach((link) => link.remove());
+
+  const pngIcon = document.createElement("link");
+  pngIcon.rel = "icon";
+  pngIcon.type = "image/png";
+  pngIcon.sizes = "64x64";
+  pngIcon.href = pngHref;
+  document.head.appendChild(pngIcon);
+
+  const icoIcon = document.createElement("link");
+  icoIcon.rel = "icon";
+  icoIcon.type = "image/x-icon";
+  icoIcon.href = icoHref;
+  document.head.appendChild(icoIcon);
+
+  const shortcut = document.createElement("link");
+  shortcut.rel = "shortcut icon";
+  shortcut.href = icoHref;
+  document.head.appendChild(shortcut);
+
+  const appleTouch = document.createElement("link");
+  appleTouch.rel = "apple-touch-icon";
+  appleTouch.href = pngHref;
+  document.head.appendChild(appleTouch);
+};
+
 const targetUrl = buildLegacyDomainRedirectUrl(
   window.location.hostname,
   window.location.pathname,
@@ -64,6 +123,8 @@ if (targetUrl) {
   window.location.replace(targetUrl);
 }
 
+clearStaleBrowserCaches();
+forceTaxiFavicon();
 startLovableBadgeCleanup();
 
 createRoot(document.getElementById("root")!).render(<App />);
