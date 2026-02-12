@@ -29,9 +29,13 @@ const Links = () => {
     <div className="min-h-screen bg-primary flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="bg-secondary rounded-xl p-3 w-fit mx-auto mb-4">
-            <span className="font-heading font-extrabold text-secondary-foreground text-2xl">TAXI</span>
-          </div>
+          <img
+            src="/images/logo-taxi-le-havre.png"
+            alt="Radio Taxi Le Havre"
+            width={236}
+            height={62}
+            className="mx-auto mb-3 h-14 w-auto"
+          />
           <h1 className="font-heading font-bold text-xl text-primary-foreground">Radio Taxi Le Havre</h1>
           <p className="text-primary-foreground/70 text-sm">24h/24 — 7j/7</p>
         </div>

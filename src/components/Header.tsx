@@ -82,14 +82,16 @@ const Header = () => {
       {/* Main nav */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b shadow-sm">
         <div className="container flex h-16 items-center gap-3">
-          <Link to="/" className="shrink-0 flex items-center gap-2">
-            <div className="bg-secondary rounded-lg p-1.5">
-              <span className="font-heading font-extrabold text-secondary-foreground text-lg">TAXI</span>
-            </div>
-            <div className="font-heading font-bold text-foreground leading-tight">
-              <span className="text-sm block">Radio Taxi</span>
-              <span className="text-xs text-muted-foreground">Le Havre</span>
-            </div>
+          <Link to="/" aria-label="Accueil Radio Taxi Le Havre" className="shrink-0 flex items-center">
+            <span className="rounded-lg bg-foreground/95 p-1 shadow-sm">
+              <img
+                src="/images/logo-taxi-le-havre.png"
+                alt="Radio Taxi Le Havre"
+                width={236}
+                height={62}
+                className="h-9 w-auto"
+              />
+            </span>
           </Link>
 
           {/* Desktop nav */}

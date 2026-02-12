@@ -17,14 +17,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="bg-secondary rounded-lg p-1.5">
-                <span className="font-heading font-extrabold text-secondary-foreground text-lg">TAXI</span>
-              </div>
-              <div className="font-heading font-bold leading-tight">
-                <span className="text-sm block">Radio Taxi</span>
-                <span className="text-xs opacity-70">Le Havre</span>
-              </div>
+            <div className="mb-4">
+              <img
+                src="/images/logo-taxi-le-havre.png"
+                alt="Radio Taxi Le Havre"
+                width={236}
+                height={62}
+                className="h-12 w-auto"
+              />
             </div>
             <p className="text-sm opacity-80 leading-relaxed">
               Depuis 1976, Radio Taxi Le Havre assure vos trajets avec une centrale ouverte 24h/24 et 7j/7.
