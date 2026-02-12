@@ -39,7 +39,7 @@ describe("Contact page", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/Votre message a été transmis/i)).toBeInTheDocument();
+      expect(screen.getByText(`Message envoyé à ${CONTACT_EMAIL}.`)).toBeInTheDocument();
     });
 
     fetchMock.mockRestore();
@@ -89,7 +89,7 @@ describe("Contact page", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/Votre message a été transmis/i)).toBeInTheDocument();
+      expect(screen.getByText(`Message envoyé à ${CONTACT_EMAIL}.`)).toBeInTheDocument();
     });
 
     fetchMock.mockRestore();
@@ -139,7 +139,23 @@ describe("Contact page", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/passerelle de secours/i)).toBeInTheDocument();
+      expect(screen.getByText(`Message envoyé à ${CONTACT_EMAIL}.`)).toBeInTheDocument();
+    });
+
+    const fallbackCall = fetchMock.mock.calls.find(([url]) =>
+      String(url).startsWith(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`),
+    );
+    const fallbackOptions = fallbackCall?.[1] as RequestInit | undefined;
+    const fallbackBody = fallbackOptions?.body ? JSON.parse(String(fallbackOptions.body)) : {};
+
+    await waitFor(() => {
+      expect(fallbackBody).toMatchObject({
+        Nom: "QA Fallback",
+        "Téléphone": "0123456789",
+        Email: "qa-fallback@example.com",
+        Sujet: "Test fallback",
+        _subject: "Nouveau message du formulaire - Taxi Le Havre",
+      });
     });
 
     fetchMock.mockRestore();

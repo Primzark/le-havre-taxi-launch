@@ -140,11 +140,11 @@ const sendViaFormSubmitFallback = async (payload: ContactPayload, signal: AbortS
       Accept: "application/json",
     },
     body: JSON.stringify({
-      name: payload.name,
-      phone: payload.phone,
-      email: payload.email,
-      subject: payload.subject,
-      message: payload.message,
+      Nom: payload.name,
+      "Téléphone": payload.phone || "Non renseigné",
+      Email: payload.email,
+      Sujet: payload.subject,
+      Message: payload.message,
       _subject: payload._subject,
       _template: payload._template,
       _captcha: payload._captcha,
@@ -309,7 +309,7 @@ const Contact = () => {
       email: String(formData.get("email") || "").trim(),
       subject: String(formData.get("subject") || "").trim(),
       message: String(formData.get("message") || "").trim(),
-      _subject: "Nouveau message - Taxi Le Havre",
+      _subject: "Nouveau message du formulaire - Taxi Le Havre",
       _template: "table",
       _captcha: "false",
     };
@@ -398,13 +398,11 @@ const Contact = () => {
         throw new Error(lastError || "Contact API request failed");
       }
 
-      const deliveryMessage = result.delivered
-        ? `Votre message a été transmis à ${result.recipient ?? CONTACT_EMAIL}.`
-        : `Votre message a été enregistré. Il sera transmis à ${result.recipient ?? CONTACT_EMAIL} dès que possible.`;
+      const deliveryMessage = `Message envoyé à ${CONTACT_EMAIL}.`;
 
       toast({
         title: "Message envoyé",
-        description: `${deliveryMessage} (${result.provider ?? "mail"})`,
+        description: deliveryMessage,
       });
 
       setFeedback({ type: "success", message: deliveryMessage });
@@ -423,10 +421,10 @@ const Contact = () => {
         try {
           await sendViaFormSubmitFallback(payload, abortController.signal);
 
-          const fallbackMessage = `Votre message a été transmis à ${CONTACT_EMAIL} via la passerelle de secours.`;
+          const fallbackMessage = `Message envoyé à ${CONTACT_EMAIL}.`;
           toast({
             title: "Message envoyé",
-            description: `${fallbackMessage} (formsubmit)`,
+            description: fallbackMessage,
           });
           setFeedback({ type: "success", message: fallbackMessage });
           form.reset();
