@@ -38,6 +38,22 @@ const distanceInKm = (fromLat: number, fromLng: number, toLat: number, toLng: nu
   return earthRadius * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 };
 
+const buildContactApiCandidates = (): string[] => {
+  const candidates = new Set<string>([CONTACT_API_URL]);
+
+  if (typeof window !== "undefined") {
+    const segments = window.location.pathname.split("/").filter(Boolean);
+
+    for (let i = segments.length; i >= 0; i -= 1) {
+      const prefix = segments.slice(0, i).join("/");
+      const candidate = `${prefix ? `/${prefix}` : ""}/api/contact.php`;
+      candidates.add(candidate);
+    }
+  }
+
+  return Array.from(candidates);
+};
+
 const Contact = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -204,26 +220,66 @@ const Contact = () => {
     const timeout = window.setTimeout(() => abortController.abort(), 12000);
 
     try {
-      const response = await fetch(CONTACT_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-        signal: abortController.signal,
-      });
-
-      const result = (await response.json().catch(() => ({}))) as {
+      const apiCandidates = buildContactApiCandidates();
+      let result: {
         success?: boolean;
         recipient?: string;
         delivered?: boolean;
         provider?: string;
         error?: string;
-      };
+      } = {};
+      let response: Response | null = null;
+      let lastError: string | null = null;
 
-      if (!response.ok || result?.success !== true) {
-        throw new Error(result?.error || "Contact API request failed");
+      for (const apiUrl of apiCandidates) {
+        try {
+          const attempt = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(payload),
+            signal: abortController.signal,
+          });
+          const parsed = (await attempt.json().catch(() => ({}))) as {
+            success?: boolean;
+            recipient?: string;
+            delivered?: boolean;
+            provider?: string;
+            error?: string;
+          };
+
+          if (attempt.ok && parsed.success === true) {
+            response = attempt;
+            result = parsed;
+            break;
+          }
+
+          if (parsed.success === false) {
+            throw new Error(parsed.error || `Contact API request failed (${attempt.status})`);
+          }
+
+          if (attempt.status !== 404) {
+            // Some hosting setups rewrite unknown paths to index.html (HTTP 200).
+            // Keep trying candidates until we hit the real API endpoint.
+            if (attempt.ok && parsed.success === undefined && !parsed.error) {
+              lastError = `Contact API not found at ${apiUrl}`;
+              continue;
+            }
+
+            throw new Error(parsed.error || `Contact API request failed (${attempt.status})`);
+          }
+
+          lastError = parsed.error || `Contact API not found at ${apiUrl}`;
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Contact API request failed";
+          lastError = message;
+        }
+      }
+
+      if (!response || result.success !== true) {
+        throw new Error(lastError || "Contact API request failed");
       }
 
       const deliveryMessage = result.delivered
@@ -237,22 +293,17 @@ const Contact = () => {
 
       setFeedback({ type: "success", message: deliveryMessage });
       form.reset();
-    } catch {
-      const mailtoSubject = encodeURIComponent(`Nouveau message - ${payload.subject}`);
-      const mailtoBody = encodeURIComponent(
-        `Nom: ${payload.name}\nTéléphone: ${payload.phone}\nEmail: ${payload.email}\n\nMessage:\n${payload.message}`,
-      );
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`;
-
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur réseau pendant l'envoi.";
       toast({
-        title: "Ouverture de votre messagerie",
-        description: `L'envoi direct a échoué. Votre client mail a été ouvert vers ${CONTACT_EMAIL}.`,
+        title: "Envoi impossible",
+        description: `Le message n'a pas pu être transmis automatiquement. ${errorMessage}`,
         variant: "destructive",
       });
 
       setFeedback({
         type: "error",
-        message: `Envoi direct indisponible. Votre messagerie locale s'est ouverte vers ${CONTACT_EMAIL}.`,
+        message: `Envoi direct indisponible. Vérifiez la configuration de l'API contact puis réessayez.`,
       });
     } finally {
       window.clearTimeout(timeout);

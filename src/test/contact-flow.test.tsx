@@ -44,4 +44,55 @@ describe("Contact page", () => {
 
     fetchMock.mockRestore();
   }, 15000);
+
+  it("resolves contact API when hosted in a subdirectory", async () => {
+    window.history.pushState({}, "", "/TaxiWebsite/le-havre-taxi-launch/contact");
+
+    const fetchMock = vi.spyOn(global, "fetch").mockImplementation(async (input) => {
+      const url = String(input);
+      if (url === "/TaxiWebsite/le-havre-taxi-launch/api/contact.php") {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ success: true, recipient: "starlod7696@gmail.com", delivered: true, provider: "mail" }),
+        } as unknown as Response;
+      }
+
+      return {
+        ok: false,
+        status: 404,
+        json: async () => ({ success: false, error: "Not found" }),
+      } as unknown as Response;
+    });
+
+    render(
+      <MemoryRouter>
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByLabelText(/Nom \*/i), { target: { value: "QA Subdir" } });
+    fireEvent.change(screen.getByLabelText(/Téléphone/i), { target: { value: "0123456789" } });
+    fireEvent.change(screen.getByLabelText(/Email \*/i), { target: { value: "qa-subdir@example.com" } });
+    fireEvent.change(screen.getByLabelText(/Sujet \*/i), { target: { value: "Test sous-dossier" } });
+    fireEvent.change(screen.getByLabelText(/Message \*/i), {
+      target: { value: "Ceci est un message de test suffisamment long en mode sous-dossier." },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /Envoyer le message/i }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/TaxiWebsite/le-havre-taxi-launch/api/contact.php",
+        expect.objectContaining({ method: "POST", headers: expect.any(Object), body: expect.any(String) }),
+      );
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Votre message a été transmis/i)).toBeInTheDocument();
+    });
+
+    fetchMock.mockRestore();
+    window.history.pushState({}, "", "/");
+  }, 15000);
 });
