@@ -360,7 +360,7 @@ const Tarifs = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="courses" className="mt-6 space-y-6">
+              <TabsContent value="courses" className="mt-6 space-y-6 overflow-x-hidden">
                 <div className="grid gap-6 xl:grid-cols-[1fr_1.15fr]">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -389,11 +389,11 @@ const Tarifs = () => {
                           }`}
                         >
                           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-                            <div>
-                              <p className="text-sm font-semibold">
+                            <div className="min-w-0">
+                              <p className="break-words text-sm font-semibold">
                                 {fare.from} <span className="text-muted-foreground">→</span> {fare.to}
                               </p>
-                              <p className="mt-1 text-xs text-muted-foreground">{fare.note}</p>
+                              <p className="mt-1 break-words text-xs text-muted-foreground">{fare.note}</p>
                             </div>
                             <p className="font-heading text-lg font-bold text-primary sm:text-xl">
                               {formatEuro(fare.basePrice)}
@@ -418,7 +418,7 @@ const Tarifs = () => {
                   </div>
 
                   <div className="rounded-xl border bg-background/70 p-4 shadow-sm md:p-5">
-                    <div className="flex items-center justify-between gap-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="inline-flex items-center gap-2 text-sm font-semibold">
                         <Sparkles className="h-4 w-4 text-primary" />
                         Estimateur en direct
@@ -434,7 +434,7 @@ const Tarifs = () => {
                           Itinéraire
                         </label>
                         <Select value={selectedRouteId} onValueChange={setSelectedRouteId}>
-                          <SelectTrigger>
+                          <SelectTrigger className="max-w-full">
                             <SelectValue placeholder="Choisir un trajet" />
                           </SelectTrigger>
                           <SelectContent>
@@ -452,7 +452,7 @@ const Tarifs = () => {
                           Bagages
                         </label>
                         <Select value={luggageId} onValueChange={setLuggageId}>
-                          <SelectTrigger>
+                          <SelectTrigger className="max-w-full">
                             <SelectValue placeholder="Volume bagages" />
                           </SelectTrigger>
                           <SelectContent>
@@ -575,7 +575,7 @@ const Tarifs = () => {
                         </div>
                       </div>
 
-                      <Button asChild className="mt-4 w-full">
+                      <Button asChild className="mt-4 h-auto w-full whitespace-normal py-3 text-center leading-snug">
                         <a href="tel:+33235250101">Valider cette estimation par téléphone</a>
                       </Button>
                     </div>
