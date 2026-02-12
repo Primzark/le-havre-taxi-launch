@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 require_once __DIR__ . "/bootstrap.php";
 
-if ($_SERVER["REQUEST_METHOD"] === "GET") {
+$method = $_SERVER["REQUEST_METHOD"] ?? "GET";
+
+if ($method === "GET") {
     json_response([
         "success" => true,
         "recipient" => get_contact_email(),
@@ -11,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     ]);
 }
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+if ($method !== "POST") {
     json_response(["success" => false, "error" => "Method not allowed"], 405);
 }
 

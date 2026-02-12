@@ -13,7 +13,17 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { resolveMenuSearch } from "@/utils/menu-search";
 
-const navLinks = [
+type NavLinkItem = {
+  to: string;
+  label: string;
+};
+
+type SocialLinkItem = {
+  href: string;
+  label: string;
+};
+
+const navLinks: NavLinkItem[] = [
   { to: "/", label: "Accueil" },
   { to: "/services", label: "Services" },
   { to: "/circuits-touristiques", label: "Circuits touristiques" },
@@ -23,6 +33,13 @@ const navLinks = [
   { to: "/actus", label: "Actus" },
   { to: "/contact", label: "Contact" },
 ];
+
+const socialLinks: SocialLinkItem[] = [
+  { href: INSTAGRAM_URL, label: "Instagram" },
+  { href: FACEBOOK_URL, label: "Facebook" },
+];
+
+const menuSearchPlaceholder = "Service, tarif, station ou circuit";
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -37,6 +54,18 @@ const Header = () => {
 
   const isActiveLink = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
+
+  const getNavLinkClassName = (to: string, isMobile: boolean) => {
+    const sharedStateClass = isActiveLink(to)
+      ? "bg-accent text-accent-foreground"
+      : "text-muted-foreground hover:text-foreground hover:bg-muted";
+
+    if (isMobile) {
+      return `block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${sharedStateClass}`;
+    }
+
+    return `px-2.5 py-2 rounded-md text-[13px] 2xl:text-sm font-medium whitespace-nowrap transition-colors ${sharedStateClass}`;
+  };
 
   const handleMenuSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -73,8 +102,17 @@ const Header = () => {
             <span className="truncate">Centrale de réservation : {CONTACT_PHONE_DISPLAY}</span>
           </a>
           <div className="hidden lg:flex items-center gap-4 shrink-0">
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Instagram</a>
-            <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Facebook</a>
+            {socialLinks.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:opacity-80"
+              >
+                {social.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -100,11 +138,7 @@ const Header = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-2.5 py-2 rounded-md text-[13px] 2xl:text-sm font-medium whitespace-nowrap transition-colors ${
-                  isActiveLink(link.to)
-                    ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+                className={getNavLinkClassName(link.to, false)}
               >
                 {link.label}
               </Link>
@@ -120,7 +154,7 @@ const Header = () => {
                 type="search"
                 value={menuQuery}
                 onChange={(event) => setMenuQuery(event.target.value)}
-                placeholder="Service, tarif, station ou circuit"
+                placeholder={menuSearchPlaceholder}
                 className="h-9 pl-9"
               />
             </div>
@@ -145,7 +179,7 @@ const Header = () => {
           {/* Mobile toggle */}
           <button
             className="ml-auto md:ml-0 xl:hidden p-2 rounded-md hover:bg-muted transition shrink-0"
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => setMobileOpen((isOpen) => !isOpen)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
@@ -167,7 +201,7 @@ const Header = () => {
                     type="search"
                     value={menuQuery}
                     onChange={(event) => setMenuQuery(event.target.value)}
-                    placeholder="Service, tarif, station ou circuit"
+                    placeholder={menuSearchPlaceholder}
                     className="h-10 pl-9"
                   />
                 </div>
@@ -180,11 +214,7 @@ const Header = () => {
                     key={link.to}
                     to={link.to}
                     onClick={() => setMobileOpen(false)}
-                    className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-                      isActiveLink(link.to)
-                        ? "bg-accent text-accent-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                    }`}
+                    className={getNavLinkClassName(link.to, true)}
                   >
                     {link.label}
                   </Link>

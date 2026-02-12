@@ -28,7 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { toursData } from "@/data/tours";
 import { useSEO } from "@/hooks/use-seo";
-import { PRIMARY_DOMAIN } from "@/config/site";
+import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_LINK, PRIMARY_DOMAIN } from "@/config/site";
 
 type QuickFare = {
   id: string;
@@ -42,6 +42,23 @@ type QuickFare = {
 type PeriodMode = "jour" | "nuit";
 type DurationFilter = "all" | "express" | "demi-journee" | "journee" | "grand-format";
 type TourSortMode = "price-asc" | "price-desc" | "duration-asc";
+type Tour = (typeof toursData)[number];
+
+type LuggageOption = {
+  id: string;
+  label: string;
+  fee: number;
+};
+
+type FareEstimate = {
+  base: number;
+  stopFee: number;
+  waitingFee: number;
+  luggageFee: number;
+  subtotal: number;
+  min: number;
+  max: number;
+};
 
 const quickFares: QuickFare[] = [
   {
@@ -83,7 +100,7 @@ const periodConfig: Record<PeriodMode, { label: string; multiplier: number; help
   },
 };
 
-const luggageOptions = [
+const luggageOptions: LuggageOption[] = [
   { id: "light", label: "0 à 1 bagage", fee: 0 },
   { id: "standard", label: "2 bagages", fee: 3 },
   { id: "large", label: "3 bagages ou plus", fee: 7 },
@@ -130,6 +147,110 @@ const parseDurationHours = (duration: string) => {
   return hours + minutes / 60;
 };
 
+const getQuickFareById = (routeId: string): QuickFare =>
+  quickFares.find((route) => route.id === routeId) ?? quickFares[0];
+
+const getLuggageOptionById = (luggageId: string): LuggageOption =>
+  luggageOptions.find((option) => option.id === luggageId) ?? luggageOptions[0];
+
+const matchesDurationFilter = (duration: string, filter: DurationFilter) => {
+  const hours = parseDurationHours(duration);
+
+  switch (filter) {
+    case "express":
+      return hours <= 3;
+    case "demi-journee":
+      return hours > 3 && hours <= 6;
+    case "journee":
+      return hours > 6 && hours <= 8;
+    case "grand-format":
+      return hours > 8;
+    case "all":
+    default:
+      return true;
+  }
+};
+
+const sortTours = (a: Tour, b: Tour, sortMode: TourSortMode) => {
+  if (sortMode === "price-desc") {
+    return b.price - a.price;
+  }
+
+  if (sortMode === "duration-asc") {
+    return parseDurationHours(a.duration) - parseDurationHours(b.duration);
+  }
+
+  return a.price - b.price;
+};
+
+const getFilteredTours = ({
+  maxBudget,
+  durationFilter,
+  query,
+  sortMode,
+}: {
+  maxBudget: number;
+  durationFilter: DurationFilter;
+  query: string;
+  sortMode: TourSortMode;
+}) => {
+  const normalizedQuery = query.trim().toLowerCase();
+
+  return toursData
+    .filter((tour) => tour.price <= maxBudget)
+    .filter((tour) => matchesDurationFilter(tour.duration, durationFilter))
+    .filter((tour) =>
+      normalizedQuery ? `n°${tour.id} ${tour.name}`.toLowerCase().includes(normalizedQuery) : true,
+    )
+    .sort((a, b) => sortTours(a, b, sortMode));
+};
+
+const getFareEstimate = ({
+  basePrice,
+  mode,
+  stopCount,
+  waitMinutes,
+  luggageFee,
+}: {
+  basePrice: number;
+  mode: PeriodMode;
+  stopCount: number;
+  waitMinutes: number;
+  luggageFee: number;
+}): FareEstimate => {
+  const periodMultiplier = periodConfig[mode].multiplier;
+  const base = basePrice * periodMultiplier;
+  const stopFee = stopCount * 4;
+  const waitingFee = Math.ceil(waitMinutes / 5) * 2;
+  const subtotal = base + stopFee + waitingFee + luggageFee;
+  const min = Math.max(basePrice, subtotal - 4);
+  const max = subtotal + (mode === "nuit" ? 10 : 7);
+
+  return {
+    base,
+    stopFee,
+    waitingFee,
+    luggageFee,
+    subtotal,
+    min,
+    max,
+  };
+};
+
+const getAveragePrice = (tours: Tour[]) =>
+  tours.length > 0 ? tours.reduce((total, tour) => total + tour.price, 0) / tours.length : 0;
+
+const getShortestTour = (tours: Tour[]) =>
+  tours.reduce<Tour | null>((shortest, current) => {
+    if (!shortest) {
+      return current;
+    }
+
+    return parseDurationHours(current.duration) < parseDurationHours(shortest.duration)
+      ? current
+      : shortest;
+  }, null);
+
 const Tarifs = () => {
   const [selectedRouteId, setSelectedRouteId] = useState(quickFares[0].id);
   const [periodMode, setPeriodMode] = useState<PeriodMode>("jour");
@@ -143,87 +264,36 @@ const Tarifs = () => {
   const [durationFilter, setDurationFilter] = useState<DurationFilter>("all");
   const [tourSortMode, setTourSortMode] = useState<TourSortMode>("price-asc");
 
-  const selectedRoute = useMemo(
-    () => quickFares.find((route) => route.id === selectedRouteId) ?? quickFares[0],
-    [selectedRouteId],
-  );
+  const stopCount = stops[0];
+  const waitMinutes = waitingMinutes[0];
+  const passengerCount = passengers[0];
+  const maxBudgetValue = maxBudget[0];
 
-  const selectedLuggage =
-    luggageOptions.find((option) => option.id === luggageId) ?? luggageOptions[0];
+  const selectedRoute = useMemo(() => getQuickFareById(selectedRouteId), [selectedRouteId]);
+
+  const selectedLuggage = useMemo(() => getLuggageOptionById(luggageId), [luggageId]);
 
   const estimate = useMemo(() => {
-    const periodMultiplier = periodConfig[periodMode].multiplier;
-    const base = selectedRoute.basePrice * periodMultiplier;
-    const stopFee = stops[0] * 4;
-    const waitingFee = Math.ceil(waitingMinutes[0] / 5) * 2;
-    const luggageFee = selectedLuggage.fee;
-    const subtotal = base + stopFee + waitingFee + luggageFee;
-    const min = Math.max(selectedRoute.basePrice, subtotal - 4);
-    const max = subtotal + (periodMode === "nuit" ? 10 : 7);
-
-    return {
-      base,
-      stopFee,
-      waitingFee,
-      luggageFee,
-      subtotal,
-      min,
-      max,
-    };
-  }, [selectedLuggage.fee, selectedRoute.basePrice, periodMode, stops, waitingMinutes]);
+    return getFareEstimate({
+      basePrice: selectedRoute.basePrice,
+      mode: periodMode,
+      stopCount,
+      waitMinutes,
+      luggageFee: selectedLuggage.fee,
+    });
+  }, [periodMode, selectedLuggage.fee, selectedRoute.basePrice, stopCount, waitMinutes]);
 
   const filteredTours = useMemo(() => {
-    const normalizedQuery = tourQuery.trim().toLowerCase();
-
-    const matchesDuration = (duration: string) => {
-      const hours = parseDurationHours(duration);
-
-      switch (durationFilter) {
-        case "express":
-          return hours <= 3;
-        case "demi-journee":
-          return hours > 3 && hours <= 6;
-        case "journee":
-          return hours > 6 && hours <= 8;
-        case "grand-format":
-          return hours > 8;
-        case "all":
-        default:
-          return true;
-      }
-    };
-
-    const tours = toursData
-      .filter((tour) => tour.price <= maxBudget[0])
-      .filter((tour) => matchesDuration(tour.duration))
-      .filter((tour) =>
-        normalizedQuery ? `n°${tour.id} ${tour.name}`.toLowerCase().includes(normalizedQuery) : true,
-      );
-
-    return tours.sort((a, b) => {
-      if (tourSortMode === "price-desc") {
-        return b.price - a.price;
-      }
-
-      if (tourSortMode === "duration-asc") {
-        return parseDurationHours(a.duration) - parseDurationHours(b.duration);
-      }
-
-      return a.price - b.price;
+    return getFilteredTours({
+      maxBudget: maxBudgetValue,
+      durationFilter,
+      query: tourQuery,
+      sortMode: tourSortMode,
     });
-  }, [durationFilter, maxBudget, tourQuery, tourSortMode]);
+  }, [durationFilter, maxBudgetValue, tourQuery, tourSortMode]);
 
-  const filteredAveragePrice =
-    filteredTours.length > 0
-      ? filteredTours.reduce((total, tour) => total + tour.price, 0) / filteredTours.length
-      : 0;
-
-  const shortestFilteredTour =
-    filteredTours.length > 0
-      ? [...filteredTours].sort(
-          (a, b) => parseDurationHours(a.duration) - parseDurationHours(b.duration),
-        )[0]
-      : null;
+  const filteredAveragePrice = useMemo(() => getAveragePrice(filteredTours), [filteredTours]);
+  const shortestFilteredTour = useMemo(() => getShortestTour(filteredTours), [filteredTours]);
 
   useSEO({
     title: "Tarifs et estimation",
@@ -321,7 +391,7 @@ const Tarifs = () => {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Button asChild size="lg" className="w-full bg-white text-primary hover:bg-white/90 sm:w-auto">
-              <a href="tel:+33235250101">
+              <a href={`tel:${CONTACT_PHONE_LINK}`}>
                 <Phone className="h-4 w-4" />
                 Réserver immédiatement
               </a>
@@ -495,7 +565,7 @@ const Tarifs = () => {
                       <div>
                         <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
                           <span>Arrêts intermédiaires</span>
-                          <span>{stops[0]}</span>
+                          <span>{stopCount}</span>
                         </div>
                         <Slider
                           value={stops}
@@ -510,7 +580,7 @@ const Tarifs = () => {
                       <div>
                         <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
                           <span>Temps d'attente</span>
-                          <span>{waitingMinutes[0]} min</span>
+                          <span>{waitMinutes} min</span>
                         </div>
                         <Slider
                           value={waitingMinutes}
@@ -525,7 +595,7 @@ const Tarifs = () => {
                       <div>
                         <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
                           <span>Passagers</span>
-                          <span>{passengers[0]} / 4</span>
+                          <span>{passengerCount} / 4</span>
                         </div>
                         <Slider
                           value={passengers}
@@ -569,14 +639,14 @@ const Tarifs = () => {
                         <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 font-semibold">
                           <span className="inline-flex items-center gap-1.5">
                             <Users className="h-4 w-4 text-primary" />
-                            {passengers[0]} passager{passengers[0] > 1 ? "s" : ""}
+                            {passengerCount} passager{passengerCount > 1 ? "s" : ""}
                           </span>
                           <span>1 à 4 inclus</span>
                         </div>
                       </div>
 
                       <Button asChild className="mt-4 h-auto w-full whitespace-normal py-3 text-center leading-snug">
-                        <a href="tel:+33235250101">Valider cette estimation par téléphone</a>
+                        <a href={`tel:${CONTACT_PHONE_LINK}`}>Valider cette estimation par téléphone</a>
                       </Button>
                     </div>
                   </div>
@@ -616,7 +686,7 @@ const Tarifs = () => {
                       Budget maximum
                     </p>
                     <p className="font-heading text-lg font-bold text-primary">
-                      {formatEuro(maxBudget[0])}
+                      {formatEuro(maxBudgetValue)}
                     </p>
                   </div>
                   <Slider
@@ -775,8 +845,11 @@ const Tarifs = () => {
               </p>
               <p className="mt-2">
                 Pour un chiffrage précis, appelez le{" "}
-                <a className="font-semibold text-primary underline-offset-2 hover:underline" href="tel:+33235250101">
-                  02 35 25 01 01
+                <a
+                  className="font-semibold text-primary underline-offset-2 hover:underline"
+                  href={`tel:${CONTACT_PHONE_LINK}`}
+                >
+                  {CONTACT_PHONE_DISPLAY}
                 </a>
                 .
               </p>

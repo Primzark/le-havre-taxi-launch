@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
+import { CONTACT_PHONE_DISPLAY } from "@/config/site";
 import { useSEO } from "@/hooks/use-seo";
 
 const PolitiqueConfidentialite = () => {
@@ -37,7 +38,7 @@ const PolitiqueConfidentialite = () => {
           <p className="text-muted-foreground mb-6">
             Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès,
             de rectification, de suppression et de portabilité de vos données. Pour exercer ces droits,
-            contactez-nous au 02 35 25 01 01 ou via notre formulaire de contact.
+            contactez-nous au {CONTACT_PHONE_DISPLAY} ou via notre formulaire de contact.
           </p>
 
           <h2 className="font-heading font-bold text-xl mb-4">Cookies</h2>

@@ -90,6 +90,46 @@ function try_delete_uploaded_image(string $imagePath): void
     }
 }
 
+/**
+ * @param array<string, mixed> $payload
+ * @param array<string, mixed> $fallback
+ * @return array{title: string, image: string, sourceUrl: string, sourceName: string}
+ */
+function extract_news_fields(array $payload, array $fallback = []): array
+{
+    $title = sanitize_text((string) ($payload["title"] ?? ($fallback["title"] ?? "")), 160);
+    $image = sanitize_text((string) ($payload["image"] ?? ($fallback["image"] ?? "")), 500);
+    $sourceUrl = sanitize_text((string) ($payload["sourceUrl"] ?? ($fallback["sourceUrl"] ?? "")), 500);
+    $sourceName = normalize_source_name(
+        sanitize_text((string) ($payload["sourceName"] ?? ($fallback["sourceName"] ?? "Instagram")), 30)
+    );
+
+    return [
+        "title" => $title,
+        "image" => $image,
+        "sourceUrl" => $sourceUrl,
+        "sourceName" => $sourceName,
+    ];
+}
+
+/**
+ * @param array{title: string, image: string, sourceUrl: string, sourceName: string} $fields
+ */
+function validate_news_fields(array $fields): void
+{
+    if ($fields["title"] === "" || $fields["image"] === "" || $fields["sourceUrl"] === "") {
+        json_response(["success" => false, "error" => "Missing required fields"], 422);
+    }
+
+    if (!is_valid_news_image_reference($fields["image"])) {
+        json_response(["success" => false, "error" => "Invalid image reference"], 422);
+    }
+
+    if (!is_valid_http_url($fields["sourceUrl"])) {
+        json_response(["success" => false, "error" => "Invalid source URL"], 422);
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     json_response([
         "success" => true,
@@ -108,29 +148,15 @@ $payload = get_request_payload();
 $items = read_news($paths["news"]);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $title = sanitize_text((string) ($payload["title"] ?? ""), 160);
-    $image = sanitize_text((string) ($payload["image"] ?? ""), 500);
-    $sourceUrl = sanitize_text((string) ($payload["sourceUrl"] ?? ""), 500);
-    $sourceName = normalize_source_name(sanitize_text((string) ($payload["sourceName"] ?? "Instagram"), 30));
-
-    if ($title === "" || $image === "" || $sourceUrl === "") {
-        json_response(["success" => false, "error" => "Missing required fields"], 422);
-    }
-
-    if (!is_valid_news_image_reference($image)) {
-        json_response(["success" => false, "error" => "Invalid image reference"], 422);
-    }
-
-    if (!is_valid_http_url($sourceUrl)) {
-        json_response(["success" => false, "error" => "Invalid source URL"], 422);
-    }
+    $fields = extract_news_fields($payload);
+    validate_news_fields($fields);
 
     $item = [
         "id" => "manual-" . bin2hex(random_bytes(6)),
-        "title" => $title,
-        "image" => $image,
-        "sourceUrl" => $sourceUrl,
-        "sourceName" => $sourceName,
+        "title" => $fields["title"],
+        "image" => $fields["image"],
+        "sourceUrl" => $fields["sourceUrl"],
+        "sourceName" => $fields["sourceName"],
         "created_at" => gmdate("c"),
     ];
 
@@ -190,27 +216,13 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT") {
 
         $found = true;
 
-        $title = sanitize_text((string) ($payload["title"] ?? (string) ($item["title"] ?? "")), 160);
-        $image = sanitize_text((string) ($payload["image"] ?? (string) ($item["image"] ?? "")), 500);
-        $sourceUrl = sanitize_text((string) ($payload["sourceUrl"] ?? (string) ($item["sourceUrl"] ?? "")), 500);
-        $sourceName = normalize_source_name(sanitize_text((string) ($payload["sourceName"] ?? (string) ($item["sourceName"] ?? "Instagram")), 30));
+        $fields = extract_news_fields($payload, $item);
+        validate_news_fields($fields);
 
-        if ($title === "" || $image === "" || $sourceUrl === "") {
-            json_response(["success" => false, "error" => "Missing required fields"], 422);
-        }
-
-        if (!is_valid_news_image_reference($image)) {
-            json_response(["success" => false, "error" => "Invalid image reference"], 422);
-        }
-
-        if (!is_valid_http_url($sourceUrl)) {
-            json_response(["success" => false, "error" => "Invalid source URL"], 422);
-        }
-
-        $item["title"] = $title;
-        $item["image"] = $image;
-        $item["sourceUrl"] = $sourceUrl;
-        $item["sourceName"] = $sourceName;
+        $item["title"] = $fields["title"];
+        $item["image"] = $fields["image"];
+        $item["sourceUrl"] = $fields["sourceUrl"];
+        $item["sourceName"] = $fields["sourceName"];
         $updated[] = $item;
     }
 

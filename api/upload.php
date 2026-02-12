@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 require_once __DIR__ . "/bootstrap.php";
 
-if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+$method = $_SERVER["REQUEST_METHOD"] ?? "GET";
+
+if ($method === "OPTIONS") {
     json_response(["success" => true]);
 }
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+if ($method !== "POST") {
     json_response(["success" => false, "error" => "Method not allowed"], 405);
 }
 

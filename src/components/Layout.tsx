@@ -7,24 +7,28 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+const scrollRevealBlockedPrefixes = ["/services", "/contact", "/actus"] as const;
+
+const scrollRevealAllowedExactPaths = new Set([
+  "/",
+  "/entreprise",
+  "/devenir-taxi",
+  "/tarifs",
+  "/mentions-legales",
+  "/politique-confidentialite",
+  "/liens",
+]);
+
+const scrollRevealAllowedPrefixes = ["/circuits-touristiques"] as const;
+
 const isScrollRevealSafePath = (pathname: string): boolean => {
-  if (
-    pathname.startsWith("/services")
-    || pathname.startsWith("/contact")
-    || pathname.startsWith("/actus")
-  ) {
+  if (scrollRevealBlockedPrefixes.some((prefix) => pathname.startsWith(prefix))) {
     return false;
   }
 
   return (
-    pathname === "/"
-    || pathname === "/entreprise"
-    || pathname === "/devenir-taxi"
-    || pathname === "/tarifs"
-    || pathname.startsWith("/circuits-touristiques")
-    || pathname === "/mentions-legales"
-    || pathname === "/politique-confidentialite"
-    || pathname === "/liens"
+    scrollRevealAllowedExactPaths.has(pathname)
+    || scrollRevealAllowedPrefixes.some((prefix) => pathname.startsWith(prefix))
   );
 };
 
