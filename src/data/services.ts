@@ -14,6 +14,8 @@ export type ServiceDefinition = {
   slug: string;
   title: string;
   icon: LucideIcon;
+  imageSrc: string;
+  imageAlt: string;
   shortDescription: string;
   heroSubtitle: string;
   seoDescription: string;
@@ -27,6 +29,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "navette-aeroport",
     title: "Navette Aéroport",
     icon: Plane,
+    imageSrc: "/images/services/navette-aeroport.jpg",
+    imageAlt: "Passager avec ses bagages devant un taxi pour un transfert aeroport.",
     shortDescription: "Transferts vers les aeroports et gares, avec prise en charge ponctuelle au depart comme a l'arrivee.",
     heroSubtitle: "Depart ou arrivee, nous coordonnons vos transferts aeroport et gare 24h/24.",
     seoDescription: "Service de navette aeroport au Havre pour vos transferts vers gares, Deauville, Orly et CDG.",
@@ -45,6 +49,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "mariage",
     title: "Mariage",
     icon: Heart,
+    imageSrc: "/images/services/mariage.jpg",
+    imageAlt: "Couple de maries pres d'un vehicule pour un transport mariage.",
     shortDescription: "Mise a disposition de taxis pour maries, familles et invites, avec organisation des trajets de la journee.",
     heroSubtitle: "Un service mariage fiable pour securiser les deplacements de vos invites.",
     seoDescription: "Service taxi mariage au Havre pour maries et invites, avec navettes planifiees.",
@@ -63,6 +69,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "navette-transport-sanitaire",
     title: "Transport Sanitaire",
     icon: Stethoscope,
+    imageSrc: "/images/services/transport-sanitaire.jpg",
+    imageAlt: "Equipe medicale en intervention pour illustrer le transport sanitaire assis.",
     shortDescription: "Trajets assis vers consultations, examens ou hospitalisations, en toute serenite.",
     heroSubtitle: "Un accompagnement fiable pour vos deplacements medicaux assis.",
     seoDescription: "Transport sanitaire assis au Havre pour rendez-vous medicaux, examens et retours a domicile.",
@@ -81,6 +89,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "navette-classe-affaire",
     title: "Classe Affaire",
     icon: Briefcase,
+    imageSrc: "/images/services/classe-affaire.jpg",
+    imageAlt: "Passager en tenue professionnelle lors d'un transfert classe affaire.",
     shortDescription: "Transport premium pour vos rendez-vous professionnels, avec discretion et ponctualite.",
     heroSubtitle: "Un service professionnel pour vos deplacements business au Havre et en Normandie.",
     seoDescription: "Service taxi classe affaire au Havre pour clients business et transferts professionnels.",
@@ -99,6 +109,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "navette-transport-scolaire",
     title: "Transport scolaire",
     icon: GraduationCap,
+    imageSrc: "/images/services/transport-scolaire.jpg",
+    imageAlt: "Enfant en tenue scolaire pour illustrer les trajets d'ecole.",
     shortDescription: "Trajets reguliers pour eleves et etudiants, avec un service encadre et ponctuel.",
     heroSubtitle: "Des deplacements scolaires organises et fiables au quotidien.",
     seoDescription: "Service taxi transport scolaire au Havre pour trajets reguliers et ponctuels.",
@@ -117,6 +129,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "transport-professionnel-et-entreprise",
     title: "Transport professionnel et entreprise",
     icon: Briefcase,
+    imageSrc: "/images/services/transport-entreprise.jpg",
+    imageAlt: "Professionnel au telephone dans un taxi pour un deplacement d'entreprise.",
     shortDescription: "Service dedie aux entreprises pour deplacements collaborateurs, clients et partenaires.",
     heroSubtitle: "Une organisation transport pensee pour les besoins des entreprises.",
     seoDescription: "Transport professionnel et entreprise au Havre avec suivi, ponctualite et facturation dediee.",
@@ -135,6 +149,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "personne-a-mobilite-reduite",
     title: "Personne à mobilité réduite",
     icon: Accessibility,
+    imageSrc: "/images/services/pmr.jpg",
+    imageAlt: "Personne en fauteuil roulant attendant une prise en charge taxi PMR.",
     shortDescription: "Vehicules adaptes PMR et assistance pour des deplacements confortables et securises.",
     heroSubtitle: "Un service PMR dedie avec vehicules adaptes et assistance.",
     seoDescription: "Service taxi PMR au Havre pour personnes a mobilite reduite avec vehicules adaptes.",
@@ -153,6 +169,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "croisieres-port",
     title: "Croisieres et port",
     icon: Ship,
+    imageSrc: "/images/services/croisieres-port.jpg",
+    imageAlt: "Vue du port du Havre pour illustrer les transferts passagers croisiere.",
     shortDescription: "Prise en charge des passagers croisiere depuis et vers les terminaux du port du Havre.",
     heroSubtitle: "Transferts portuaires rapides pour les passagers en escale ou au depart.",
     seoDescription: "Service taxi port et croisieres au Havre avec prise en charge aux terminaux.",
@@ -170,6 +188,8 @@ export const servicesData: ServiceDefinition[] = [
     slug: "transport-groupes",
     title: "Transport de groupes",
     icon: Users,
+    imageSrc: "/images/services/transport-groupes.jpg",
+    imageAlt: "Station de taxis pour les deplacements en groupe au Havre.",
     shortDescription: "Deplacements de familles, equipes et groupes avec vehicules spacieux jusqu'a 8 passagers.",
     heroSubtitle: "Voyagez ensemble dans des vehicules adaptes aux petits groupes.",
     seoDescription: "Service taxi pour transport de groupes au Havre avec vehicules 6 a 8 places.",

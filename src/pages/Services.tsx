@@ -35,17 +35,28 @@ const Services = () => {
               <Link
                 key={service.slug}
                 to={`/services/${service.slug}`}
-                className="group bg-card rounded-xl p-6 border shadow-sm hover:shadow-md transition"
+                className="group overflow-hidden bg-card rounded-2xl border shadow-sm hover:shadow-lg transition"
               >
-                <div className="bg-accent rounded-lg p-3 w-fit mb-4">
-                  <service.icon className="h-6 w-6 text-accent-foreground" />
+                <div className="relative h-44 overflow-hidden">
+                  <img
+                    src={service.imageSrc}
+                    alt={service.imageAlt}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                  <div className="absolute left-4 top-4 bg-background/90 rounded-full p-2 shadow">
+                    <service.icon className="h-5 w-5 text-primary" />
+                  </div>
                 </div>
-                <h2 className="font-heading font-semibold text-lg mb-2">{service.title}</h2>
-                <p className="text-muted-foreground text-sm leading-relaxed">{service.shortDescription}</p>
-                <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary">
-                  Voir le service
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </span>
+                <div className="p-6">
+                  <h2 className="font-heading font-semibold text-lg mb-2">{service.title}</h2>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{service.shortDescription}</p>
+                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary">
+                    Voir le service
+                    <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
