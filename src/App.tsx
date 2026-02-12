@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigationType } from "react-router-dom";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import Tours from "./pages/Tours";
 import TourDetail from "./pages/TourDetail";
 import Tarifs from "./pages/Tarifs";
@@ -17,6 +18,7 @@ import Links from "./pages/Links";
 import MentionsLegales from "./pages/MentionsLegales";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import NotFound from "./pages/NotFound";
+import { serviceLegacyRedirects } from "./data/services";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +47,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/circuits-touristiques" element={<Tours />} />
           <Route path="/circuits-touristiques/:id" element={<TourDetail />} />
           <Route path="/tarifs" element={<Tarifs />} />
@@ -54,6 +57,9 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/nous-contact" element={<Navigate to="/" replace />} />
           <Route path="/nous-contacter" element={<Navigate to="/" replace />} />
+          {serviceLegacyRedirects.map((redirect) => (
+            <Route key={redirect.from} path={redirect.from} element={<Navigate to={redirect.to} replace />} />
+          ))}
           <Route path="/liens" element={<Links />} />
           <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />

@@ -1,7 +1,9 @@
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
-import { Car, Plane, Ship, Stethoscope, GraduationCap, Users, Briefcase } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Car } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
+import { servicesData } from "@/data/services";
 
 const vehicles = [
   "Berline (Peugeot 508, etc.)",
@@ -10,63 +12,41 @@ const vehicles = [
   "Vehicule adapte PMR",
 ];
 
-const services = [
-  {
-    icon: Stethoscope,
-    title: "Transport médical",
-    description: "Rendez-vous, hospitalisations ou retour a domicile : nous organisons vos trajets assis en toute tranquillite.",
-  },
-  {
-    icon: Plane,
-    title: "Transferts aéroport & gare",
-    description: "Depart ou arrivee : gares locales, aeroport de Deauville, Paris CDG et Orly.",
-  },
-  {
-    icon: Ship,
-    title: "Croisieres et port",
-    description:
-      "Nos chauffeurs habilites accedent aux terminaux du port du Havre pour une prise en charge directe au quai.",
-  },
-  {
-    icon: Briefcase,
-    title: "Transport professionnel",
-    description: "Rendez-vous clients, conventions, seminaires : un service fiable avec facturation entreprise.",
-  },
-  {
-    icon: Users,
-    title: "Transport de groupes",
-    description: "Famille, amis, equipes : des vehicules spacieux pour voyager ensemble, jusqu'a 8 passagers.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Événements & loisirs",
-    description: "Mariage, concert, match ou soiree : on vous depose et on vous recupere au bon moment.",
-  },
-];
-
 const Services = () => {
   useSEO({
     title: "Services",
-    description: "Transport medical, transferts gare et aeroport, prises en charge croisiere, trajets pros et transport de groupes.",
+    description:
+      "Services taxi au Havre : navette aeroport, transport sanitaire, classe affaire, scolaire, PMR, mariage et entreprise.",
     canonicalPath: "/services",
   });
 
   return (
     <Layout>
-      <PageHero title="Nos services" subtitle="Des solutions concretes pour vos trajets du quotidien comme pour les deplacements exceptionnels." />
+      <PageHero
+        title="Nos services"
+        subtitle="Retrouvez tous les services de Taxi Le Havre, avec une page detaillee pour chaque besoin."
+      />
 
       {/* Services grid */}
       <section className="py-16">
         <div className="container">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((s) => (
-              <div key={s.title} className="bg-card rounded-xl p-6 border shadow-sm hover:shadow-md transition">
+            {servicesData.map((service) => (
+              <Link
+                key={service.slug}
+                to={`/services/${service.slug}`}
+                className="group bg-card rounded-xl p-6 border shadow-sm hover:shadow-md transition"
+              >
                 <div className="bg-accent rounded-lg p-3 w-fit mb-4">
-                  <s.icon className="h-6 w-6 text-accent-foreground" />
+                  <service.icon className="h-6 w-6 text-accent-foreground" />
                 </div>
-                <h2 className="font-heading font-semibold text-lg mb-2">{s.title}</h2>
-                <p className="text-muted-foreground text-sm leading-relaxed">{s.description}</p>
-              </div>
+                <h2 className="font-heading font-semibold text-lg mb-2">{service.title}</h2>
+                <p className="text-muted-foreground text-sm leading-relaxed">{service.shortDescription}</p>
+                <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary">
+                  Voir le service
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </Link>
             ))}
           </div>
         </div>
