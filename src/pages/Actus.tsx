@@ -14,12 +14,14 @@ import {
   PRIMARY_DOMAIN,
 } from "@/config/site";
 
+type SocialSource = "Instagram" | "Facebook";
+
 type NewsCard = {
   id: string;
   title: string;
   image: string;
   sourceUrl: string;
-  sourceName: "Instagram" | "Facebook";
+  sourceName: SocialSource;
   created_at?: string;
 };
 
@@ -38,6 +40,16 @@ type NewsResponse = {
 };
 
 const STORAGE_KEY = "taxi-le-havre-news-cards";
+const JSON_ACCEPT_HEADERS = { Accept: "application/json" } as const;
+const JSON_REQUEST_HEADERS = {
+  "Content-Type": "application/json",
+  Accept: "application/json",
+} as const;
+
+const socialProfiles: Array<{ href: string; label: string }> = [
+  { href: INSTAGRAM_URL, label: "Instagram @lehavretaxi" },
+  { href: FACEBOOK_URL, label: "Facebook @taxilehavre" },
+];
 
 const defaultCards: NewsCard[] = [
   {
@@ -95,7 +107,7 @@ const Actus = () => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [sourceUrl, setSourceUrl] = useState(INSTAGRAM_URL);
-  const [sourceName, setSourceName] = useState<"Instagram" | "Facebook">("Instagram");
+  const [sourceName, setSourceName] = useState<SocialSource>("Instagram");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -129,12 +141,28 @@ const Actus = () => {
 
   const manualCardsCount = useMemo(() => cards.filter((card) => card.id.startsWith("manual-")).length, [cards]);
 
+  const requireAdmin = (message: string) => {
+    if (isAdmin) {
+      return true;
+    }
+
+    setStatusMessage(message);
+    return false;
+  };
+
+  const resetPublishForm = () => {
+    setTitle("");
+    setImage("");
+    setSourceUrl(INSTAGRAM_URL);
+    setSourceName("Instagram");
+  };
+
   const loadCards = async () => {
     setIsLoadingCards(true);
 
     try {
       const response = await fetch(ACTUS_API_URL, {
-        headers: { Accept: "application/json" },
+        headers: JSON_ACCEPT_HEADERS,
         credentials: "same-origin",
       });
       const result = (await response.json()) as NewsResponse;
@@ -169,7 +197,7 @@ const Actus = () => {
   const refreshSession = async () => {
     try {
       const response = await fetch(ADMIN_API_URL, {
-        headers: { Accept: "application/json" },
+        headers: JSON_ACCEPT_HEADERS,
         credentials: "same-origin",
       });
 
@@ -209,10 +237,7 @@ const Actus = () => {
     try {
       const response = await fetch(ADMIN_API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+        headers: JSON_REQUEST_HEADERS,
         credentials: "same-origin",
         body: JSON.stringify({ username: loginUsername.trim(), password: loginPassword }),
       });
@@ -240,7 +265,7 @@ const Actus = () => {
     try {
       await fetch(ADMIN_API_URL, {
         method: "DELETE",
-        headers: { Accept: "application/json" },
+        headers: JSON_ACCEPT_HEADERS,
         credentials: "same-origin",
       });
     } catch {
@@ -255,8 +280,7 @@ const Actus = () => {
   const uploadSelectedImage = async () => {
     setStatusMessage("");
 
-    if (!isAdmin) {
-      setStatusMessage("Connexion admin requise pour téléverser une image.");
+    if (!requireAdmin("Connexion admin requise pour téléverser une image.")) {
       return;
     }
 
@@ -302,8 +326,7 @@ const Actus = () => {
     event.preventDefault();
     setStatusMessage("");
 
-    if (!isAdmin) {
-      setStatusMessage("Connexion admin requise pour publier une capture.");
+    if (!requireAdmin("Connexion admin requise pour publier une capture.")) {
       return;
     }
 
@@ -339,10 +362,7 @@ const Actus = () => {
     try {
       const response = await fetch(ACTUS_API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+        headers: JSON_REQUEST_HEADERS,
         credentials: "same-origin",
         body: JSON.stringify(payload),
       });
@@ -354,10 +374,7 @@ const Actus = () => {
       }
 
       setCards((previous) => [result.item as NewsCard, ...previous]);
-      setTitle("");
-      setImage("");
-      setSourceUrl(INSTAGRAM_URL);
-      setSourceName("Instagram");
+      resetPublishForm();
       setStatusMessage("Capture publiée.");
     } catch {
       setStatusMessage("Erreur réseau pendant la publication.");
@@ -369,8 +386,7 @@ const Actus = () => {
   const removeCard = async (id: string, askConfirmation = true) => {
     setStatusMessage("");
 
-    if (!isAdmin) {
-      setStatusMessage("Connexion admin requise pour supprimer une capture.");
+    if (!requireAdmin("Connexion admin requise pour supprimer une capture.")) {
       return;
     }
 
@@ -381,10 +397,7 @@ const Actus = () => {
     try {
       const response = await fetch(ACTUS_API_URL, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+        headers: JSON_REQUEST_HEADERS,
         credentials: "same-origin",
         body: JSON.stringify({ id }),
       });
@@ -405,8 +418,7 @@ const Actus = () => {
   const resetCards = async () => {
     setStatusMessage("");
 
-    if (!isAdmin) {
-      setStatusMessage("Connexion admin requise pour réinitialiser.");
+    if (!requireAdmin("Connexion admin requise pour réinitialiser.")) {
       return;
     }
 
@@ -435,22 +447,17 @@ const Actus = () => {
       <section className="py-16">
         <div className="container max-w-5xl">
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-card border rounded-lg px-4 py-2 font-heading font-semibold hover:shadow-md transition"
-            >
-              Instagram @lehavretaxi
-            </a>
-            <a
-              href={FACEBOOK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-card border rounded-lg px-4 py-2 font-heading font-semibold hover:shadow-md transition"
-            >
-              Facebook @taxilehavre
-            </a>
+            {socialProfiles.map((profile) => (
+              <a
+                key={profile.label}
+                href={profile.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-card border rounded-lg px-4 py-2 font-heading font-semibold hover:shadow-md transition"
+              >
+                {profile.label}
+              </a>
+            ))}
           </div>
 
           {isLoadingCards ? (
@@ -552,7 +559,7 @@ const Actus = () => {
                     <select
                       id="news-source-name"
                       value={sourceName}
-                      onChange={(event) => setSourceName(event.target.value as "Instagram" | "Facebook")}
+                      onChange={(event) => setSourceName(event.target.value as SocialSource)}
                       className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
                     >
                       <option value="Instagram">Instagram</option>

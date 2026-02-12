@@ -38,6 +38,41 @@ type ContactPayload = {
   _captcha: string;
 };
 
+type ContactApiResult = {
+  success?: boolean;
+  recipient?: string;
+  delivered?: boolean;
+  provider?: string;
+  error?: string;
+};
+
+type ContactFallbackResult = {
+  success?: boolean | string;
+  message?: string;
+  error?: string;
+};
+
+type ContactFeedbackState = {
+  type: "idle" | "success" | "error";
+  message: string;
+};
+
+type ExternalLink = {
+  href: string;
+  label: string;
+};
+
+const STATION_SEARCH_URL = "https://www.google.com/maps/search/station+taxi+le+havre";
+const CONTACT_SUCCESS_MESSAGE = `Message envoyé à ${CONTACT_EMAIL}.`;
+const appDownloadLinks: ExternalLink[] = [
+  { href: APPLE_STORE_URL, label: "Apple App Store" },
+  { href: PLAY_STORE_URL, label: "Google Play Store" },
+];
+const socialProfileLinks: ExternalLink[] = [
+  { href: INSTAGRAM_URL, label: "Voir Instagram" },
+  { href: FACEBOOK_URL, label: "Voir Facebook" },
+];
+
 const distanceInKm = (fromLat: number, fromLng: number, toLat: number, toLng: number) => {
   const earthRadius = 6371;
   const dLat = toRadians(toLat - fromLat);
@@ -132,6 +167,10 @@ const buildContactApiCandidates = (): string[] => {
   return candidates;
 };
 
+const openInNewTab = (url: string) => {
+  window.open(url, "_blank", "noopener,noreferrer");
+};
+
 const sendViaFormSubmitFallback = async (payload: ContactPayload, signal: AbortSignal) => {
   const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`, {
     method: "POST",
@@ -153,11 +192,7 @@ const sendViaFormSubmitFallback = async (payload: ContactPayload, signal: AbortS
     signal,
   });
 
-  const result = (await response.json().catch(() => ({}))) as {
-    success?: boolean | string;
-    message?: string;
-    error?: string;
-  };
+  const result = (await response.json().catch(() => ({}))) as ContactFallbackResult;
 
   const isSuccess =
     response.ok &&
@@ -176,7 +211,7 @@ const Contact = () => {
   const [isLocating, setIsLocating] = useState(false);
   const [stationQuery, setStationQuery] = useState("");
   const [selectedStationId, setSelectedStationId] = useState<number | null>(stationsData[0]?.id ?? null);
-  const [feedback, setFeedback] = useState<{ type: "idle" | "success" | "error"; message: string }>({
+  const [feedback, setFeedback] = useState<ContactFeedbackState>({
     type: "idle",
     message: "",
   });
@@ -242,16 +277,23 @@ const Contact = () => {
     [filteredStations, selectedStationId],
   );
 
+  const notifyDeliverySuccess = (message: string) => {
+    toast({
+      title: "Message envoyé",
+      description: message,
+    });
+
+    setFeedback({ type: "success", message });
+  };
+
   const openDirections = (station: Station) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${station.latitude},${station.longitude}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    openInNewTab(url);
   };
 
   const openNearestStation = () => {
-    const fallbackUrl = "https://www.google.com/maps/search/station+taxi+le+havre";
-
     if (!navigator.geolocation) {
-      window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+      openInNewTab(STATION_SEARCH_URL);
       return;
     }
 
@@ -267,7 +309,7 @@ const Contact = () => {
         }, null as { station: Station; distanceKm: number } | null);
 
         if (!nearest) {
-          window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+          openInNewTab(STATION_SEARCH_URL);
           setIsLocating(false);
           return;
         }
@@ -282,7 +324,7 @@ const Contact = () => {
         });
       },
       () => {
-        window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+        openInNewTab(STATION_SEARCH_URL);
         setIsLocating(false);
         toast({
           title: "Position non disponible",
@@ -303,7 +345,7 @@ const Contact = () => {
       return;
     }
 
-    const payload = {
+    const payload: ContactPayload = {
       name: String(formData.get("name") || "").trim(),
       phone: String(formData.get("phone") || "").trim(),
       email: String(formData.get("email") || "").trim(),
@@ -337,13 +379,7 @@ const Contact = () => {
 
     try {
       const apiCandidates = buildContactApiCandidates();
-      let result: {
-        success?: boolean;
-        recipient?: string;
-        delivered?: boolean;
-        provider?: string;
-        error?: string;
-      } = {};
+      let result: ContactApiResult = {};
       let response: Response | null = null;
       let lastError: string | null = null;
 
@@ -358,13 +394,7 @@ const Contact = () => {
             body: JSON.stringify(payload),
             signal: abortController.signal,
           });
-          const parsed = (await attempt.json().catch(() => ({}))) as {
-            success?: boolean;
-            recipient?: string;
-            delivered?: boolean;
-            provider?: string;
-            error?: string;
-          };
+          const parsed = (await attempt.json().catch(() => ({}))) as ContactApiResult;
 
           if (attempt.ok && parsed.success === true) {
             response = attempt;
@@ -398,14 +428,7 @@ const Contact = () => {
         throw new Error(lastError || "Contact API request failed");
       }
 
-      const deliveryMessage = `Message envoyé à ${CONTACT_EMAIL}.`;
-
-      toast({
-        title: "Message envoyé",
-        description: deliveryMessage,
-      });
-
-      setFeedback({ type: "success", message: deliveryMessage });
+      notifyDeliverySuccess(CONTACT_SUCCESS_MESSAGE);
       form.reset();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Erreur réseau pendant l'envoi.";
@@ -421,12 +444,7 @@ const Contact = () => {
         try {
           await sendViaFormSubmitFallback(payload, abortController.signal);
 
-          const fallbackMessage = `Message envoyé à ${CONTACT_EMAIL}.`;
-          toast({
-            title: "Message envoyé",
-            description: fallbackMessage,
-          });
-          setFeedback({ type: "success", message: fallbackMessage });
+          notifyDeliverySuccess(CONTACT_SUCCESS_MESSAGE);
           form.reset();
           return;
         } catch (fallbackError) {
@@ -547,7 +565,7 @@ const Contact = () => {
                     {isLocating ? "Recherche..." : "Trouver la plus proche"}
                   </Button>
                   <Button type="button" variant="outline" asChild className="sm:flex-1">
-                    <a href="https://www.google.com/maps/search/station+taxi+le+havre" target="_blank" rel="noopener noreferrer">
+                    <a href={STATION_SEARCH_URL} target="_blank" rel="noopener noreferrer">
                       Ouvrir Google Maps
                     </a>
                   </Button>
@@ -592,24 +610,33 @@ const Contact = () => {
               <div className="bg-card border rounded-xl p-5 mt-4">
                 <h3 className="font-heading font-semibold mb-3">Application et réseaux</h3>
                 <div className="grid sm:grid-cols-2 gap-2 mb-3">
-                  <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-                    <Download className="inline h-4 w-4 mr-1" />
-                    Apple App Store
-                  </a>
-                  <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-                    <Download className="inline h-4 w-4 mr-1" />
-                    Google Play Store
-                  </a>
+                  {appDownloadLinks.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      <Download className="inline h-4 w-4 mr-1" />
+                      {link.label}
+                    </a>
+                  ))}
                 </div>
                 <p className="text-sm text-muted-foreground">Instagram: lehavretaxi</p>
                 <p className="text-sm text-muted-foreground">Facebook: taxilehavre</p>
                 <div className="flex gap-3 mt-2">
-                  <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-                    Voir Instagram
-                  </a>
-                  <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-                    Voir Facebook
-                  </a>
+                  {socialProfileLinks.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>

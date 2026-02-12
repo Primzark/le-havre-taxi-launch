@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . "/bootstrap.php";
 
 $paths = get_data_paths();
+$method = $_SERVER["REQUEST_METHOD"] ?? "GET";
 
 /**
  * @return array<int, array<string, mixed>>
@@ -130,14 +131,14 @@ function validate_news_fields(array $fields): void
     }
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "GET") {
+if ($method === "GET") {
     json_response([
         "success" => true,
         "items" => read_news($paths["news"]),
     ]);
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+if ($method === "OPTIONS") {
     json_response(["success" => true]);
 }
 
@@ -147,7 +148,7 @@ enforce_rate_limit("news_write", 120, 900);
 $payload = get_request_payload();
 $items = read_news($paths["news"]);
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($method === "POST") {
     $fields = extract_news_fields($payload);
     validate_news_fields($fields);
 
@@ -168,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     json_response(["success" => true, "item" => $item], 201);
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
+if ($method === "DELETE") {
     $id = sanitize_text((string) ($payload["id"] ?? ""), 100);
     if ($id === "") {
         json_response(["success" => false, "error" => "Missing id"], 422);
@@ -199,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
     json_response(["success" => true, "items" => array_values($filtered)]);
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "PUT") {
+if ($method === "PUT") {
     $id = sanitize_text((string) ($payload["id"] ?? ""), 100);
     if ($id === "") {
         json_response(["success" => false, "error" => "Missing id"], 422);

@@ -10,6 +10,11 @@ const jsonResponse = (payload: unknown, ok = true, status = 200) =>
     json: async () => payload,
   } as Response);
 
+const memoryRouterFutureConfig = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+} as const;
+
 describe("Actus admin flow", () => {
   it("authenticates admin and publishes a new capture", async () => {
     let authenticated = false;
@@ -50,7 +55,7 @@ describe("Actus admin flow", () => {
     vi.stubGlobal("fetch", fetchMock as unknown as typeof fetch);
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={memoryRouterFutureConfig}>
         <Actus />
       </MemoryRouter>,
     );

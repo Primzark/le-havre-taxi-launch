@@ -21,6 +21,10 @@ import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+const routerFutureConfig = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+} as const;
 
 const RouteScrollManager = () => {
   const { pathname, search, hash } = useLocation();
@@ -42,7 +46,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter future={routerFutureConfig}>
         <RouteScrollManager />
         <Routes>
           <Route path="/" element={<Index />} />

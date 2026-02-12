@@ -3,10 +3,15 @@ import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Tours from "@/pages/Tours";
 
+const memoryRouterFutureConfig = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+} as const;
+
 describe("Tours page", () => {
   it("links each circuit card to its detail route", () => {
     const { container } = render(
-      <MemoryRouter>
+      <MemoryRouter future={memoryRouterFutureConfig}>
         <Tours />
       </MemoryRouter>,
     );

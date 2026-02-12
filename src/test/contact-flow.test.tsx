@@ -8,6 +8,11 @@ vi.mock("@/components/StationsMap", () => ({
   default: () => <div data-testid="stations-map">Map mock</div>,
 }));
 
+const memoryRouterFutureConfig = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+} as const;
+
 describe("Contact page", () => {
   it("submits the contact form and shows success feedback", async () => {
     const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue({
@@ -16,7 +21,7 @@ describe("Contact page", () => {
     } as unknown as Response);
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={memoryRouterFutureConfig}>
         <Contact />
       </MemoryRouter>,
     );
@@ -66,7 +71,7 @@ describe("Contact page", () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={memoryRouterFutureConfig}>
         <Contact />
       </MemoryRouter>,
     );
@@ -116,7 +121,7 @@ describe("Contact page", () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={memoryRouterFutureConfig}>
         <Contact />
       </MemoryRouter>,
     );
@@ -181,7 +186,7 @@ describe("Contact page", () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={memoryRouterFutureConfig}>
         <Contact />
       </MemoryRouter>,
     );
