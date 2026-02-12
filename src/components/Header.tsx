@@ -15,12 +15,8 @@ import { resolveMenuSearch } from "@/utils/menu-search";
 
 const navLinks = [
   { to: "/", label: "Accueil" },
-  { to: "/services", label: "Services" },
-  { to: "/circuits-touristiques", label: "Circuits touristiques" },
-  { to: "/tarifs", label: "Tarifs" },
-  { to: "/entreprise", label: "Entreprise" },
-  { to: "/devenir-taxi", label: "Devenir taxi" },
-  { to: "/actus", label: "Actus" },
+  { to: "/circuits-touristiques", label: "Nos circuits" },
+  { to: "/services", label: "Nos services" },
   { to: "/contact", label: "Contact" },
 ];
 

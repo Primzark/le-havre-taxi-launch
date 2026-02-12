@@ -12,7 +12,7 @@ const TourDetail = () => {
   useSEO({
     title: tour ? `Circuit ${tour.name}` : "Circuit non trouvé",
     description: tour
-      ? `Circuit N°${tour.id} ${tour.name}, durée ${tour.duration}, tarif ${tour.price} € (1 à 4 personnes).`
+      ? `Circuit N°${tour.id} ${tour.name}, durée ${tour.duration}, tarif ${tour.price1To4} € (1 à 4 personnes).`
       : "Ce circuit touristique n'existe pas.",
     canonicalPath: tour ? `/circuits-touristiques/${tour.id}` : "/circuits-touristiques",
   });
@@ -58,16 +58,22 @@ const TourDetail = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Euro className="h-5 w-5 text-primary" />
-                <span className="font-heading font-bold text-xl text-primary">{tour.price} €</span>
+                <span className="font-heading font-bold text-xl text-primary">{tour.price1To4} €</span>
+                <span className="text-sm text-muted-foreground">1 à 4 personnes</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Euro className="h-5 w-5 text-primary" />
+                <span className="font-heading font-bold text-xl text-primary">{tour.price5To6} €</span>
+                <span className="text-sm text-muted-foreground">5 à 6 personnes</span>
               </div>
             </div>
 
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Profitez de {tour.name} avec un chauffeur qui connait parfaitement la region. Vous avancez a votre rythme, sans contrainte de stationnement ni stress de circulation.
+              {tour.description}
             </p>
 
             <p className="text-sm text-muted-foreground border-t pt-4">
-              Tarif valable pour 1 a 4 personnes, hors supplements eventuels. Entrees de musees, repas et autres frais personnels non inclus.
+              Tarifs forfaitaires convenus a l'avance. Entrees de sites, repas et depenses personnelles non inclus.
             </p>
           </div>
 

@@ -50,7 +50,7 @@ const Contact = () => {
   useSEO({
     title: "Contact",
     description:
-      "Contactez Radio Taxi Le Havre par telephone ou via le formulaire. Consultez aussi les 35 stations de l'agglomeration.",
+      "Contactez Radio Taxi Le Havre par telephone ou via le formulaire. Consultez les 22 stations historiques de l'agglomeration.",
     canonicalPath: "/contact",
     robots: "noindex, follow",
   });
@@ -235,7 +235,7 @@ const Contact = () => {
 
   return (
     <Layout>
-      <PageHero title="Nous contacter" subtitle="Un renseignement, une reservation ou un besoin precis ? Nous vous repondons rapidement." />
+      <PageHero title="Nous contacter" subtitle="Pour toutes reservations, n'oubliez pas d'indiquer votre numero de telephone." />
 
       <section className="py-16">
         <div className="container">
@@ -264,7 +264,7 @@ const Contact = () => {
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-primary mt-0.5" />
                   <div>
-                    <p className="font-heading font-semibold">35 stations</p>
+                    <p className="font-heading font-semibold">{stationsData.length} stations</p>
                     <p className="text-muted-foreground">Recherche rapide par nom ou adresse, avec itineraire direct</p>
                   </div>
                 </div>
@@ -310,7 +310,7 @@ const Contact = () => {
 
                 <div className="rounded-lg border bg-card">
                   <div className="flex items-center justify-between px-3 py-2 border-b text-sm">
-                    <span className="font-medium">Stations ({filteredStations.length}/35)</span>
+                    <span className="font-medium">Stations ({filteredStations.length}/{stationsData.length})</span>
                     {selectedStation && (
                       <button
                         type="button"

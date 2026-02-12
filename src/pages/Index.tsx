@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Phone, Clock, Users, Car, MapPin, Star, Download, ArrowRight, Search } from "lucide-react";
+import { Phone, Clock, Users, Car, MapPin, Download, ArrowRight, Search, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
@@ -14,27 +14,32 @@ import {
 } from "@/utils/menu-search";
 
 const stats = [
-  { icon: Clock, label: "Depuis", value: "1976" },
-  { icon: Car, label: "Taxis dans le réseau", value: "115" },
-  { icon: Clock, label: "Service continu", value: "24h/7j" },
-  { icon: Users, label: "Courses traitées en 2024", value: "101 000" },
+  { icon: Car, label: "Vehicules", value: "125" },
+  { icon: MapPin, label: "Stations", value: "22" },
+  { icon: Clock, label: "Disponibilite", value: "24h/24" },
+  { icon: Users, label: "Service", value: "365j/365" },
 ];
 
 const appFeatures = [
   {
-    icon: MapPin,
-    title: "Une station près de vous",
-    description: "Repérez en quelques secondes la station la plus pratique autour de vous.",
-  },
-  {
     icon: Car,
-    title: "Réserver sans attendre",
-    description: "Une course se commande rapidement, par téléphone ou depuis l'application.",
+    title: "Courses directe",
+    description: "24h/24, 7j/7",
   },
   {
-    icon: Star,
-    title: "Des chauffeurs expérimentés",
-    description: "Ponctualité, courtoisie et conduite sereine, au quotidien comme pour les longs trajets.",
+    icon: Clock,
+    title: "Reservation",
+    description: "24h/24, 7j/7",
+  },
+  {
+    icon: FileText,
+    title: "Demander un devis",
+    description: "Un devis gratuit en quelques secondes",
+  },
+  {
+    icon: MapPin,
+    title: "Geolocalisation",
+    description: "Suivi et reperage rapide de votre course",
   },
 ];
 
@@ -68,7 +73,7 @@ const Index = () => {
   useSEO({
     title: "Accueil",
     description:
-      "Radio Taxi Le Havre : 115 taxis, 35 stations, service 24h/24 et 7j/7. Réservation immédiate et tarifs clairs.",
+      "Services personnalises aux particuliers et aux entreprises, assistance PMR et circuits touristiques avec une flotte de 130 vehicules.",
     canonicalPath: "/",
   });
 
@@ -118,11 +123,11 @@ const Index = () => {
         <div className="container relative py-14 md:py-20">
           <div className="max-w-2xl">
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl mb-5 leading-tight">
-              Votre taxi au Havre,{" "}
-              <span className="text-secondary">24h/24</span>
+              Taxi Le Havre,
+              <span className="text-secondary"> qui sommes-nous ?</span>
             </h1>
             <p className="text-lg md:text-xl opacity-90 mb-7 leading-relaxed">
-              Depuis 1976, Radio Taxi Le Havre accompagne les Havrais et les visiteurs, avec une centrale joignable jour et nuit.
+              Services personnalises aux particuliers et aux entreprises, services d'assistance aux personnes a mobilite reduite ou bien circuits touristiques, avec une flotte de 130 vehicules de 4 a 8 places.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-heading font-semibold" asChild>
@@ -137,7 +142,7 @@ const Index = () => {
                 asChild
               >
                 <Link to="/contact">
-                  <MapPin className="h-5 w-5 mr-2" /> Voir les stations
+                  <MapPin className="h-5 w-5 mr-2" /> Nous contacter
                 </Link>
               </Button>
             </div>
@@ -163,7 +168,7 @@ const Index = () => {
             <Button type="submit" className="h-11 px-7">Rechercher</Button>
           </form>
           <p className="max-w-3xl mx-auto mt-2 text-xs text-muted-foreground">
-            Exemples : transport medical, tarif 2025, station gare, circuit etretat.
+            Exemples : transport sanitaire, navette aeroport, station gare, circuit etretat.
           </p>
           {searchFeedback && (
             <p className="max-w-3xl mx-auto mt-2 text-sm text-destructive" role="status" aria-live="polite">
@@ -227,12 +232,12 @@ const Index = () => {
       <section className="py-16 md:py-20">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">L'application au quotidien</h2>
+            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Notre application mobile</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Pour réserver vite, retrouver une station et garder vos repères où que vous soyez au Havre.
+              Ne perdez plus de temps a chercher un taxi : l'application Taxi Le Havre permet de commander un taxi 24h/24 et 7j/7.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {appFeatures.map((f) => (
               <div key={f.title} className="bg-card rounded-xl p-6 shadow-sm border hover:shadow-md transition">
                 <div className="bg-accent rounded-lg p-3 w-fit mb-4">
@@ -271,12 +276,15 @@ const Index = () => {
               />
             </div>
             <div>
-              <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Une equipe locale et reactive</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Découvrez nos services</h2>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                115 taxis, 35 stations et une centrale disponible 24h/24 pour organiser vos deplacements sans attente inutile.
+                Services personnalises aux particuliers et aux entreprises, services d'assistance aux personnes a mobilite reduite, transport de colis ou bien circuits touristiques, avec une flotte de 125 vehicules de 4 a 8 places. Nos 22 stations nous permettent de repondre a votre demande dans les meilleurs delais.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-5">
+                «Parce que nous connaissons bien nos clients et leurs besoins specifiques que vous soyez un utilisateur occasionnel ou regulier du taxi, nous mettons tout en oeuvre pour vous satisfaire.»
               </p>
               <Button size="lg" asChild>
-                <Link to="/services">Découvrir nos services</Link>
+                <Link to="/services">Voir tous les services</Link>
               </Button>
             </div>
           </div>
@@ -320,19 +328,19 @@ const Index = () => {
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Circuits touristiques <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">13 idees de sorties pour decouvrir la Normandie en taxi.</p>
+              <p className="text-muted-foreground text-sm">12 circuits historiques : Le Havre, Etretat, Normandie, Mont St Michel, Honfleur, Rouen, Giverny...</p>
             </Link>
             <Link to="/tarifs" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Nos tarifs <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">Consultez les prix indicatifs, simples et transparents.</p>
+              <p className="text-muted-foreground text-sm">Tarifs fixes et forfaitaires, convenus a l'avance et sans surtaxe.</p>
             </Link>
             <Link to="/services" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Nos services <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">Medical, gare, aeroport, croisiere, groupes et trajets pros.</p>
+              <p className="text-muted-foreground text-sm">Navette aeroport, mariage, sanitaire, classe affaire, scolaire, entreprise et PMR.</p>
             </Link>
           </div>
         </div>
