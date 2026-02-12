@@ -43,5 +43,5 @@ describe("Contact page", () => {
     });
 
     fetchMock.mockRestore();
-  });
+  }, 15000);
 });

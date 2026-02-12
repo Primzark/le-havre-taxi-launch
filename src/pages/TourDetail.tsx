@@ -1,14 +1,43 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { toursData } from "@/data/tours";
-import { ArrowLeft, Clock, Euro } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Euro, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/use-seo";
 import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 
 const TourDetail = () => {
   const { id } = useParams();
   const tour = toursData.find((t) => t.id === Number(id));
+  const [galleryApi, setGalleryApi] = useState<CarouselApi>();
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+
+  useEffect(() => {
+    if (!galleryApi) {
+      return;
+    }
+
+    const updateActiveSlide = () => {
+      setActiveSlideIndex(galleryApi.selectedScrollSnap());
+    };
+
+    updateActiveSlide();
+    galleryApi.on("select", updateActiveSlide);
+    galleryApi.on("reInit", updateActiveSlide);
+
+    const autoplayInterval = window.setInterval(() => {
+      galleryApi.scrollNext();
+    }, 5200);
+
+    return () => {
+      window.clearInterval(autoplayInterval);
+      galleryApi.off("select", updateActiveSlide);
+      galleryApi.off("reInit", updateActiveSlide);
+    };
+  }, [galleryApi]);
 
   useSEO(
     tour
@@ -112,18 +141,88 @@ const TourDetail = () => {
         <div className="tour-section-bg" aria-hidden="true" />
         <div className="tour-orb tour-orb--three" aria-hidden="true" />
 
-        <div className="container relative max-w-3xl">
-          <div className="tour-card-enter rounded-2xl border bg-card/95 p-6 shadow-[0_18px_40px_-22px_hsl(var(--primary)/0.55)] backdrop-blur-sm md:p-8">
-            <div className="mb-8 overflow-hidden rounded-xl border">
-              <img
-                src={tour.image}
-                alt={`Circuit ${tour.name}`}
-                className="aspect-video w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
-                loading="lazy"
-              />
-            </div>
+        <div className="container relative">
+          <div className="grid items-start gap-8 lg:grid-cols-[1.05fr_1.25fr] xl:gap-10">
+            <article className="tour-card-enter rounded-2xl border bg-card/95 p-6 shadow-[0_18px_40px_-24px_hsl(var(--primary)/0.5)] backdrop-blur-sm md:p-8">
+              <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                <Sparkles className="h-4 w-4" />
+                Escale signature
+              </p>
+              <h2 className="mt-4 font-heading text-2xl font-extrabold leading-tight md:text-3xl">
+                {tour.story.title}
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
+                {tour.story.intro}
+              </p>
 
-            <div className="mb-8 flex flex-wrap gap-6">
+              <ul className="mt-6 space-y-3">
+                {tour.story.highlights.map((highlight) => (
+                  <li key={highlight} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{highlight}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-7 rounded-xl border bg-background/80 p-4">
+                <p className="inline-flex items-center gap-2 text-sm font-semibold">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  Départ et retour au Havre
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground md:text-sm">
+                  Horaires souples, arrêts photo possibles et rythme adapté à votre journée.
+                </p>
+              </div>
+            </article>
+
+            <div className="tour-card-enter rounded-2xl border bg-card/95 p-4 shadow-[0_22px_44px_-26px_hsl(var(--primary)/0.6)] backdrop-blur-sm md:p-5" style={{ animationDelay: "120ms" }}>
+              <Carousel setApi={setGalleryApi} opts={{ loop: true }} className="tour-gallery-carousel">
+                <CarouselContent className="ml-0">
+                  {tour.story.gallery.map((slide, index) => (
+                    <CarouselItem key={`${slide.src}-${slide.caption}`} className="pl-0">
+                      <figure className={cn("tour-gallery-slide", activeSlideIndex === index && "is-active")}>
+                        <img
+                          src={slide.src}
+                          alt={slide.alt}
+                          className={cn(
+                            "tour-gallery-image",
+                            activeSlideIndex === index ? "scale-110" : "scale-100",
+                          )}
+                          style={{ transitionDuration: "5200ms" }}
+                          loading="lazy"
+                        />
+                        <div className="tour-gallery-light" aria-hidden="true" />
+                        <figcaption className="tour-gallery-caption">{slide.caption}</figcaption>
+                      </figure>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-3 top-auto bottom-3 h-9 w-9 border-white/45 bg-black/35 text-white hover:bg-black/50 hover:text-white" />
+                <CarouselNext className="right-3 top-auto bottom-3 h-9 w-9 border-white/45 bg-black/35 text-white hover:bg-black/50 hover:text-white" />
+              </Carousel>
+
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Galerie immersive</p>
+                <div className="flex items-center gap-2">
+                  {tour.story.gallery.map((slide, index) => (
+                    <button
+                      key={`${slide.caption}-dot`}
+                      type="button"
+                      onClick={() => galleryApi?.scrollTo(index)}
+                      aria-label={`Aller à l'image ${index + 1} : ${slide.caption}`}
+                      className={cn(
+                        "h-2.5 rounded-full transition-all",
+                        activeSlideIndex === index ? "w-8 bg-primary" : "w-2.5 bg-border hover:bg-primary/45",
+                      )}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="tour-card-enter mt-8 rounded-2xl border bg-card/95 p-5 shadow-[0_18px_40px_-26px_hsl(var(--primary)/0.45)] md:p-6" style={{ animationDelay: "140ms" }}>
+            <div className="mb-5 flex flex-wrap gap-6">
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-primary" />
                 <span className="font-medium">Durée : {tour.duration}</span>
@@ -134,11 +233,10 @@ const TourDetail = () => {
               </div>
             </div>
 
-            <p className="text-muted-foreground leading-relaxed mb-6">
+            <p className="mb-4 text-muted-foreground leading-relaxed">
               Profitez de {tour.name} avec un chauffeur qui connaît parfaitement la région. Vous avancez à votre rythme, sans contrainte de stationnement ni stress de circulation.
             </p>
-
-            <p className="text-sm text-muted-foreground border-t pt-4">
+            <p className="border-t pt-4 text-sm text-muted-foreground">
               Tarif valable pour 1 à 4 personnes, hors suppléments éventuels. Entrées de musées, repas et autres frais personnels non inclus.
             </p>
           </div>

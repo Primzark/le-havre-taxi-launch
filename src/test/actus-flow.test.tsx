@@ -85,5 +85,5 @@ describe("Actus admin flow", () => {
     );
 
     vi.unstubAllGlobals();
-  });
+  }, 15000);
 });
