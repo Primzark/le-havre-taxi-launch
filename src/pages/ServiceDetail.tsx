@@ -33,7 +33,7 @@ const ServiceDetail = () => {
 
   return (
     <Layout>
-      <PageHero title={service.title} subtitle={service.heroSubtitle} />
+      <PageHero title={service.title} subtitle={service.heroSubtitle} backgroundImage={service.imageSrc} />
 
       <section className="relative overflow-hidden py-16">
         <div className="pointer-events-none absolute inset-0">
@@ -43,24 +43,11 @@ const ServiceDetail = () => {
 
         <div className="container relative grid gap-8 lg:grid-cols-[1.4fr_1fr]">
           <article className="space-y-6">
-            <div className="relative overflow-hidden rounded-2xl border bg-card shadow-lg">
-              <img
-                src={service.imageSrc}
-                alt={service.imageAlt}
-                className="h-64 md:h-80 w-full object-cover"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full bg-black/35 px-3 py-1.5 text-white backdrop-blur">
+            <div className="bg-card/95 backdrop-blur-sm rounded-2xl border p-6 shadow-sm">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1.5 text-accent-foreground">
                 <service.icon className="h-4 w-4" />
                 <span className="text-xs font-semibold">Service dedie</span>
               </div>
-              <div className="absolute bottom-5 left-5 right-5">
-                <h2 className="font-heading font-bold text-2xl text-white drop-shadow">{service.title}</h2>
-              </div>
-            </div>
-
-            <div className="bg-card/95 backdrop-blur-sm rounded-2xl border p-6 shadow-sm">
               <h3 className="font-heading font-bold text-2xl mb-3">Ce service en detail</h3>
               <div className="space-y-3 text-muted-foreground leading-relaxed">
                 {service.details.map((paragraph) => (

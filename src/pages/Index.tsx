@@ -113,33 +113,58 @@ const Index = () => {
 
   return (
     <Layout>
-      <section className="relative bg-primary text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/80" />
+      <section className="relative overflow-hidden text-primary-foreground">
+        <img
+          src="/images/home-pont-normandie.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/70" />
+        <div className="absolute -top-24 left-[6%] h-64 w-64 rounded-full bg-secondary/35 blur-3xl" />
+        <div className="absolute -bottom-20 right-[12%] h-72 w-72 rounded-full bg-primary-foreground/15 blur-3xl" />
+
         <div className="container relative py-14 md:py-20">
-          <div className="max-w-2xl">
-            <h1 className="font-heading font-extrabold text-4xl md:text-5xl mb-5 leading-tight">
-              Votre taxi au Havre,{" "}
-              <span className="text-secondary">24h/24</span>
-            </h1>
-            <p className="text-lg md:text-xl opacity-90 mb-7 leading-relaxed">
-              Depuis 1976, Radio Taxi Le Havre accompagne les Havrais et les visiteurs, avec une centrale joignable jour et nuit.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-heading font-semibold" asChild>
-                <a href={`tel:${CONTACT_PHONE_LINK}`}>
-                  <Phone className="h-5 w-5 mr-2" /> {CONTACT_PHONE_DISPLAY}
-                </a>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-primary-foreground/70 bg-transparent text-primary-foreground hover:border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-primary-foreground font-heading transition-colors"
-                asChild
-              >
-                <Link to="/contact">
-                  <MapPin className="h-5 w-5 mr-2" /> Voir les stations
-                </Link>
-              </Button>
+          <div className="grid items-end gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="max-w-2xl rounded-2xl border border-white/20 bg-black/20 p-6 md:p-8 shadow-2xl backdrop-blur-sm">
+              <h1 className="font-heading font-extrabold text-4xl md:text-5xl mb-5 leading-tight">
+                Votre taxi au Havre,{" "}
+                <span className="text-secondary">24h/24</span>
+              </h1>
+              <p className="text-lg md:text-xl opacity-90 mb-7 leading-relaxed">
+                Depuis 1976, Radio Taxi Le Havre accompagne les Havrais et les visiteurs, avec une centrale joignable jour et nuit.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-heading font-semibold" asChild>
+                  <a href={`tel:${CONTACT_PHONE_LINK}`}>
+                    <Phone className="h-5 w-5 mr-2" /> {CONTACT_PHONE_DISPLAY}
+                  </a>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-primary-foreground/70 bg-transparent text-primary-foreground hover:border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-primary-foreground font-heading transition-colors"
+                  asChild
+                >
+                  <Link to="/contact">
+                    <MapPin className="h-5 w-5 mr-2" /> Voir les stations
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-md">
+                <p className="text-sm font-semibold uppercase tracking-widest text-secondary mb-2">Disponibilite</p>
+                <p className="font-heading text-2xl leading-tight mb-4">Courses locales, aeroport, gare et services dedies</p>
+                <ul className="space-y-2 text-sm opacity-90">
+                  <li>Reservation immediate ou planifiee</li>
+                  <li>Prise en charge 7j/7, de jour comme de nuit</li>
+                  <li>Flotte adaptee de 4 a 8 places</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
