@@ -85,7 +85,7 @@ const Index = () => {
         "radio taxi le havre",
         "taxi 24h 24 le havre",
         "centrale taxi le havre",
-        "reservation taxi le havre",
+        "réservation taxi le havre",
       ],
       breadcrumbs: false as const,
       structuredData: {
@@ -198,12 +198,12 @@ const Index = () => {
 
             <div className="hidden lg:block">
               <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-md">
-                <p className="text-sm font-semibold uppercase tracking-widest text-secondary mb-2">Disponibilite</p>
-                <p className="font-heading text-2xl leading-tight mb-4">Courses locales, aeroport, gare et services dedies</p>
+                <p className="text-sm font-semibold uppercase tracking-widest text-secondary mb-2">Disponibilité</p>
+                <p className="font-heading text-2xl leading-tight mb-4">Courses locales, aéroport, gare et services dédiés</p>
                 <ul className="space-y-2 text-sm opacity-90">
-                  <li>Reservation immediate ou planifiee</li>
+                  <li>Réservation immédiate ou planifiée</li>
                   <li>Prise en charge 7j/7, de jour comme de nuit</li>
-                  <li>Flotte adaptee de 4 a 8 places</li>
+                  <li>Flotte adaptée de 4 à 8 places</li>
                 </ul>
               </div>
             </div>
@@ -229,7 +229,7 @@ const Index = () => {
             <Button type="submit" className="h-11 px-7">Rechercher</Button>
           </form>
           <p className="max-w-3xl mx-auto mt-2 text-xs text-muted-foreground">
-            Exemples : transport medical, tarif 2025, station gare, circuit etretat.
+            Exemples : transport médical, tarif 2025, station gare, circuit Étretat.
           </p>
           {searchFeedback && (
             <p className="max-w-3xl mx-auto mt-2 text-sm text-destructive" role="status" aria-live="polite">
@@ -340,9 +340,9 @@ const Index = () => {
               />
             </div>
             <div>
-              <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Une equipe locale et reactive</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Une équipe locale et réactive</h2>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                115 taxis, 35 stations et une centrale disponible 24h/24 pour organiser vos deplacements sans attente inutile.
+                115 taxis, 35 stations et une centrale disponible 24h/24 pour organiser vos déplacements sans attente inutile.
               </p>
               <Button size="lg" asChild>
                 <Link to="/services">Découvrir nos services</Link>
@@ -389,7 +389,7 @@ const Index = () => {
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Circuits touristiques <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">13 idees de sorties pour decouvrir la Normandie en taxi.</p>
+              <p className="text-muted-foreground text-sm">13 idées de sorties pour découvrir la Normandie en taxi.</p>
             </Link>
             <Link to="/tarifs" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
@@ -401,7 +401,7 @@ const Index = () => {
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Nos services <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">Medical, gare, aeroport, croisiere, groupes et trajets pros.</p>
+              <p className="text-muted-foreground text-sm">Médical, gare, aéroport, croisière, groupes et trajets pros.</p>
             </Link>
           </div>
         </div>

@@ -95,11 +95,11 @@ const Actus = () => {
     () => ({
       title: "Actus",
       description:
-        "Retrouvez les actualites Radio Taxi Le Havre publiees depuis Instagram et Facebook.",
+        "Retrouvez les actualités Radio Taxi Le Havre publiées depuis Instagram et Facebook.",
       canonicalPath: "/actus",
       ogImage: "/images/home-catene.jpg",
       keywords: [
-        "actualites taxi le havre",
+        "actualités taxi le havre",
         "instagram taxi le havre",
         "facebook taxi le havre",
         "infos circulation le havre taxi",
@@ -107,7 +107,7 @@ const Actus = () => {
       structuredData: {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        name: "Actualites Taxi Le Havre",
+        name: "Actualités Taxi Le Havre",
         url: `${PRIMARY_DOMAIN}/actus`,
         inLanguage: "fr-FR",
       },
@@ -218,7 +218,7 @@ const Actus = () => {
       setLoginPassword("");
       setStatusMessage("Connexion admin active.");
     } catch {
-      setStatusMessage("Erreur reseau pendant la connexion admin.");
+      setStatusMessage("Erreur réseau pendant la connexion admin.");
     } finally {
       setIsAuthLoading(false);
     }
@@ -239,19 +239,19 @@ const Actus = () => {
 
     setIsAdmin(false);
     setAdminUsername("");
-    setStatusMessage("Session admin fermee.");
+    setStatusMessage("Session admin fermée.");
   };
 
   const uploadSelectedImage = async () => {
     setStatusMessage("");
 
     if (!isAdmin) {
-      setStatusMessage("Connexion admin requise pour televerser une image.");
+      setStatusMessage("Connexion admin requise pour téléverser une image.");
       return;
     }
 
     if (!uploadFile) {
-      setStatusMessage("Selectionnez une image a televerser.");
+      setStatusMessage("Sélectionnez une image à téléverser.");
       return;
     }
 
@@ -269,15 +269,15 @@ const Actus = () => {
 
       const result = (await response.json()) as { success?: boolean; url?: string; error?: string };
       if (!response.ok || result?.success !== true || !result.url) {
-        setStatusMessage(result?.error || "Televersement impossible.");
+        setStatusMessage(result?.error || "Téléversement impossible.");
         return;
       }
 
       setImage(result.url);
       setUploadFile(null);
-      setStatusMessage("Image televersee. URL renseignee automatiquement.");
+      setStatusMessage("Image téléversée. URL renseignée automatiquement.");
     } catch {
-      setStatusMessage("Erreur reseau pendant le televersement.");
+      setStatusMessage("Erreur réseau pendant le téléversement.");
     } finally {
       setIsUploading(false);
     }
@@ -338,9 +338,9 @@ const Actus = () => {
       setImage("");
       setSourceUrl(INSTAGRAM_URL);
       setSourceName("Instagram");
-      setStatusMessage("Capture publiee.");
+      setStatusMessage("Capture publiée.");
     } catch {
-      setStatusMessage("Erreur reseau pendant la publication.");
+      setStatusMessage("Erreur réseau pendant la publication.");
     } finally {
       setIsSubmitting(false);
     }
@@ -376,9 +376,9 @@ const Actus = () => {
       }
 
       setCards(result.items as NewsCard[]);
-      setStatusMessage("Capture supprimee.");
+      setStatusMessage("Capture supprimée.");
     } catch {
-      setStatusMessage("Erreur reseau pendant la suppression.");
+      setStatusMessage("Erreur réseau pendant la suppression.");
     }
   };
 
@@ -386,13 +386,13 @@ const Actus = () => {
     setStatusMessage("");
 
     if (!isAdmin) {
-      setStatusMessage("Connexion admin requise pour reinitialiser.");
+      setStatusMessage("Connexion admin requise pour réinitialiser.");
       return;
     }
 
     const manualCards = cards.filter((card) => card.id.startsWith("manual-"));
     if (manualCards.length === 0) {
-      setStatusMessage("Aucune capture manuelle a supprimer.");
+      setStatusMessage("Aucune capture manuelle à supprimer.");
       return;
     }
 
@@ -401,14 +401,14 @@ const Actus = () => {
     }
 
     await loadCards();
-    setStatusMessage("Captures manuelles reinitialisees.");
+    setStatusMessage("Captures manuelles réinitialisées.");
   };
 
   return (
     <Layout>
       <PageHero
-        title="Actualites"
-        subtitle="Les dernieres infos du groupement, en provenance de nos reseaux sociaux."
+        title="Actualités"
+        subtitle="Les dernières infos du groupement, en provenance de nos réseaux sociaux."
         backgroundImage="/images/home-catene.jpg"
       />
 
@@ -447,7 +447,7 @@ const Actus = () => {
             </div>
           ) : cards.length === 0 ? (
             <div className="bg-card border rounded-xl p-8 text-center mb-10">
-              <p className="font-heading font-semibold">Aucune actualite publiee pour le moment.</p>
+              <p className="font-heading font-semibold">Aucune actualité publiée pour le moment.</p>
               <p className="text-sm text-muted-foreground mt-2">Connectez-vous en admin pour publier une actu.</p>
             </div>
           ) : (
@@ -483,9 +483,9 @@ const Actus = () => {
               <h2 className="font-heading font-bold text-xl">Gestion des actus</h2>
               {isAdmin ? (
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">Connecte: {adminUsername}</span>
+                  <span className="text-sm text-muted-foreground">Connecté : {adminUsername}</span>
                   <Button type="button" variant="outline" onClick={handleLogout} disabled={isAuthLoading}>
-                    Deconnexion
+                    Déconnexion
                   </Button>
                 </div>
               ) : (
@@ -528,7 +528,7 @@ const Actus = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="news-source-name">Reseau</Label>
+                    <Label htmlFor="news-source-name">Réseau</Label>
                     <select
                       id="news-source-name"
                       value={sourceName}
@@ -567,7 +567,7 @@ const Actus = () => {
 
                 <div className="grid sm:grid-cols-[1fr_auto] gap-3 items-end">
                   <div className="space-y-2">
-                    <Label htmlFor="news-image-file">Televerser une image</Label>
+                    <Label htmlFor="news-image-file">Téléverser une image</Label>
                     <Input
                       id="news-image-file"
                       type="file"
@@ -576,7 +576,7 @@ const Actus = () => {
                     />
                   </div>
                   <Button type="button" variant="outline" onClick={uploadSelectedImage} disabled={isUploading || !uploadFile}>
-                    {isUploading ? "Televersement..." : "Televerser"}
+                    {isUploading ? "Téléversement..." : "Téléverser"}
                   </Button>
                 </div>
 
@@ -585,7 +585,7 @@ const Actus = () => {
                     {isSubmitting ? "Publication..." : "Ajouter la capture"}
                   </Button>
                   <Button type="button" variant="outline" onClick={resetCards}>
-                    Reinitialiser les captures manuelles ({manualCardsCount})
+                    Réinitialiser les captures manuelles ({manualCardsCount})
                   </Button>
                 </div>
               </form>
@@ -593,7 +593,7 @@ const Actus = () => {
 
             {statusMessage && <p className="text-sm text-primary mt-4">{statusMessage}</p>}
             <p className="text-xs text-muted-foreground mt-4">
-              Les actus sont gerees via `api/news.php`, l'authentification via `api/admin.php` et les images via `api/upload.php`.
+              Les actus sont gérées via `api/news.php`, l'authentification via `api/admin.php` et les images via `api/upload.php`.
             </p>
           </div>
         </div>

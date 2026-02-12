@@ -7,7 +7,7 @@ import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 const Entreprise = () => {
   useSEO({
     title: "Entreprise",
-    description: "Radio Taxi Le Havre : 115 vehicules, 35 stations et une centrale active depuis 1976.",
+    description: "Radio Taxi Le Havre : 115 véhicules, 35 stations et une centrale active depuis 1976.",
     canonicalPath: "/entreprise",
     ogImage: "/images/services/transport-entreprise.jpg",
     keywords: [
@@ -20,7 +20,7 @@ const Entreprise = () => {
       "@context": "https://schema.org",
       "@type": "AboutPage",
       name: `Entreprise ${SITE_NAME}`,
-      description: "Presentation de la cooperative Radio Taxi Le Havre",
+      description: "Présentation de la coopérative Radio Taxi Le Havre",
       url: `${PRIMARY_DOMAIN}/entreprise`,
       inLanguage: "fr-FR",
     },
@@ -39,12 +39,12 @@ const Entreprise = () => {
         <div className="container max-w-4xl">
           <h2 className="font-heading font-bold text-2xl mb-6">Qui nous sommes</h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
-            Radio Taxi Le Havre rassemble des chauffeurs independants sur toute l'agglomeration.
-            Avec <strong>115 vehicules</strong> et <strong>35 stations</strong>, nous couvrons les besoins du quotidien comme les trajets plus specifiques.
+            Radio Taxi Le Havre rassemble des chauffeurs indépendants sur toute l'agglomération.
+            Avec <strong>115 véhicules</strong> et <strong>35 stations</strong>, nous couvrons les besoins du quotidien comme les trajets plus spécifiques.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            La centrale de reservation fonctionne 24h/24 et 7j/7 pour vos deplacements personnels, professionnels,
-            medicaux ou touristiques, au Havre et autour.
+            La centrale de réservation fonctionne 24h/24 et 7j/7 pour vos déplacements personnels, professionnels,
+            médicaux ou touristiques, au Havre et autour.
           </p>
         </div>
       </section>
@@ -58,28 +58,28 @@ const Entreprise = () => {
               <Clock className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-heading font-semibold mb-2">Depuis 1976</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Une presence continue au Havre, avec la meme exigence de fiabilite sur la route.
+                Une présence continue au Havre, avec la même exigence de fiabilité sur la route.
               </p>
             </div>
             <div className="bg-card rounded-xl border p-6 shadow-sm">
               <Users className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-heading font-semibold mb-2">Une equipe organisee</h3>
+              <h3 className="font-heading font-semibold mb-2">Une équipe organisée</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Chauffeurs, operatrices et administratif travaillent ensemble pour une prise en charge rapide.
+                Chauffeurs, opératrices et personnel administratif travaillent ensemble pour une prise en charge rapide.
               </p>
             </div>
             <div className="bg-card rounded-xl border p-6 shadow-sm">
               <MapPin className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-heading font-semibold mb-2">35 stations</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Des points de presence repartis dans l'agglomeration pour rester proches de vous.
+                Des points de présence répartis dans l'agglomération pour rester proches de vous.
               </p>
             </div>
             <div className="bg-card rounded-xl border p-6 shadow-sm">
               <Phone className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-heading font-semibold mb-2">Disponibilité 24h/7j</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Une centrale joignable jour et nuit, week-ends et jours feries inclus.
+                Une centrale joignable jour et nuit, week-ends et jours fériés inclus.
               </p>
             </div>
           </div>

@@ -38,15 +38,15 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
   {
     route: "/services",
     label: "Services",
-    example: "service medical",
+    example: "service médical",
     keywords: [
       "service",
       "services",
-      "medical",
+      "médical",
       "sanitaire",
       "maritime",
-      "croisiere",
-      "aeroport",
+      "croisière",
+      "aéroport",
       "gare",
       "professionnel",
       "entreprise",
@@ -55,7 +55,7 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
       "classe affaire",
       "scolaire",
       "pmr",
-      "mobilite reduite",
+      "mobilité réduite",
       "ford tourneo",
     ],
   },
@@ -63,18 +63,18 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
     route: "/tarifs",
     label: "Tarifs",
     example: "tarif 2025",
-    keywords: ["tarif", "tarifs", "tarif 2025", "prix", "cout", "decret", "arrete", "prefectoral"],
+    keywords: ["tarif", "tarifs", "tarif 2025", "prix", "coût", "décret", "arrêté", "préfectoral"],
   },
   {
     route: "/contact",
     label: "Stations et contact",
     example: "station proche",
-    keywords: ["contact", "reservation", "appeler", "telephone", "mail", "email", "station", "station proche"],
+    keywords: ["contact", "réservation", "appeler", "téléphone", "mail", "email", "station", "station proche"],
   },
   {
     route: "/circuits-touristiques",
     label: "Circuits touristiques",
-    example: "circuit etretat",
+    example: "circuit Étretat",
     keywords: [
       "circuit",
       "circuits",
@@ -82,7 +82,7 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
       "touristique",
       "visite",
       "normandie",
-      "etretat",
+      "étretat",
       "honfleur",
       "rouen",
       "giverny",
@@ -96,8 +96,8 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
   {
     route: "/entreprise",
     label: "Entreprise",
-    example: "a propos",
-    keywords: ["entreprise", "a propos", "histoire", "equipe", "operatrices", "secretaires"],
+    example: "à propos",
+    keywords: ["entreprise", "à propos", "histoire", "équipe", "opératrices", "secrétaires"],
   },
   {
     route: "/devenir-taxi",
@@ -108,8 +108,8 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
   {
     route: "/actus",
     label: "Actus",
-    example: "actualites instagram",
-    keywords: ["actus", "actualites", "instagram", "facebook", "capture", "news"],
+    example: "actualités instagram",
+    keywords: ["actus", "actualités", "instagram", "facebook", "capture", "news"],
   },
   {
     route: "/liens",
@@ -416,7 +416,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: "Saisissez un mot-cle (service, tarif, station ou circuit).",
+      message: "Saisissez un mot-clé (service, tarif, station ou circuit).",
       suggestions: MENU_SEARCH_QUICK_LINKS,
     };
   }
@@ -429,7 +429,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "high",
       intentLabel: "Circuits touristiques",
       matchedKeyword: normalizeSearchText(circuitMatch.name),
-      message: `Resultat trouve : circuit ${circuitMatch.name}.`,
+      message: `Résultat trouvé : circuit ${circuitMatch.name}.`,
       suggestions: MENU_SEARCH_QUICK_LINKS,
     };
   }
@@ -445,7 +445,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: "Aucun resultat net. Essayez : transport medical, tarif 2025, station proche ou circuit etretat.",
+      message: "Aucun résultat net. Essayez : transport médical, tarif 2025, station proche ou circuit Étretat.",
       suggestions: buildSuggestions(ranked),
     };
   }
@@ -458,7 +458,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: `Recherche ambigue. Precisez votre demande (ex. ${best.target.example}).`,
+      message: `Recherche ambiguë. Précisez votre demande (ex. ${best.target.example}).`,
       suggestions: buildSuggestions(ranked),
     };
   }
@@ -473,7 +473,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
   const autoNavigate = best.strongMatch && (confidence === "high" || confidence === "medium");
 
   const message = autoNavigate
-    ? `Resultat trouve : ${best.target.label}.`
+    ? `Résultat trouvé : ${best.target.label}.`
     : `Recherche proche de ${best.target.label}. Choisissez une suggestion pour continuer.`;
 
   return {

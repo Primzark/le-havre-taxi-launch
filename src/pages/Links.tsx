@@ -13,15 +13,15 @@ const links = [
   { icon: Euro, label: "Consulter les tarifs", href: "/tarifs" },
   { icon: Navigation, label: "Voir les circuits", href: "/circuits-touristiques" },
   { icon: Map, label: "Trouver une station", href: "/contact" },
-  { icon: Download, label: "Telecharger sur l'App Store", href: APPLE_STORE_URL },
-  { icon: Download, label: "Telecharger sur Google Play", href: PLAY_STORE_URL },
+  { icon: Download, label: "Télécharger sur l'App Store", href: APPLE_STORE_URL },
+  { icon: Download, label: "Télécharger sur Google Play", href: PLAY_STORE_URL },
   { icon: Mail, label: "Envoyer un message", href: "/contact" },
 ];
 
 const Links = () => {
   useSEO({
     title: "Liens utiles",
-    description: "Tous les raccourcis utiles de Radio Taxi Le Havre : appel, tarifs, stations, application et reseaux.",
+    description: "Tous les raccourcis utiles de Radio Taxi Le Havre : appel, tarifs, stations, application et réseaux.",
     canonicalPath: "/liens",
     ogImage: "/images/logo-taxi-le-havre.png",
     robots: "noindex, follow",

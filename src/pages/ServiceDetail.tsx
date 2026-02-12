@@ -36,7 +36,7 @@ const ServiceDetail = () => {
             description: service.seoDescription,
             serviceType: service.title,
             url: `${PRIMARY_DOMAIN}/services/${service.slug}`,
-            areaServed: "Le Havre et agglomeration",
+            areaServed: "Le Havre et agglomération",
             inLanguage: "fr-FR",
             image: `${PRIMARY_DOMAIN}${service.imageSrc}`,
             provider: {
@@ -48,7 +48,7 @@ const ServiceDetail = () => {
         }
       : {
           title: "Service introuvable",
-          description: "Le service demande est introuvable.",
+          description: "Le service demandé est introuvable.",
           canonicalPath: "/services",
           robots: "noindex, follow",
         },
@@ -73,9 +73,9 @@ const ServiceDetail = () => {
             <div className="bg-card/95 backdrop-blur-sm rounded-2xl border p-6 shadow-sm">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1.5 text-accent-foreground">
                 <service.icon className="h-4 w-4" />
-                <span className="text-xs font-semibold">Service dedie</span>
+                <span className="text-xs font-semibold">Service dédié</span>
               </div>
-              <h3 className="font-heading font-bold text-2xl mb-3">Ce service en detail</h3>
+              <h3 className="font-heading font-bold text-2xl mb-3">Ce service en détail</h3>
               <div className="space-y-3 text-muted-foreground leading-relaxed">
                 {service.details.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
@@ -84,7 +84,7 @@ const ServiceDetail = () => {
             </div>
 
             <div className="bg-card/95 backdrop-blur-sm rounded-2xl border p-6 shadow-sm">
-              <h3 className="font-heading font-semibold text-xl mb-4">Points cles</h3>
+              <h3 className="font-heading font-semibold text-xl mb-4">Points clés</h3>
               <ul className="space-y-3">
                 {service.highlights.map((highlight) => (
                   <li key={highlight} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -97,7 +97,7 @@ const ServiceDetail = () => {
           </article>
 
           <aside className="bg-card/95 backdrop-blur-sm rounded-2xl border p-6 shadow-lg h-fit lg:sticky lg:top-24">
-            <h3 className="font-heading font-semibold text-xl mb-2">Reserver ce service</h3>
+            <h3 className="font-heading font-semibold text-xl mb-2">Réserver ce service</h3>
             <p className="text-muted-foreground text-sm leading-relaxed mb-5">
               Contactez la centrale pour planifier votre course ou obtenir une estimation rapide.
             </p>

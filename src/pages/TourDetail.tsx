@@ -32,7 +32,7 @@ const TourDetail = () => {
             "@type": "TouristTrip",
             name: `Circuit ${tour.id} ${tour.name}`,
             description: `Circuit touristique ${tour.name} depuis Le Havre`,
-            touristType: "Tour prive en taxi",
+            touristType: "Tour privé en taxi",
             itinerary: {
               "@type": "Place",
               name: tour.name,
@@ -53,7 +53,7 @@ const TourDetail = () => {
           },
         }
       : {
-          title: "Circuit non trouve",
+          title: "Circuit non trouvé",
           description: "Ce circuit touristique n'existe pas.",
           canonicalPath: "/circuits-touristiques",
           robots: "noindex, follow",
@@ -106,11 +106,11 @@ const TourDetail = () => {
             </div>
 
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Profitez de {tour.name} avec un chauffeur qui connait parfaitement la region. Vous avancez a votre rythme, sans contrainte de stationnement ni stress de circulation.
+              Profitez de {tour.name} avec un chauffeur qui connaît parfaitement la région. Vous avancez à votre rythme, sans contrainte de stationnement ni stress de circulation.
             </p>
 
             <p className="text-sm text-muted-foreground border-t pt-4">
-              Tarif valable pour 1 a 4 personnes, hors supplements eventuels. Entrees de musees, repas et autres frais personnels non inclus.
+              Tarif valable pour 1 à 4 personnes, hors suppléments éventuels. Entrées de musées, repas et autres frais personnels non inclus.
             </p>
           </div>
 

@@ -14,14 +14,14 @@ const quickPrices = [
 const Tarifs = () => {
   useSEO({
     title: "Tarifs",
-    description: "Tarifs indicatifs mis a jour au 1er janvier 2025, plus 13 circuits touristiques avec durees et prix.",
+    description: "Tarifs indicatifs mis à jour au 1er janvier 2025, plus 13 circuits touristiques avec durées et prix.",
     canonicalPath: "/tarifs",
     ogImage: "/images/tarifs-page-2.jpg",
     keywords: [
       "tarif taxi le havre",
       "prix taxi le havre",
       "circuit touristique taxi prix",
-      "tarif prefectoral taxi",
+      "tarif préfectoral taxi",
     ],
     structuredData: [
       {
@@ -55,7 +55,7 @@ const Tarifs = () => {
     <Layout>
       <PageHero
         title="Tarifs"
-        subtitle="Reperez rapidement les prix indicatifs et les circuits proposes."
+        subtitle="Repérez rapidement les prix indicatifs et les circuits proposés."
         backgroundImage="/images/services/navette-aeroport.jpg"
       />
 
@@ -88,7 +88,7 @@ const Tarifs = () => {
       <section className="bg-muted py-16">
         <div className="container max-w-4xl">
           <h2 className="font-heading font-bold text-2xl mb-2">13 circuits touristiques (aller-retour)</h2>
-          <p className="text-muted-foreground text-sm mb-8">Tarifs mis a jour le 01/01/2025</p>
+          <p className="text-muted-foreground text-sm mb-8">Tarifs mis à jour le 01/01/2025</p>
 
           <div className="overflow-hidden rounded-xl border bg-card shadow-sm mb-8">
             <img
@@ -118,10 +118,10 @@ const Tarifs = () => {
           </div>
 
           <p className="text-muted-foreground text-sm mt-8">
-            Tarif valable pour 1 a 4 personnes, hors supplements eventuels (passagers ou bagages supplementaires). Les entrees de sites, repas et depenses personnelles ne sont pas inclus.
+            Tarif valable pour 1 à 4 personnes, hors suppléments éventuels (passagers ou bagages supplémentaires). Les entrées de sites, repas et dépenses personnelles ne sont pas incluses.
           </p>
 
-          <p className="text-sm mt-4 font-medium">Arrete prefectoral 2025</p>
+          <p className="text-sm mt-4 font-medium">Arrêté préfectoral 2025</p>
         </div>
       </section>
     </Layout>

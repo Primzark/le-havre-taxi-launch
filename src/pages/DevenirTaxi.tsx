@@ -7,19 +7,19 @@ import { useSEO } from "@/hooks/use-seo";
 import { PRIMARY_DOMAIN } from "@/config/site";
 
 const requirements = [
-  "Etre titulaire du permis B depuis plus de 3 ans",
-  "Obtenir la carte professionnelle de taxi (examen prefectoral)",
-  "Disposer d'un vehicule conforme a la reglementation",
-  "Posseder une autorisation de stationnement (licence)",
-  "Etre inscrit au registre des metiers ou du commerce",
+  "Être titulaire du permis B depuis plus de 3 ans",
+  "Obtenir la carte professionnelle de taxi (examen préfectoral)",
+  "Disposer d'un véhicule conforme à la réglementation",
+  "Posséder une autorisation de stationnement (licence)",
+  "Être inscrit au registre des métiers ou du commerce",
 ];
 
 const advantages = [
-  "Integrer un groupement reconnu depuis 1976",
-  "Profiter d'une centrale de reservation active 24h/24",
-  "Acceder a une clientele variee (particuliers, entreprises, tourisme, medical)",
-  "S'appuyer sur 35 stations dans l'agglomeration",
-  "Rejoindre un reseau de 115 taxis",
+  "Intégrer un groupement reconnu depuis 1976",
+  "Profiter d'une centrale de réservation active 24h/24",
+  "Accéder à une clientèle variée (particuliers, entreprises, tourisme, médical)",
+  "S'appuyer sur 35 stations dans l'agglomération",
+  "Rejoindre un réseau de 115 taxis",
 ];
 
 const DevenirTaxi = () => {
@@ -58,8 +58,8 @@ const DevenirTaxi = () => {
           <div className="mb-12">
             <h2 className="font-heading font-bold text-2xl mb-4">Qui est le chauffeur de taxi ?</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Le chauffeur de taxi accompagne ses passagers sur des trajets tres varies : domicile, travail, gare,
-              rendez-vous medical, aeroport ou sortie. C'est un metier de terrain qui demande ponctualite, sens du service
+              Le chauffeur de taxi accompagne ses passagers sur des trajets très variés : domicile, travail, gare,
+              rendez-vous médical, aéroport ou sortie. C'est un métier de terrain qui demande ponctualité, sens du service
               et bonne connaissance du secteur havrais.
             </p>
           </div>

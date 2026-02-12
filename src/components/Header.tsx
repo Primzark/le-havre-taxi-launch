@@ -48,7 +48,7 @@ const Header = () => {
 
     if (!result.route || !result.autoNavigate) {
       toast({
-        title: "Recherche a preciser",
+        title: "Recherche à préciser",
         description: `${result.message} Suggestions: ${result.suggestions.map((item) => item.label).join(", ")}.`,
         variant: "destructive",
       });
@@ -70,7 +70,7 @@ const Header = () => {
             className="inline-flex min-w-0 items-center gap-2 font-heading font-semibold transition hover:opacity-90"
           >
             <Phone className="h-4 w-4" />
-            <span className="truncate">Centrale de reservation : {CONTACT_PHONE_DISPLAY}</span>
+            <span className="truncate">Centrale de réservation : {CONTACT_PHONE_DISPLAY}</span>
           </a>
           <div className="hidden lg:flex items-center gap-4 shrink-0">
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Instagram</a>

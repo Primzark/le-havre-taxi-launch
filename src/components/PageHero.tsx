@@ -35,7 +35,7 @@ const PageHero = ({ title, subtitle, backgroundImage }: PageHeroProps) => {
       <div className="container relative py-16 md:py-24">
         <div className={`max-w-3xl ${backgroundImage ? "rounded-2xl border border-white/20 bg-black/20 p-6 md:p-8 shadow-2xl backdrop-blur-sm" : ""}`}>
           {showBreadcrumb && (
-            <nav aria-label="Fil d'ariane" className="mb-3 text-sm opacity-85">
+            <nav aria-label="Fil d'Ariane" className="mb-3 text-sm opacity-85">
               <Link to="/" className="hover:opacity-100 underline-offset-2 hover:underline">
                 Accueil
               </Link>

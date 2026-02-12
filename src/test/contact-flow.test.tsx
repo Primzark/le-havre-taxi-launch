@@ -22,7 +22,7 @@ describe("Contact page", () => {
     );
 
     fireEvent.change(screen.getByLabelText(/Nom \*/i), { target: { value: "QA Tester" } });
-    fireEvent.change(screen.getByLabelText(/Telephone/i), { target: { value: "0123456789" } });
+    fireEvent.change(screen.getByLabelText(/Téléphone/i), { target: { value: "0123456789" } });
     fireEvent.change(screen.getByLabelText(/Email \*/i), { target: { value: "qa@example.com" } });
     fireEvent.change(screen.getByLabelText(/Sujet \*/i), { target: { value: "Demande de test" } });
     fireEvent.change(screen.getByLabelText(/Message \*/i), {
@@ -39,7 +39,7 @@ describe("Contact page", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/Votre message a ete transmis/i)).toBeInTheDocument();
+      expect(screen.getByText(/Votre message a été transmis/i)).toBeInTheDocument();
     });
 
     fetchMock.mockRestore();

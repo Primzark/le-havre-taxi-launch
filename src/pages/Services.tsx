@@ -10,14 +10,14 @@ const vehicles = [
   "Berline (Peugeot 508, etc.)",
   "Monospace",
   "Van (Ford Tourneo Custom)",
-  "Vehicule adapte PMR",
+  "Véhicule adapté PMR",
 ];
 
 const Services = () => {
   useSEO({
     title: "Services",
     description:
-      "Services taxi au Havre : navette aeroport, transport sanitaire, classe affaire, scolaire, PMR, mariage et entreprise.",
+      "Services taxi au Havre : navette aéroport, transport sanitaire, classe affaire, scolaire, PMR, mariage et entreprise.",
     canonicalPath: "/services",
     ogImage: "/images/services/navette-aeroport.jpg",
     keywords: [
@@ -53,7 +53,7 @@ const Services = () => {
     <Layout>
       <PageHero
         title="Nos services"
-        subtitle="Retrouvez tous les services de Taxi Le Havre, avec une page detaillee pour chaque besoin."
+        subtitle="Retrouvez tous les services de Taxi Le Havre, avec une page détaillée pour chaque besoin."
         backgroundImage="/images/services/navette-aeroport.jpg"
       />
 

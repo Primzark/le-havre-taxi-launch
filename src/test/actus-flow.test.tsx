@@ -76,7 +76,7 @@ describe("Actus admin flow", () => {
     fireEvent.click(screen.getByRole("button", { name: /Ajouter la capture/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Capture publiee/i)).toBeInTheDocument();
+      expect(screen.getByText(/Capture publiée/i)).toBeInTheDocument();
     });
 
     expect(fetchMock).toHaveBeenCalledWith(

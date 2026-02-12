@@ -53,12 +53,12 @@ const Contact = () => {
     () => ({
       title: "Contact",
       description:
-        "Contactez Radio Taxi Le Havre par telephone ou via le formulaire. Consultez aussi les 35 stations de l'agglomeration.",
+        "Contactez Radio Taxi Le Havre par téléphone ou via le formulaire. Consultez aussi les 35 stations de l'agglomération.",
       canonicalPath: "/contact",
       ogImage: "/images/home-mairie.jpg",
       keywords: [
         "contact taxi le havre",
-        "numero taxi le havre",
+        "numéro taxi le havre",
         "station taxi le havre",
         "formulaire taxi le havre",
       ],
@@ -145,8 +145,8 @@ const Contact = () => {
         setIsLocating(false);
 
         toast({
-          title: "Station la plus proche trouvee",
-          description: `${nearest.station.name} a environ ${nearest.distanceKm.toFixed(1)} km.`,
+          title: "Station la plus proche trouvée",
+          description: `${nearest.station.name} à environ ${nearest.distanceKm.toFixed(1)} km.`,
         });
       },
       () => {
@@ -154,7 +154,7 @@ const Contact = () => {
         setIsLocating(false);
         toast({
           title: "Position non disponible",
-          description: "Google Maps a ete ouvert sur les stations de taxi du Havre.",
+          description: "Google Maps a été ouvert sur les stations de taxi du Havre.",
           variant: "destructive",
         });
       },
@@ -193,7 +193,7 @@ const Contact = () => {
     }
 
     if (payload.message.length < MIN_MESSAGE_LENGTH) {
-      setFeedback({ type: "error", message: `Le message doit contenir au moins ${MIN_MESSAGE_LENGTH} caracteres.` });
+      setFeedback({ type: "error", message: `Le message doit contenir au moins ${MIN_MESSAGE_LENGTH} caractères.` });
       return;
     }
 
@@ -227,11 +227,11 @@ const Contact = () => {
       }
 
       const deliveryMessage = result.delivered
-        ? `Votre message a ete transmis a ${result.recipient ?? CONTACT_EMAIL}.`
-        : `Votre message a ete enregistre. Il sera transmis a ${result.recipient ?? CONTACT_EMAIL} des que possible.`;
+        ? `Votre message a été transmis à ${result.recipient ?? CONTACT_EMAIL}.`
+        : `Votre message a été enregistré. Il sera transmis à ${result.recipient ?? CONTACT_EMAIL} dès que possible.`;
 
       toast({
-        title: "Message envoye",
+        title: "Message envoyé",
         description: `${deliveryMessage} (${result.provider ?? "mail"})`,
       });
 
@@ -240,13 +240,13 @@ const Contact = () => {
     } catch {
       const mailtoSubject = encodeURIComponent(`Nouveau message - ${payload.subject}`);
       const mailtoBody = encodeURIComponent(
-        `Nom: ${payload.name}\nTelephone: ${payload.phone}\nEmail: ${payload.email}\n\nMessage:\n${payload.message}`,
+        `Nom: ${payload.name}\nTéléphone: ${payload.phone}\nEmail: ${payload.email}\n\nMessage:\n${payload.message}`,
       );
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`;
 
       toast({
         title: "Ouverture de votre messagerie",
-        description: `L'envoi direct a echoue. Votre client mail a ete ouvert vers ${CONTACT_EMAIL}.`,
+        description: `L'envoi direct a échoué. Votre client mail a été ouvert vers ${CONTACT_EMAIL}.`,
         variant: "destructive",
       });
 
@@ -264,7 +264,7 @@ const Contact = () => {
     <Layout>
       <PageHero
         title="Nous contacter"
-        subtitle="Un renseignement, une reservation ou un besoin precis ? Nous vous repondons rapidement."
+        subtitle="Un renseignement, une réservation ou un besoin précis ? Nous vous répondons rapidement."
         backgroundImage="/images/home-mairie.jpg"
       />
 
@@ -272,12 +272,12 @@ const Contact = () => {
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="font-heading font-bold text-2xl mb-6">Nos coordonnees</h2>
+              <h2 className="font-heading font-bold text-2xl mb-6">Nos coordonnées</h2>
               <div className="space-y-5 mb-8">
                 <div className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-primary mt-0.5" />
                   <div>
-                    <p className="font-heading font-semibold">Telephone</p>
+                    <p className="font-heading font-semibold">Téléphone</p>
                     <a href={`tel:${CONTACT_PHONE_LINK}`} className="text-muted-foreground hover:text-primary transition">
                       {CONTACT_PHONE_DISPLAY}
                     </a>
@@ -296,27 +296,27 @@ const Contact = () => {
                   <MapPin className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <p className="font-heading font-semibold">35 stations</p>
-                    <p className="text-muted-foreground">Recherche rapide par nom ou adresse, avec itineraire direct</p>
+                    <p className="text-muted-foreground">Recherche rapide par nom ou adresse, avec itinéraire direct</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Clock className="h-5 w-5 text-primary mt-0.5" />
                   <div>
-                    <p className="font-heading font-semibold">Disponibilite</p>
+                    <p className="font-heading font-semibold">Disponibilité</p>
                     <p className="text-muted-foreground">24h/24 - 7j/7</p>
                   </div>
                 </div>
               </div>
 
               <div className="bg-muted rounded-xl p-5">
-                <h3 className="font-heading font-semibold mb-3">Trouver une station a proximite</h3>
+                <h3 className="font-heading font-semibold mb-3">Trouver une station à proximité</h3>
 
                 <div className="relative mb-3">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     value={stationQuery}
                     onChange={(event) => setStationQuery(event.target.value)}
-                    placeholder="Ex: gare, hotel de ville, avenue Foch"
+                    placeholder="Ex: gare, hôtel de ville, avenue Foch"
                     className="pl-9"
                   />
                 </div>
@@ -348,14 +348,14 @@ const Contact = () => {
                         className="text-primary hover:underline"
                         onClick={() => openDirections(selectedStation)}
                       >
-                        Ouvrir l'itineraire vers {selectedStation.name}
+                        Ouvrir l'itinéraire vers {selectedStation.name}
                       </button>
                     )}
                   </div>
 
                   <div className="max-h-64 overflow-auto divide-y">
                     {filteredStations.length === 0 && (
-                      <p className="p-3 text-sm text-muted-foreground">Aucune station ne correspond a votre recherche.</p>
+                      <p className="p-3 text-sm text-muted-foreground">Aucune station ne correspond à votre recherche.</p>
                     )}
 
                     {filteredStations.map((station) => (
@@ -376,7 +376,7 @@ const Contact = () => {
               </div>
 
               <div className="bg-card border rounded-xl p-5 mt-4">
-                <h3 className="font-heading font-semibold mb-3">Application et reseaux</h3>
+                <h3 className="font-heading font-semibold mb-3">Application et réseaux</h3>
                 <div className="grid sm:grid-cols-2 gap-2 mb-3">
                   <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
                     <Download className="inline h-4 w-4 mr-1" />
@@ -402,7 +402,7 @@ const Contact = () => {
 
             <div>
               <h2 className="font-heading font-bold text-2xl mb-2">Envoyez-nous un message</h2>
-              <p className="text-sm text-muted-foreground mb-6">Vos messages sont transmis a {CONTACT_EMAIL}.</p>
+              <p className="text-sm text-muted-foreground mb-6">Vos messages sont transmis à {CONTACT_EMAIL}.</p>
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
@@ -413,8 +413,8 @@ const Contact = () => {
                     <Input id="name" name="name" required maxLength={100} placeholder="Votre nom" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Telephone</Label>
-                    <Input id="phone" name="phone" type="tel" maxLength={20} placeholder="Votre telephone" />
+                    <Label htmlFor="phone">Téléphone</Label>
+                    <Input id="phone" name="phone" type="tel" maxLength={20} placeholder="Votre téléphone" />
                   </div>
                 </div>
 
@@ -425,7 +425,7 @@ const Contact = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="subject">Sujet *</Label>
-                  <Input id="subject" name="subject" required maxLength={200} placeholder="Ex: reservation aeroport demain matin" />
+                  <Input id="subject" name="subject" required maxLength={200} placeholder="Ex: réservation aéroport demain matin" />
                 </div>
 
                 <div className="space-y-2">
@@ -437,7 +437,7 @@ const Contact = () => {
                     maxLength={2000}
                     rows={5}
                     minLength={MIN_MESSAGE_LENGTH}
-                    placeholder="Indiquez votre demande, la date et toute precision utile."
+                    placeholder="Indiquez votre demande, la date et toute précision utile."
                   />
                 </div>
 

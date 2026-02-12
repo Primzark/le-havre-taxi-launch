@@ -8,15 +8,15 @@ import { PRIMARY_DOMAIN } from "@/config/site";
 const Tours = () => {
   useSEO({
     title: "Circuits touristiques",
-    description: "13 circuits touristiques au depart du Havre : Etretat, Honfleur, Rouen, Giverny, Paris, Versailles et plus.",
+    description: "13 circuits touristiques au départ du Havre : Étretat, Honfleur, Rouen, Giverny, Paris, Versailles et plus.",
     canonicalPath: "/circuits-touristiques",
     ogImage: "/images/tour-03-normandie.jpg",
     keywords: [
       "circuit touristique le havre",
       "taxi tourisme normandie",
-      "etretat taxi prive",
+      "étretat taxi privé",
       "honfleur excursion taxi",
-      "tour prive depuis le havre",
+      "tour privé depuis le havre",
     ],
     structuredData: {
       "@context": "https://schema.org",
@@ -35,7 +35,7 @@ const Tours = () => {
     <Layout>
       <PageHero
         title="Circuits touristiques"
-        subtitle="Treize idees de sorties pour visiter la Normandie et ses incontournables."
+        subtitle="Treize idées de sorties pour visiter la Normandie et ses incontournables."
         backgroundImage="/images/tour-03-normandie.jpg"
       />
 
@@ -65,7 +65,7 @@ const Tours = () => {
             ))}
           </div>
           <p className="text-muted-foreground text-sm text-center mt-10 max-w-2xl mx-auto">
-            Tarif valable pour 1 a 4 personnes, hors supplements eventuels. Les billets d'entree, repas et depenses personnelles restent a votre charge.
+            Tarif valable pour 1 à 4 personnes, hors suppléments éventuels. Les billets d'entrée, repas et dépenses personnelles restent à votre charge.
           </p>
         </div>
       </section>
