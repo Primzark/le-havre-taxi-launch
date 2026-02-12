@@ -179,7 +179,8 @@ const TourDetail = () => {
 
       <section className="relative -mt-6 pb-6 md:-mt-8 md:pb-8">
         <div className="container relative">
-          <div className="tour-card-enter rounded-2xl border bg-card/95 p-4 shadow-[0_18px_36px_-26px_hsl(var(--primary)/0.45)] backdrop-blur-sm md:p-5">
+          <div className="-mx-8 sm:mx-0">
+            <div className="tour-card-enter border-y bg-card/95 p-4 shadow-[0_18px_36px_-26px_hsl(var(--primary)/0.45)] backdrop-blur-sm sm:rounded-2xl sm:border md:p-5">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
               <p className="inline-flex items-center gap-2 text-sm font-semibold">
                 <Sparkles className="h-4 w-4 text-primary" />
@@ -190,19 +191,19 @@ const TourDetail = () => {
               </p>
             </div>
 
-            <Carousel
-              key={tour.id}
-              setApi={setCircuitApi}
-              opts={{
-                align: "center",
+              <Carousel
+                key={tour.id}
+                setApi={setCircuitApi}
+                opts={{
+                  align: "center",
                 loop: true,
                 startIndex: currentTourIndex >= 0 ? currentTourIndex : 0,
-              }}
-              className="tour-route-carousel"
-            >
-              <CarouselContent className="-ml-2">
+                }}
+                className="tour-route-carousel"
+              >
+                <CarouselContent className="ml-0 sm:-ml-2">
                 {toursData.map((candidate, index) => (
-                  <CarouselItem key={candidate.id} className="basis-[82%] pl-2 sm:basis-[52%] md:basis-[42%] lg:basis-[34%]">
+                    <CarouselItem key={candidate.id} className="basis-full pl-0 sm:basis-[52%] sm:pl-2 md:basis-[42%] lg:basis-[34%]">
                     <Link
                       to={`/circuits-touristiques/${candidate.id}`}
                       aria-current={activeCircuitIndex === index ? "page" : undefined}
@@ -238,14 +239,15 @@ const TourDetail = () => {
                     </Link>
                   </CarouselItem>
                 ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2 top-1/2 h-9 w-9 border-white/45 bg-black/30 text-white hover:bg-black/45 hover:text-white md:-left-4" />
-              <CarouselNext className="right-2 top-1/2 h-9 w-9 border-white/45 bg-black/30 text-white hover:bg-black/45 hover:text-white md:-right-4" />
-            </Carousel>
+                </CarouselContent>
+                <CarouselPrevious className="left-2 top-1/2 h-9 w-9 border-white/45 bg-black/30 text-white hover:bg-black/45 hover:text-white md:-left-4" />
+                <CarouselNext className="right-2 top-1/2 h-9 w-9 border-white/45 bg-black/30 text-white hover:bg-black/45 hover:text-white md:-right-4" />
+              </Carousel>
 
             <p className="mt-3 text-xs text-muted-foreground">
               Sur mobile, glissez horizontalement sur les cartes. Sur desktop, utilisez les flèches.
             </p>
+            </div>
           </div>
         </div>
       </section>
