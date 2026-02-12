@@ -18,13 +18,27 @@ const Layout = ({ children }: LayoutProps) => {
       return;
     }
 
+    const largeSectionLimit = window.innerHeight * 1.2;
+    const targetsToObserve: HTMLElement[] = [];
+
     targets.forEach((target, index) => {
       target.classList.add("scroll-reveal");
       target.style.setProperty("--reveal-delay", `${Math.min((index % 3) * 90, 180)}ms`);
+
+      if (target.scrollHeight > largeSectionLimit) {
+        target.classList.add("is-visible");
+        return;
+      }
+
+      targetsToObserve.push(target);
     });
 
+    if (targetsToObserve.length === 0) {
+      return;
+    }
+
     if (!("IntersectionObserver" in window)) {
-      targets.forEach((target) => target.classList.add("is-visible"));
+      targetsToObserve.forEach((target) => target.classList.add("is-visible"));
       return;
     }
 
@@ -41,12 +55,12 @@ const Layout = ({ children }: LayoutProps) => {
         });
       },
       {
-        threshold: 0.18,
-        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.08,
+        rootMargin: "0px 0px -4% 0px",
       },
     );
 
-    targets.forEach((target) => observer.observe(target));
+    targetsToObserve.forEach((target) => observer.observe(target));
 
     return () => {
       observer.disconnect();

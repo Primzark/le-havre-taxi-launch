@@ -138,3 +138,12 @@
     transition: none;
   }
 }
+
+@media (max-width: 767px) {
+  .scroll-reveal,
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
