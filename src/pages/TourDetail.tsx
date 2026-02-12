@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { toursData } from "@/data/tours";
 import { ArrowLeft, CheckCircle2, Clock, Euro, MapPin, Sparkles } from "lucide-react";
@@ -12,8 +12,12 @@ import { cn } from "@/lib/utils";
 const TourDetail = () => {
   const { id } = useParams();
   const tour = toursData.find((t) => t.id === Number(id));
+  const navigate = useNavigate();
   const [galleryApi, setGalleryApi] = useState<CarouselApi>();
+  const [circuitApi, setCircuitApi] = useState<CarouselApi>();
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [activeCircuitIndex, setActiveCircuitIndex] = useState(0);
+  const currentTourIndex = toursData.findIndex((candidate) => candidate.id === tour?.id);
 
   useEffect(() => {
     if (!galleryApi) {
@@ -38,6 +42,42 @@ const TourDetail = () => {
       galleryApi.off("reInit", updateActiveSlide);
     };
   }, [galleryApi]);
+
+  useEffect(() => {
+    if (currentTourIndex >= 0) {
+      setActiveCircuitIndex(currentTourIndex);
+    }
+  }, [currentTourIndex]);
+
+  useEffect(() => {
+    if (!circuitApi || currentTourIndex < 0) {
+      return;
+    }
+
+    const onSelect = () => {
+      const selectedIndex = circuitApi.selectedScrollSnap();
+      setActiveCircuitIndex(selectedIndex);
+
+      if (selectedIndex === currentTourIndex) {
+        return;
+      }
+
+      const selectedTour = toursData[selectedIndex];
+      if (!selectedTour) {
+        return;
+      }
+
+      navigate(`/circuits-touristiques/${selectedTour.id}`);
+    };
+
+    circuitApi.on("select", onSelect);
+    circuitApi.on("reInit", onSelect);
+
+    return () => {
+      circuitApi.off("select", onSelect);
+      circuitApi.off("reInit", onSelect);
+    };
+  }, [circuitApi, currentTourIndex, navigate]);
 
   useSEO(
     tour
@@ -133,6 +173,79 @@ const TourDetail = () => {
               <Euro className="h-4 w-4" />
               {tour.price} €
             </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative -mt-6 pb-6 md:-mt-8 md:pb-8">
+        <div className="container relative">
+          <div className="tour-card-enter rounded-2xl border bg-card/95 p-4 shadow-[0_18px_36px_-26px_hsl(var(--primary)/0.45)] backdrop-blur-sm md:p-5">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <p className="inline-flex items-center gap-2 text-sm font-semibold">
+                <Sparkles className="h-4 w-4 text-primary" />
+                Swipez pour passer au circuit suivant
+              </p>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                {activeCircuitIndex + 1} / {toursData.length}
+              </p>
+            </div>
+
+            <Carousel
+              key={tour.id}
+              setApi={setCircuitApi}
+              opts={{
+                align: "center",
+                loop: true,
+                startIndex: currentTourIndex >= 0 ? currentTourIndex : 0,
+              }}
+              className="tour-route-carousel"
+            >
+              <CarouselContent className="-ml-2">
+                {toursData.map((candidate, index) => (
+                  <CarouselItem key={candidate.id} className="basis-[82%] pl-2 sm:basis-[52%] md:basis-[42%] lg:basis-[34%]">
+                    <Link
+                      to={`/circuits-touristiques/${candidate.id}`}
+                      aria-current={activeCircuitIndex === index ? "page" : undefined}
+                      className={cn(
+                        "group block overflow-hidden rounded-xl border bg-background transition-all duration-400",
+                        activeCircuitIndex === index
+                          ? "border-primary/65 shadow-[0_16px_32px_-24px_hsl(var(--primary)/0.9)]"
+                          : "border-border/70 hover:border-primary/35 hover:shadow-[0_12px_26px_-20px_hsl(var(--primary)/0.55)]",
+                      )}
+                    >
+                      <div className="relative overflow-hidden">
+                        <img
+                          src={candidate.image}
+                          alt={`Aperçu du circuit ${candidate.name}`}
+                          className={cn(
+                            "h-36 w-full object-cover transition-transform duration-500 ease-out",
+                            activeCircuitIndex === index ? "scale-105" : "scale-100 group-hover:scale-105",
+                          )}
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-transparent" />
+                        <span className="absolute bottom-2 left-2 rounded-full border border-white/35 bg-black/30 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                          Circuit {candidate.id}
+                        </span>
+                      </div>
+                      <div className="p-3">
+                        <p className="line-clamp-1 text-sm font-semibold">{candidate.name}</p>
+                        <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
+                          <span>{candidate.duration}</span>
+                          <span className="font-semibold text-primary">{candidate.price} €</span>
+                        </div>
+                      </div>
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2 top-1/2 h-9 w-9 border-white/45 bg-black/30 text-white hover:bg-black/45 hover:text-white md:-left-4" />
+              <CarouselNext className="right-2 top-1/2 h-9 w-9 border-white/45 bg-black/30 text-white hover:bg-black/45 hover:text-white md:-right-4" />
+            </Carousel>
+
+            <p className="mt-3 text-xs text-muted-foreground">
+              Sur mobile, glissez horizontalement sur les cartes. Sur desktop, utilisez les flèches.
+            </p>
           </div>
         </div>
       </section>
