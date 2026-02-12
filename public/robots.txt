@@ -3,5 +3,5 @@ Allow: /
 Disallow: /api/
 Disallow: /var/
 
-Sitemap: https://taxis-lehavre.com/sitemap.xml
-Host: taxis-lehavre.com
+Sitemap: https://taxi-le-havre.com/sitemap.xml
+Host: taxi-le-havre.com

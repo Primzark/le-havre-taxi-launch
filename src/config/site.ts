@@ -1,5 +1,5 @@
 export const SITE_NAME = "Taxi Le Havre";
-export const PRIMARY_DOMAIN = "https://taxis-lehavre.com";
+export const PRIMARY_DOMAIN = "https://taxi-le-havre.com";
 
 export const CONTACT_PHONE_NUMBER = "0235250101";
 export const CONTACT_PHONE_DISPLAY = "02 35 25 01 01";
