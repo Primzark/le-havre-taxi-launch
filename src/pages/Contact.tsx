@@ -41,6 +41,10 @@ const distanceInKm = (fromLat: number, fromLng: number, toLat: number, toLng: nu
 const buildContactApiCandidates = (): string[] => {
   const candidates = new Set<string>([CONTACT_API_URL]);
 
+  // Common local deployment paths (MAMP/XAMPP style).
+  candidates.add("/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
+  candidates.add("/le-havre-taxi-launch/api/contact.php");
+
   if (typeof window !== "undefined") {
     const segments = window.location.pathname.split("/").filter(Boolean);
 
@@ -295,15 +299,24 @@ const Contact = () => {
       form.reset();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Erreur réseau pendant l'envoi.";
+      const normalizedMessage = errorMessage.trim();
+      const isRateLimited = /too many requests|retry later|429/i.test(normalizedMessage);
+      const isPathIssue = /not found/i.test(normalizedMessage);
+      const feedbackMessage = isRateLimited
+        ? "Trop de tentatives en peu de temps. Réessayez dans quelques instants."
+        : isPathIssue
+          ? `Envoi direct indisponible. Endpoint API introuvable (${normalizedMessage}).`
+          : `Envoi direct indisponible. ${normalizedMessage}`;
+
       toast({
         title: "Envoi impossible",
-        description: `Le message n'a pas pu être transmis automatiquement. ${errorMessage}`,
+        description: `Le message n'a pas pu être transmis automatiquement. ${normalizedMessage}`,
         variant: "destructive",
       });
 
       setFeedback({
         type: "error",
-        message: `Envoi direct indisponible. Vérifiez la configuration de l'API contact puis réessayez.`,
+        message: feedbackMessage,
       });
     } finally {
       window.clearTimeout(timeout);
