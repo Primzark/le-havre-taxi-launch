@@ -16,7 +16,7 @@ const MentionsLegales = () => {
     description: "Mentions légales du site Radio Taxi Le Havre.",
     canonicalPath: "/mentions-legales",
     robots: "index, follow",
-    ogImage: "/images/home-bassin-commerce.jpg",
+    ogImage: "/images/home-bassin-commerce.webp",
     keywords: [
       "mentions légales taxi le havre",
       "éditeur site taxi le havre",
@@ -26,7 +26,7 @@ const MentionsLegales = () => {
 
   return (
     <Layout>
-      <PageHero title="Mentions légales" backgroundImage="/images/home-bassin-commerce.jpg" />
+      <PageHero title="Mentions légales" backgroundImage="/images/home-bassin-commerce.webp" />
       <section className="py-16">
         <div className="container max-w-3xl prose prose-sm">
           <h2 className="font-heading font-bold text-xl mb-4">Éditeur du site</h2>

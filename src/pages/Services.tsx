@@ -19,7 +19,7 @@ const Services = () => {
     description:
       "Services taxi au Havre : navette aéroport, transport sanitaire, classe affaire, scolaire, PMR, mariage et entreprise.",
     canonicalPath: "/services",
-    ogImage: "/images/services/navette-aeroport.jpg",
+    ogImage: "/images/services/navette-aeroport.webp",
     keywords: [
       "services taxi le havre",
       "navette aeroport le havre",
@@ -54,7 +54,7 @@ const Services = () => {
       <PageHero
         title="Nos services"
         subtitle="Retrouvez tous les services de Taxi Le Havre, avec une page détaillée pour chaque besoin."
-        backgroundImage="/images/services/navette-aeroport.jpg"
+        backgroundImage="/images/services/navette-aeroport.webp"
       />
 
       {/* Services grid */}

@@ -27,7 +27,7 @@ const DevenirTaxi = () => {
     title: "Devenir taxi",
     description: "Conditions pour devenir chauffeur de taxi et rejoindre Radio Taxi Le Havre.",
     canonicalPath: "/devenir-taxi",
-    ogImage: "/images/services/classe-affaire.jpg",
+    ogImage: "/images/services/classe-affaire.webp",
     keywords: [
       "devenir taxi le havre",
       "chauffeur taxi conditions",
@@ -49,7 +49,7 @@ const DevenirTaxi = () => {
       <PageHero
         title="Devenir taxi"
         subtitle="Vous souhaitez exercer au Havre ? Voici les bases pour rejoindre le groupement."
-        backgroundImage="/images/services/classe-affaire.jpg"
+        backgroundImage="/images/services/classe-affaire.webp"
       />
 
       <section className="py-16">

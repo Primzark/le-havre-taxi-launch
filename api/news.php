@@ -54,8 +54,22 @@ function normalize_source_name(string $sourceName): string
     return $sourceName === "Facebook" ? "Facebook" : "Instagram";
 }
 
+function is_webp_reference(string $image): bool
+{
+    $path = parse_url($image, PHP_URL_PATH);
+    if (!is_string($path) || $path === "") {
+        return false;
+    }
+
+    return str_ends_with(strtolower($path), ".webp");
+}
+
 function is_valid_news_image_reference(string $image): bool
 {
+    if (!is_webp_reference($image)) {
+        return false;
+    }
+
     if (str_starts_with($image, "/images/") || str_starts_with($image, "/uploads/actus/")) {
         $realPath = get_public_root_path() . $image;
         return is_file($realPath);

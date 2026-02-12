@@ -19,7 +19,7 @@ const Footer = () => {
           <div>
             <div className="mb-4">
               <img
-                src="/images/logo-taxi-le-havre.png"
+                src="/images/logo-taxi-le-havre.webp"
                 alt="Radio Taxi Le Havre"
                 width={236}
                 height={62}

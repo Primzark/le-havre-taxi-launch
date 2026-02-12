@@ -37,7 +37,7 @@ describe("Actus admin flow", () => {
           item: {
             id: "manual-test",
             title: "Nouvelle capture",
-            image: "/images/actus-instagram-1.jpg",
+            image: "/images/actus-instagram-1.webp",
             sourceUrl: "https://www.instagram.com/lehavretaxi",
             sourceName: "Instagram",
           },
@@ -68,7 +68,7 @@ describe("Actus admin flow", () => {
     });
 
     fireEvent.change(screen.getByLabelText(/Titre/i), { target: { value: "Nouvelle capture" } });
-    fireEvent.change(screen.getByLabelText(/URL image/i), { target: { value: "/images/actus-instagram-1.jpg" } });
+    fireEvent.change(screen.getByLabelText(/URL image/i), { target: { value: "/images/actus-instagram-1.webp" } });
     fireEvent.change(screen.getByLabelText(/Lien source/i), {
       target: { value: "https://www.instagram.com/lehavretaxi" },
     });

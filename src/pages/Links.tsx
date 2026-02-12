@@ -23,7 +23,7 @@ const Links = () => {
     title: "Liens utiles",
     description: "Tous les raccourcis utiles de Radio Taxi Le Havre : appel, tarifs, stations, application et réseaux.",
     canonicalPath: "/liens",
-    ogImage: "/images/logo-taxi-le-havre.png",
+    ogImage: "/images/logo-taxi-le-havre.webp",
     robots: "noindex, follow",
     keywords: [
       "liens taxi le havre",
@@ -37,7 +37,7 @@ const Links = () => {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <img
-            src="/images/logo-taxi-le-havre.png"
+            src="/images/logo-taxi-le-havre.webp"
             alt="Radio Taxi Le Havre"
             width={236}
             height={62}

@@ -9,7 +9,7 @@ const Entreprise = () => {
     title: "Entreprise",
     description: "Radio Taxi Le Havre : 115 véhicules, 35 stations et une centrale active depuis 1976.",
     canonicalPath: "/entreprise",
-    ogImage: "/images/services/transport-entreprise.jpg",
+    ogImage: "/images/services/transport-entreprise.webp",
     keywords: [
       "entreprise taxi le havre",
       "radio taxi le havre",
@@ -31,7 +31,7 @@ const Entreprise = () => {
       <PageHero
         title="Notre entreprise"
         subtitle="Un groupement local, au service des Havrais comme des visiteurs depuis 1976."
-        backgroundImage="/images/services/transport-entreprise.jpg"
+        backgroundImage="/images/services/transport-entreprise.webp"
       />
 
       {/* À propos */}

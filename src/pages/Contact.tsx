@@ -55,7 +55,7 @@ const Contact = () => {
       description:
         "Contactez Radio Taxi Le Havre par téléphone ou via le formulaire. Consultez aussi les 35 stations de l'agglomération.",
       canonicalPath: "/contact",
-      ogImage: "/images/home-mairie.jpg",
+      ogImage: "/images/home-mairie.webp",
       keywords: [
         "contact taxi le havre",
         "numéro taxi le havre",
@@ -265,7 +265,7 @@ const Contact = () => {
       <PageHero
         title="Nous contacter"
         subtitle="Un renseignement, une réservation ou un besoin précis ? Nous vous répondons rapidement."
-        backgroundImage="/images/home-mairie.jpg"
+        backgroundImage="/images/home-mairie.webp"
       />
 
       <section className="py-16">

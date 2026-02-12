@@ -16,7 +16,7 @@ const Tarifs = () => {
     title: "Tarifs",
     description: "Tarifs indicatifs mis à jour au 1er janvier 2025, plus 13 circuits touristiques avec durées et prix.",
     canonicalPath: "/tarifs",
-    ogImage: "/images/tarifs-page-2.jpg",
+    ogImage: "/images/tarifs-page-2.webp",
     keywords: [
       "tarif taxi le havre",
       "prix taxi le havre",
@@ -56,7 +56,7 @@ const Tarifs = () => {
       <PageHero
         title="Tarifs"
         subtitle="Repérez rapidement les prix indicatifs et les circuits proposés."
-        backgroundImage="/images/services/navette-aeroport.jpg"
+        backgroundImage="/images/services/navette-aeroport.webp"
       />
 
       {/* Quick prices */}
@@ -66,7 +66,7 @@ const Tarifs = () => {
           <div className="grid gap-6 mb-6">
             <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
               <img
-                src="/images/tarifs-page-2.jpg"
+                src="/images/tarifs-page-2.webp"
                 alt="Grille tarifaire"
                 className="w-full h-auto"
                 loading="lazy"
@@ -92,7 +92,7 @@ const Tarifs = () => {
 
           <div className="overflow-hidden rounded-xl border bg-card shadow-sm mb-8">
             <img
-              src="/images/tarifs-page-3.jpg"
+              src="/images/tarifs-page-3.webp"
               alt="Liste des 13 circuits touristiques"
               className="w-full h-auto"
               loading="lazy"

@@ -8,7 +8,7 @@ const PolitiqueConfidentialite = () => {
     description: "Politique de confidentialité et traitement des données personnelles de Radio Taxi Le Havre.",
     canonicalPath: "/politique-confidentialite",
     robots: "index, follow",
-    ogImage: "/images/home-pont-normandie.jpg",
+    ogImage: "/images/home-pont-normandie.webp",
     keywords: [
       "politique confidentialité taxi le havre",
       "rgpd taxi le havre",
@@ -18,7 +18,7 @@ const PolitiqueConfidentialite = () => {
 
   return (
     <Layout>
-      <PageHero title="Politique de confidentialité" backgroundImage="/images/home-pont-normandie.jpg" />
+      <PageHero title="Politique de confidentialité" backgroundImage="/images/home-pont-normandie.webp" />
       <section className="py-16">
         <div className="container max-w-3xl prose prose-sm">
           <h2 className="font-heading font-bold text-xl mb-4">Collecte des données</h2>

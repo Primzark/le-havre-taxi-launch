@@ -48,19 +48,19 @@ const appFeatures = [
 const homeSlides = [
   {
     title: "Mairie du Havre",
-    image: "/images/home-mairie.jpg",
+    image: "/images/home-mairie.webp",
   },
   {
     title: "Bassin du Commerce",
-    image: "/images/home-bassin-commerce.jpg",
+    image: "/images/home-bassin-commerce.webp",
   },
   {
     title: "Pont de Normandie",
-    image: "/images/home-pont-normandie.jpg",
+    image: "/images/home-pont-normandie.webp",
   },
   {
     title: "La Catène de containers",
-    image: "/images/home-catene.jpg",
+    image: "/images/home-catene.webp",
   },
 ];
 
@@ -79,7 +79,7 @@ const Index = () => {
       description:
         "Radio Taxi Le Havre : 115 taxis, 35 stations, service 24h/24 et 7j/7. Réservation immédiate et tarifs clairs.",
       canonicalPath: "/",
-      ogImage: "/images/home-pont-normandie.jpg",
+      ogImage: "/images/home-pont-normandie.webp",
       keywords: [
         "taxi le havre",
         "radio taxi le havre",
@@ -156,7 +156,7 @@ const Index = () => {
     <Layout>
       <section className="relative overflow-hidden text-primary-foreground">
         <img
-          src="/images/home-pont-normandie.jpg"
+          src="/images/home-pont-normandie.webp"
           alt=""
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover"
@@ -333,7 +333,7 @@ const Index = () => {
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div className="overflow-hidden rounded-xl border shadow-sm">
               <img
-                src="/images/service-station.jpg"
+                src="/images/service-station.webp"
                 alt="Station de taxi au Havre"
                 className="w-full h-[340px] md:h-[420px] object-cover"
                 loading="lazy"
@@ -363,7 +363,7 @@ const Index = () => {
             <div className="flex flex-wrap justify-center items-center gap-4">
               <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer">
                 <img
-                  src="/images/google-play-badge.png"
+                  src="/images/google-play-badge.webp"
                   alt="Télécharger sur Google Play"
                   className="h-12 w-auto object-contain"
                   loading="lazy"
@@ -371,7 +371,7 @@ const Index = () => {
               </a>
               <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer">
                 <img
-                  src="/images/apple-store-badge.png"
+                  src="/images/apple-store-badge.webp"
                   alt="Télécharger sur l'App Store"
                   className="h-12 w-auto object-contain"
                   loading="lazy"

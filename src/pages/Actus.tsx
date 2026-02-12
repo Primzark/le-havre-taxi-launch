@@ -43,21 +43,21 @@ const defaultCards: NewsCard[] = [
   {
     id: "instagram-1",
     title: "Publication Instagram",
-    image: "/images/actus-instagram-1.jpg",
+    image: "/images/actus-instagram-1.webp",
     sourceUrl: INSTAGRAM_URL,
     sourceName: "Instagram",
   },
   {
     id: "facebook-1",
     title: "Publication Facebook",
-    image: "/images/actus-facebook-1.png",
+    image: "/images/actus-facebook-1.webp",
     sourceUrl: FACEBOOK_URL,
     sourceName: "Facebook",
   },
   {
     id: "instagram-2",
     title: "Publication Instagram",
-    image: "/images/actus-instagram-2.png",
+    image: "/images/actus-instagram-2.webp",
     sourceUrl: INSTAGRAM_URL,
     sourceName: "Instagram",
   },
@@ -70,6 +70,16 @@ const isHttpUrl = (value: string) => {
   } catch {
     return false;
   }
+};
+
+const isWebpImageReference = (value: string) => {
+  const trimmed = value.trim();
+  if (trimmed === "") {
+    return false;
+  }
+
+  const normalized = trimmed.split("?")[0].split("#")[0].toLowerCase();
+  return normalized.endsWith(".webp");
 };
 
 const Actus = () => {
@@ -97,7 +107,7 @@ const Actus = () => {
       description:
         "Retrouvez les actualités Radio Taxi Le Havre publiées depuis Instagram et Facebook.",
       canonicalPath: "/actus",
-      ogImage: "/images/home-catene.jpg",
+      ogImage: "/images/home-catene.webp",
       keywords: [
         "actualités taxi le havre",
         "instagram taxi le havre",
@@ -255,6 +265,11 @@ const Actus = () => {
       return;
     }
 
+    if (uploadFile.type && uploadFile.type !== "image/webp") {
+      setStatusMessage("Format non supporté. Téléversez une image WebP.");
+      return;
+    }
+
     setIsUploading(true);
 
     try {
@@ -304,6 +319,11 @@ const Actus = () => {
 
     if (!image.trim().startsWith("/") && !isHttpUrl(image.trim())) {
       setStatusMessage("Image invalide. Utilisez une URL http(s) ou un chemin /uploads/... ou /images/...");
+      return;
+    }
+
+    if (!isWebpImageReference(image)) {
+      setStatusMessage("Image invalide. Utilisez une image au format .webp.");
       return;
     }
 
@@ -409,7 +429,7 @@ const Actus = () => {
       <PageHero
         title="Actualités"
         subtitle="Les dernières infos du groupement, en provenance de nos réseaux sociaux."
-        backgroundImage="/images/home-catene.jpg"
+        backgroundImage="/images/home-catene.webp"
       />
 
       <section className="py-16">
@@ -548,7 +568,7 @@ const Actus = () => {
                       id="news-image"
                       value={image}
                       onChange={(event) => setImage(event.target.value)}
-                      placeholder="/uploads/actus/... ou https://..."
+                      placeholder="/uploads/actus/... .webp ou https://... .webp"
                       required
                     />
                   </div>
@@ -571,7 +591,7 @@ const Actus = () => {
                     <Input
                       id="news-image-file"
                       type="file"
-                      accept="image/*"
+                      accept="image/webp"
                       onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)}
                     />
                   </div>

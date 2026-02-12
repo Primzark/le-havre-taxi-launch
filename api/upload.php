@@ -61,14 +61,11 @@ if ($finfo) {
 }
 
 $allowed = [
-    "image/jpeg" => "jpg",
-    "image/png" => "png",
     "image/webp" => "webp",
-    "image/gif" => "gif",
 ];
 
 if (!isset($allowed[$mimeType])) {
-    json_response(["success" => false, "error" => "Unsupported image type"], 422);
+    json_response(["success" => false, "error" => "Unsupported image type. Use WebP."], 422);
 }
 
 $extension = $allowed[$mimeType];

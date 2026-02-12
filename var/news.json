@@ -2,7 +2,7 @@
   {
     "id": "instagram-1",
     "title": "Capture Instagram",
-    "image": "/images/actus-instagram-1.jpg",
+    "image": "/images/actus-instagram-1.webp",
     "sourceUrl": "https://www.instagram.com/lehavretaxi",
     "sourceName": "Instagram",
     "created_at": "2026-01-01T00:00:00Z"
@@ -10,7 +10,7 @@
   {
     "id": "facebook-1",
     "title": "Capture Facebook",
-    "image": "/images/actus-facebook-1.png",
+    "image": "/images/actus-facebook-1.webp",
     "sourceUrl": "https://www.facebook.com/taxilehavre",
     "sourceName": "Facebook",
     "created_at": "2026-01-01T00:00:00Z"
@@ -18,7 +18,7 @@
   {
     "id": "instagram-2",
     "title": "Capture Instagram",
-    "image": "/images/actus-instagram-2.png",
+    "image": "/images/actus-instagram-2.webp",
     "sourceUrl": "https://www.instagram.com/lehavretaxi",
     "sourceName": "Instagram",
     "created_at": "2026-01-01T00:00:00Z"

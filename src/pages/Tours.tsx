@@ -10,7 +10,7 @@ const Tours = () => {
     title: "Circuits touristiques",
     description: "13 circuits touristiques au départ du Havre : Étretat, Honfleur, Rouen, Giverny, Paris, Versailles et plus.",
     canonicalPath: "/circuits-touristiques",
-    ogImage: "/images/tour-03-normandie.jpg",
+    ogImage: "/images/tour-03-normandie.webp",
     keywords: [
       "circuit touristique le havre",
       "taxi tourisme normandie",
@@ -36,7 +36,7 @@ const Tours = () => {
       <PageHero
         title="Circuits touristiques"
         subtitle="Treize idées de sorties pour visiter la Normandie et ses incontournables."
-        backgroundImage="/images/tour-03-normandie.jpg"
+        backgroundImage="/images/tour-03-normandie.webp"
       />
 
       <section className="py-16">
