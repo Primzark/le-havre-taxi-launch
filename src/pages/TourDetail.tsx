@@ -73,35 +73,64 @@ const TourDetail = () => {
 
   return (
     <Layout>
-      <section className="bg-primary text-primary-foreground py-16">
-        <div className="container">
-          <Link to="/circuits-touristiques" className="inline-flex items-center gap-1 text-sm opacity-80 hover:opacity-100 mb-4 transition">
+      <section className="relative overflow-hidden text-primary-foreground">
+        <img
+          src={tour.image}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/86 to-primary/72" />
+        <div className="tour-orb tour-orb--one" aria-hidden="true" />
+        <div className="tour-orb tour-orb--two" aria-hidden="true" />
+
+        <div className="container relative py-16 md:py-20">
+          <Link to="/circuits-touristiques" className="mb-4 inline-flex items-center gap-1 text-sm opacity-85 transition hover:opacity-100">
             <ArrowLeft className="h-4 w-4" /> Tous les circuits
           </Link>
-          <h1 className="font-heading font-extrabold text-3xl md:text-4xl">
+          <span className="inline-flex rounded-full border border-white/30 bg-black/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+            Circuit privé
+          </span>
+          <h1 className="mt-3 font-heading text-3xl font-extrabold md:text-4xl">
             N°{tour.id} — {tour.name}
           </h1>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm md:text-base">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-black/20 px-3 py-1.5">
+              <Clock className="h-4 w-4" />
+              {tour.duration}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-black/20 px-3 py-1.5">
+              <Euro className="h-4 w-4" />
+              {tour.price} €
+            </span>
+          </div>
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="container max-w-3xl">
-          <div className="bg-card rounded-xl border p-8 shadow-sm">
-            <img
-              src={tour.image}
-              alt={`Circuit ${tour.name}`}
-              className="aspect-video w-full object-cover rounded-lg mb-8"
-              loading="lazy"
-            />
+      <section className="relative overflow-hidden py-16 md:py-20">
+        <div className="tour-section-bg" aria-hidden="true" />
+        <div className="tour-orb tour-orb--three" aria-hidden="true" />
 
-            <div className="flex flex-wrap gap-6 mb-8">
+        <div className="container relative max-w-3xl">
+          <div className="tour-card-enter rounded-2xl border bg-card/95 p-6 shadow-[0_18px_40px_-22px_hsl(var(--primary)/0.55)] backdrop-blur-sm md:p-8">
+            <div className="mb-8 overflow-hidden rounded-xl border">
+              <img
+                src={tour.image}
+                alt={`Circuit ${tour.name}`}
+                className="aspect-video w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="mb-8 flex flex-wrap gap-6">
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-primary" />
                 <span className="font-medium">Durée : {tour.duration}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Euro className="h-5 w-5 text-primary" />
-                <span className="font-heading font-bold text-xl text-primary">{tour.price} €</span>
+                <span className="font-heading text-xl font-bold text-primary">{tour.price} €</span>
               </div>
             </div>
 
@@ -114,7 +143,7 @@ const TourDetail = () => {
             </p>
           </div>
 
-          <div className="text-center mt-8">
+          <div className="tour-card-enter text-center mt-8" style={{ animationDelay: "120ms" }}>
             <Button size="lg" asChild>
               <a href="tel:+33235250101">Réserver ce circuit</a>
             </Button>

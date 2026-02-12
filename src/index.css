@@ -126,6 +126,104 @@
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
+
+  .tour-section-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(42rem 28rem at 8% 8%, hsl(var(--primary) / 0.16), transparent 60%),
+      radial-gradient(34rem 24rem at 92% 14%, hsl(var(--secondary) / 0.2), transparent 58%),
+      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--accent) / 0.55) 48%, hsl(var(--background)) 100%);
+  }
+
+  .tour-orb {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    filter: blur(54px);
+    opacity: 0.58;
+    animation: tour-orb-float 14s ease-in-out infinite;
+  }
+
+  .tour-orb--one {
+    top: -7rem;
+    left: -4rem;
+    width: 18rem;
+    height: 18rem;
+    background: hsl(var(--primary) / 0.38);
+  }
+
+  .tour-orb--two {
+    top: 16%;
+    right: -6rem;
+    width: 20rem;
+    height: 20rem;
+    background: hsl(var(--secondary) / 0.45);
+    animation-delay: -4s;
+    animation-duration: 18s;
+  }
+
+  .tour-orb--three {
+    bottom: -9rem;
+    left: 34%;
+    width: 16rem;
+    height: 16rem;
+    background: hsl(var(--primary) / 0.22);
+    animation-delay: -8s;
+    animation-duration: 16s;
+  }
+
+  .tour-card-enter {
+    animation: tour-card-enter 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .tour-card {
+    position: relative;
+    isolation: isolate;
+    transform: translateZ(0);
+  }
+
+  .tour-card::after {
+    content: "";
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    bottom: 0.55rem;
+    height: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, hsl(var(--secondary) / 0.95), hsl(var(--primary) / 0.9));
+    transform: scaleX(0.16);
+    transform-origin: left;
+    opacity: 0.55;
+    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease-out;
+  }
+
+  .tour-card:hover::after,
+  .tour-card:focus-visible::after {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes tour-card-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes tour-orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -16px, 0) scale(1.08);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -135,11 +233,28 @@
     transform: none;
     transition: none;
   }
+
+  .tour-card-enter {
+    animation: none;
+  }
+
+  .tour-orb {
+    animation: none;
+  }
+
+  .tour-card::after {
+    transition: none;
+  }
 }
 
 @media (max-width: 767px) {
   .scroll-reveal {
     transform: translate3d(0, 16px, 0) scale(0.995);
     transition-duration: 360ms, 520ms;
+  }
+
+  .tour-orb {
+    filter: blur(42px);
+    opacity: 0.45;
   }
 }
