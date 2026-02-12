@@ -39,23 +39,51 @@ const distanceInKm = (fromLat: number, fromLng: number, toLat: number, toLng: nu
 };
 
 const buildContactApiCandidates = (): string[] => {
-  const candidates = new Set<string>([CONTACT_API_URL]);
+  const candidates: string[] = [];
+  const seen = new Set<string>();
+
+  const addCandidate = (value: string) => {
+    const normalized = value.trim();
+    if (!normalized || seen.has(normalized)) {
+      return;
+    }
+    seen.add(normalized);
+    candidates.push(normalized);
+  };
+
+  addCandidate(CONTACT_API_URL);
+
+  const envCandidate = String(import.meta.env.VITE_CONTACT_API_URL ?? "").trim();
+  if (envCandidate) {
+    addCandidate(envCandidate);
+  }
+
+  const baseUrl = String(import.meta.env.BASE_URL ?? "/");
+  const normalizedBase = baseUrl.startsWith("/") ? baseUrl : `/${baseUrl}`;
+  addCandidate(`${normalizedBase.replace(/\/+$/, "")}/api/contact.php`);
 
   // Common local deployment paths (MAMP/XAMPP style).
-  candidates.add("/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
-  candidates.add("/le-havre-taxi-launch/api/contact.php");
+  addCandidate("/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
+  addCandidate("/le-havre-taxi-launch/api/contact.php");
 
   if (typeof window !== "undefined") {
     const segments = window.location.pathname.split("/").filter(Boolean);
 
-    for (let i = segments.length; i >= 0; i -= 1) {
+    // Try project roots only, not the current page route itself.
+    // Example: /TaxiWebsite/le-havre-taxi-launch/contact -> try:
+    // /api/contact.php, /TaxiWebsite/api/contact.php, /TaxiWebsite/le-havre-taxi-launch/api/contact.php
+    for (let i = 0; i < segments.length; i += 1) {
       const prefix = segments.slice(0, i).join("/");
-      const candidate = `${prefix ? `/${prefix}` : ""}/api/contact.php`;
-      candidates.add(candidate);
+      addCandidate(`${prefix ? `/${prefix}` : ""}/api/contact.php`);
+    }
+
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      addCandidate("http://localhost:8888/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
+      addCandidate("http://127.0.0.1:8888/TaxiWebsite/le-havre-taxi-launch/api/contact.php");
     }
   }
 
-  return Array.from(candidates);
+  return candidates;
 };
 
 const Contact = () => {
