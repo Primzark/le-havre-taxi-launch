@@ -27,6 +27,17 @@ const MIN_MESSAGE_LENGTH = 10;
 
 const toRadians = (value: number) => (value * Math.PI) / 180;
 
+type ContactPayload = {
+  name: string;
+  phone: string;
+  email: string;
+  subject: string;
+  message: string;
+  _subject: string;
+  _template: string;
+  _captcha: string;
+};
+
 const distanceInKm = (fromLat: number, fromLng: number, toLat: number, toLng: number) => {
   const earthRadius = 6371;
   const dLat = toRadians(toLat - fromLat);
@@ -119,6 +130,44 @@ const buildContactApiCandidates = (): string[] => {
   }
 
   return candidates;
+};
+
+const sendViaFormSubmitFallback = async (payload: ContactPayload, signal: AbortSignal) => {
+  const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name: payload.name,
+      phone: payload.phone,
+      email: payload.email,
+      subject: payload.subject,
+      message: payload.message,
+      _subject: payload._subject,
+      _template: payload._template,
+      _captcha: payload._captcha,
+      _replyto: payload.email,
+    }),
+    signal,
+  });
+
+  const result = (await response.json().catch(() => ({}))) as {
+    success?: boolean | string;
+    message?: string;
+    error?: string;
+  };
+
+  const isSuccess =
+    response.ok &&
+    (result.success === true || String(result.success).toLowerCase() === "true");
+
+  if (!isSuccess) {
+    throw new Error(result.message || result.error || `Fallback delivery failed (${response.status})`);
+  }
+
+  return result;
 };
 
 const Contact = () => {
@@ -365,6 +414,46 @@ const Contact = () => {
       const normalizedMessage = errorMessage.trim();
       const isRateLimited = /too many requests|retry later|429/i.test(normalizedMessage);
       const isPathIssue = /not found/i.test(normalizedMessage);
+      const shouldTryFallback =
+        /not found|failed to fetch|network|cors|request failed \(404\)|endpoint api introuvable/i.test(
+          normalizedMessage.toLowerCase(),
+        );
+
+      if (shouldTryFallback) {
+        try {
+          await sendViaFormSubmitFallback(payload, abortController.signal);
+
+          const fallbackMessage = `Votre message a été transmis à ${CONTACT_EMAIL} via la passerelle de secours.`;
+          toast({
+            title: "Message envoyé",
+            description: `${fallbackMessage} (formsubmit)`,
+          });
+          setFeedback({ type: "success", message: fallbackMessage });
+          form.reset();
+          return;
+        } catch (fallbackError) {
+          const fallbackText =
+            fallbackError instanceof Error ? fallbackError.message : "Fallback delivery failed";
+          const needsActivation = /activation|activate form|needs activation/i.test(fallbackText);
+          const fallbackFeedback = needsActivation
+            ? `La passerelle d'envoi nécessite une activation unique. Ouvrez la boîte ${CONTACT_EMAIL}, cliquez sur "Activate Form", puis réessayez.`
+            : `Envoi direct indisponible. ${fallbackText}`;
+
+          toast({
+            title: "Envoi impossible",
+            description: needsActivation
+              ? `Activation requise sur ${CONTACT_EMAIL}. Vérifiez votre boîte mail et cliquez sur le lien "Activate Form".`
+              : `L'API principale et la passerelle de secours ont échoué. ${fallbackText}`,
+            variant: "destructive",
+          });
+          setFeedback({
+            type: "error",
+            message: fallbackFeedback,
+          });
+          return;
+        }
+      }
+
       const feedbackMessage = isRateLimited
         ? "Trop de tentatives en peu de temps. Réessayez dans quelques instants."
         : isPathIssue
