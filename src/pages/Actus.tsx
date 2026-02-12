@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSEO } from "@/hooks/use-seo";
-import { ACTUS_API_URL, ACTUS_UPLOAD_API_URL, ADMIN_API_URL, FACEBOOK_URL, INSTAGRAM_URL } from "@/config/site";
+import {
+  ACTUS_API_URL,
+  ACTUS_UPLOAD_API_URL,
+  ADMIN_API_URL,
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+  PRIMARY_DOMAIN,
+} from "@/config/site";
 
 type NewsCard = {
   id: string;
@@ -84,12 +91,31 @@ const Actus = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
 
-  useSEO({
-    title: "Actus",
-    description:
-      "Retrouvez les actualites Radio Taxi Le Havre publiees depuis Instagram et Facebook.",
-    canonicalPath: "/actus",
-  });
+  const actusSEO = useMemo(
+    () => ({
+      title: "Actus",
+      description:
+        "Retrouvez les actualites Radio Taxi Le Havre publiees depuis Instagram et Facebook.",
+      canonicalPath: "/actus",
+      ogImage: "/images/home-catene.jpg",
+      keywords: [
+        "actualites taxi le havre",
+        "instagram taxi le havre",
+        "facebook taxi le havre",
+        "infos circulation le havre taxi",
+      ],
+      structuredData: {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Actualites Taxi Le Havre",
+        url: `${PRIMARY_DOMAIN}/actus`,
+        inLanguage: "fr-FR",
+      },
+    }),
+    [],
+  );
+
+  useSEO(actusSEO);
 
   const manualCardsCount = useMemo(() => cards.filter((card) => card.id.startsWith("manual-")).length, [cards]);
 

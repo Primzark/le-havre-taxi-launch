@@ -3,12 +3,32 @@ import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { useSEO } from "@/hooks/use-seo";
 import { toursData } from "@/data/tours";
+import { PRIMARY_DOMAIN } from "@/config/site";
 
 const Tours = () => {
   useSEO({
     title: "Circuits touristiques",
     description: "13 circuits touristiques au depart du Havre : Etretat, Honfleur, Rouen, Giverny, Paris, Versailles et plus.",
     canonicalPath: "/circuits-touristiques",
+    ogImage: "/images/tour-03-normandie.jpg",
+    keywords: [
+      "circuit touristique le havre",
+      "taxi tourisme normandie",
+      "etretat taxi prive",
+      "honfleur excursion taxi",
+      "tour prive depuis le havre",
+    ],
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Circuits touristiques Taxi Le Havre",
+      itemListElement: toursData.map((tour, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${PRIMARY_DOMAIN}/circuits-touristiques/${tour.id}`,
+        name: `Circuit ${tour.id} ${tour.name}`,
+      })),
+    },
   });
 
   return (

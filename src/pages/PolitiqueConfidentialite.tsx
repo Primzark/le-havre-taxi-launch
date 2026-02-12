@@ -8,6 +8,12 @@ const PolitiqueConfidentialite = () => {
     description: "Politique de confidentialite et traitement des donnees personnelles de Radio Taxi Le Havre.",
     canonicalPath: "/politique-confidentialite",
     robots: "index, follow",
+    ogImage: "/images/home-pont-normandie.jpg",
+    keywords: [
+      "politique confidentialite taxi le havre",
+      "rgpd taxi le havre",
+      "donnees personnelles taxi le havre",
+    ],
   });
 
   return (

@@ -2,12 +2,28 @@ import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { Users, MapPin, Clock, Phone } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
+import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 
 const Entreprise = () => {
   useSEO({
     title: "Entreprise",
     description: "Radio Taxi Le Havre : 115 vehicules, 35 stations et une centrale active depuis 1976.",
     canonicalPath: "/entreprise",
+    ogImage: "/images/services/transport-entreprise.jpg",
+    keywords: [
+      "entreprise taxi le havre",
+      "radio taxi le havre",
+      "centrale taxi 24h 24",
+      "taxi depuis 1976",
+    ],
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      name: `Entreprise ${SITE_NAME}`,
+      description: "Presentation de la cooperative Radio Taxi Le Havre",
+      url: `${PRIMARY_DOMAIN}/entreprise`,
+      inLanguage: "fr-FR",
+    },
   });
 
   return (

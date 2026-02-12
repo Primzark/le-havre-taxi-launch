@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import { toursData } from "@/data/tours";
 import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/use-seo";
+import { PRIMARY_DOMAIN } from "@/config/site";
 
 const quickPrices = [
   { from: "Le Havre", to: "Centre-ville", price: "10 €" },
@@ -15,6 +16,39 @@ const Tarifs = () => {
     title: "Tarifs",
     description: "Tarifs indicatifs mis a jour au 1er janvier 2025, plus 13 circuits touristiques avec durees et prix.",
     canonicalPath: "/tarifs",
+    ogImage: "/images/tarifs-page-2.jpg",
+    keywords: [
+      "tarif taxi le havre",
+      "prix taxi le havre",
+      "circuit touristique taxi prix",
+      "tarif prefectoral taxi",
+    ],
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": "OfferCatalog",
+        name: "Tarifs indicatifs Taxi Le Havre",
+        itemListElement: quickPrices.map((price, index) => ({
+          "@type": "Offer",
+          sku: `tarif-${index + 1}`,
+          name: `${price.from} - ${price.to}`,
+          price: price.price.replace(/[^\d.,]/g, "").replace(",", "."),
+          priceCurrency: "EUR",
+          url: `${PRIMARY_DOMAIN}/tarifs`,
+        })),
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Circuits touristiques avec prix",
+        itemListElement: toursData.map((tour, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: `Circuit ${tour.id} ${tour.name}`,
+          url: `${PRIMARY_DOMAIN}/circuits-touristiques/${tour.id}`,
+        })),
+      },
+    ],
   });
 
   return (

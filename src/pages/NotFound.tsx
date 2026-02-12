@@ -9,6 +9,7 @@ const NotFound = () => {
     description: "La page demandee est introuvable. Revenez a l'accueil Radio Taxi Le Havre.",
     canonicalPath: "/404",
     robots: "noindex, follow",
+    breadcrumbs: false,
   });
 
   return (

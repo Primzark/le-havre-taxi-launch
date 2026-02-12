@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Car } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
 import { servicesData } from "@/data/services";
+import { PRIMARY_DOMAIN } from "@/config/site";
 
 const vehicles = [
   "Berline (Peugeot 508, etc.)",
@@ -18,6 +19,34 @@ const Services = () => {
     description:
       "Services taxi au Havre : navette aeroport, transport sanitaire, classe affaire, scolaire, PMR, mariage et entreprise.",
     canonicalPath: "/services",
+    ogImage: "/images/services/navette-aeroport.jpg",
+    keywords: [
+      "services taxi le havre",
+      "navette aeroport le havre",
+      "taxi pmr le havre",
+      "transport sanitaire assis le havre",
+      "transport entreprise le havre",
+    ],
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Services Taxi Le Havre",
+        url: `${PRIMARY_DOMAIN}/services`,
+        inLanguage: "fr-FR",
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Services de Taxi Le Havre",
+        itemListElement: servicesData.map((service, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `${PRIMARY_DOMAIN}/services/${service.slug}`,
+          name: service.title,
+        })),
+      },
+    ],
   });
 
   return (

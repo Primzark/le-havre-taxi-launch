@@ -16,6 +16,12 @@ const MentionsLegales = () => {
     description: "Mentions legales du site Radio Taxi Le Havre.",
     canonicalPath: "/mentions-legales",
     robots: "index, follow",
+    ogImage: "/images/home-bassin-commerce.jpg",
+    keywords: [
+      "mentions legales taxi le havre",
+      "editeur site taxi le havre",
+      "hebergement site taxi le havre",
+    ],
   });
 
   return (

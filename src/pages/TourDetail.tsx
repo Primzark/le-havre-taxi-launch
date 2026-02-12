@@ -4,18 +4,61 @@ import { toursData } from "@/data/tours";
 import { ArrowLeft, Clock, Euro } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/use-seo";
+import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 
 const TourDetail = () => {
   const { id } = useParams();
   const tour = toursData.find((t) => t.id === Number(id));
 
-  useSEO({
-    title: tour ? `Circuit ${tour.name}` : "Circuit non trouvé",
-    description: tour
-      ? `Circuit N°${tour.id} ${tour.name}, durée ${tour.duration}, tarif ${tour.price} € (1 à 4 personnes).`
-      : "Ce circuit touristique n'existe pas.",
-    canonicalPath: tour ? `/circuits-touristiques/${tour.id}` : "/circuits-touristiques",
-  });
+  useSEO(
+    tour
+      ? {
+          title: `Circuit ${tour.name}`,
+          description: `Circuit N°${tour.id} ${tour.name}, durée ${tour.duration}, tarif ${tour.price} € (1 à 4 personnes).`,
+          canonicalPath: `/circuits-touristiques/${tour.id}`,
+          ogImage: tour.image,
+          keywords: [
+            "circuit touristique le havre",
+            `${tour.name.toLowerCase()} taxi`,
+            `excursion ${tour.name.toLowerCase()} depuis le havre`,
+          ],
+          breadcrumbs: [
+            { name: "Accueil", path: "/" },
+            { name: "Circuits touristiques", path: "/circuits-touristiques" },
+            { name: tour.name, path: `/circuits-touristiques/${tour.id}` },
+          ],
+          structuredData: {
+            "@context": "https://schema.org",
+            "@type": "TouristTrip",
+            name: `Circuit ${tour.id} ${tour.name}`,
+            description: `Circuit touristique ${tour.name} depuis Le Havre`,
+            touristType: "Tour prive en taxi",
+            itinerary: {
+              "@type": "Place",
+              name: tour.name,
+            },
+            offers: {
+              "@type": "Offer",
+              price: tour.price,
+              priceCurrency: "EUR",
+              availability: "https://schema.org/InStock",
+              url: `${PRIMARY_DOMAIN}/circuits-touristiques/${tour.id}`,
+            },
+            image: `${PRIMARY_DOMAIN}${tour.image}`,
+            provider: {
+              "@type": "LocalBusiness",
+              name: SITE_NAME,
+              url: PRIMARY_DOMAIN,
+            },
+          },
+        }
+      : {
+          title: "Circuit non trouve",
+          description: "Ce circuit touristique n'existe pas.",
+          canonicalPath: "/circuits-touristiques",
+          robots: "noindex, follow",
+        },
+  );
 
   if (!tour) {
     return (

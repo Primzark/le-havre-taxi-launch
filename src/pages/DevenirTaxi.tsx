@@ -4,6 +4,7 @@ import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/use-seo";
+import { PRIMARY_DOMAIN } from "@/config/site";
 
 const requirements = [
   "Etre titulaire du permis B depuis plus de 3 ans",
@@ -26,6 +27,21 @@ const DevenirTaxi = () => {
     title: "Devenir taxi",
     description: "Conditions pour devenir chauffeur de taxi et rejoindre Radio Taxi Le Havre.",
     canonicalPath: "/devenir-taxi",
+    ogImage: "/images/services/classe-affaire.jpg",
+    keywords: [
+      "devenir taxi le havre",
+      "chauffeur taxi conditions",
+      "carte professionnelle taxi",
+      "rejoindre radio taxi le havre",
+    ],
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Devenir taxi au Havre",
+      description: "Conditions pour exercer et rejoindre Taxi Le Havre",
+      url: `${PRIMARY_DOMAIN}/devenir-taxi`,
+      inLanguage: "fr-FR",
+    },
   });
 
   return (

@@ -23,6 +23,13 @@ const Links = () => {
     title: "Liens utiles",
     description: "Tous les raccourcis utiles de Radio Taxi Le Havre : appel, tarifs, stations, application et reseaux.",
     canonicalPath: "/liens",
+    ogImage: "/images/logo-taxi-le-havre.png",
+    robots: "noindex, follow",
+    keywords: [
+      "liens taxi le havre",
+      "raccourcis taxi le havre",
+      "app taxi le havre",
+    ],
   });
 
   return (

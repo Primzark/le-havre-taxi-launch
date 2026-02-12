@@ -3,7 +3,7 @@ import { ArrowLeft, CheckCircle2, Phone } from "lucide-react";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_LINK } from "@/config/site";
+import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_LINK, PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 import { getServiceBySlug } from "@/data/services";
 import { useSEO } from "@/hooks/use-seo";
 import NotFound from "./NotFound";
@@ -18,6 +18,33 @@ const ServiceDetail = () => {
           title: service.title,
           description: service.seoDescription,
           canonicalPath: `/services/${service.slug}`,
+          ogImage: service.imageSrc,
+          keywords: [
+            "taxi le havre",
+            service.title.toLowerCase(),
+            `service taxi ${service.title.toLowerCase()} le havre`,
+          ],
+          breadcrumbs: [
+            { name: "Accueil", path: "/" },
+            { name: "Services", path: "/services" },
+            { name: service.title, path: `/services/${service.slug}` },
+          ],
+          structuredData: {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: service.title,
+            description: service.seoDescription,
+            serviceType: service.title,
+            url: `${PRIMARY_DOMAIN}/services/${service.slug}`,
+            areaServed: "Le Havre et agglomeration",
+            inLanguage: "fr-FR",
+            image: `${PRIMARY_DOMAIN}${service.imageSrc}`,
+            provider: {
+              "@type": "LocalBusiness",
+              name: SITE_NAME,
+              url: PRIMARY_DOMAIN,
+            },
+          },
         }
       : {
           title: "Service introuvable",

@@ -17,6 +17,8 @@ import {
   FACEBOOK_URL,
   INSTAGRAM_URL,
   PLAY_STORE_URL,
+  PRIMARY_DOMAIN,
+  SITE_NAME,
 } from "@/config/site";
 import { useSEO } from "@/hooks/use-seo";
 import { Station, stationsData } from "@/data/stations";
@@ -47,13 +49,38 @@ const Contact = () => {
     message: "",
   });
 
-  useSEO({
-    title: "Contact",
-    description:
-      "Contactez Radio Taxi Le Havre par telephone ou via le formulaire. Consultez aussi les 35 stations de l'agglomeration.",
-    canonicalPath: "/contact",
-    robots: "noindex, follow",
-  });
+  const contactSEO = useMemo(
+    () => ({
+      title: "Contact",
+      description:
+        "Contactez Radio Taxi Le Havre par telephone ou via le formulaire. Consultez aussi les 35 stations de l'agglomeration.",
+      canonicalPath: "/contact",
+      ogImage: "/images/home-mairie.jpg",
+      keywords: [
+        "contact taxi le havre",
+        "numero taxi le havre",
+        "station taxi le havre",
+        "formulaire taxi le havre",
+      ],
+      structuredData: {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        name: `Contact ${SITE_NAME}`,
+        url: `${PRIMARY_DOMAIN}/contact`,
+        inLanguage: "fr-FR",
+        mainEntity: {
+          "@type": "LocalBusiness",
+          name: SITE_NAME,
+          url: PRIMARY_DOMAIN,
+          email: CONTACT_EMAIL,
+          telephone: CONTACT_PHONE_LINK,
+        },
+      },
+    }),
+    [],
+  );
+
+  useSEO(contactSEO);
 
   const filteredStations = useMemo(() => {
     const needle = stationQuery.trim().toLowerCase();

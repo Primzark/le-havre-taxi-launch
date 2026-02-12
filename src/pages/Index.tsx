@@ -1,10 +1,17 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Phone, Clock, Users, Car, MapPin, Star, Download, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { APPLE_STORE_URL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_LINK, PLAY_STORE_URL } from "@/config/site";
+import {
+  APPLE_STORE_URL,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_LINK,
+  PLAY_STORE_URL,
+  PRIMARY_DOMAIN,
+  SITE_NAME,
+} from "@/config/site";
 import { useSEO } from "@/hooks/use-seo";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -66,12 +73,33 @@ const Index = () => {
   const [searchFeedback, setSearchFeedback] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState<MenuSearchSuggestion[]>(MENU_SEARCH_QUICK_LINKS);
 
-  useSEO({
-    title: "Accueil",
-    description:
-      "Radio Taxi Le Havre : 115 taxis, 35 stations, service 24h/24 et 7j/7. Réservation immédiate et tarifs clairs.",
-    canonicalPath: "/",
-  });
+  const homeSEO = useMemo(
+    () => ({
+      title: "Accueil",
+      description:
+        "Radio Taxi Le Havre : 115 taxis, 35 stations, service 24h/24 et 7j/7. Réservation immédiate et tarifs clairs.",
+      canonicalPath: "/",
+      ogImage: "/images/home-pont-normandie.jpg",
+      keywords: [
+        "taxi le havre",
+        "radio taxi le havre",
+        "taxi 24h 24 le havre",
+        "centrale taxi le havre",
+        "reservation taxi le havre",
+      ],
+      breadcrumbs: false as const,
+      structuredData: {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: PRIMARY_DOMAIN,
+        inLanguage: "fr-FR",
+      },
+    }),
+    [],
+  );
+
+  useSEO(homeSEO);
 
   useEffect(() => {
     if (!carouselApi) {
