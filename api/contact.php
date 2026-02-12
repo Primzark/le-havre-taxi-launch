@@ -89,6 +89,14 @@ if (!$mailResult["delivered"]) {
         "provider" => $mailResult["provider"],
         "error" => $mailResult["error"],
     ]);
+
+    json_response([
+        "success" => false,
+        "recipient" => $recipient,
+        "delivered" => false,
+        "provider" => $mailResult["provider"],
+        "error" => $mailResult["error"] !== "" ? $mailResult["error"] : "Email delivery failed",
+    ], 503);
 } else {
     api_log("info", "contact_email_delivered", [
         "recipient" => $recipient,

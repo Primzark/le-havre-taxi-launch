@@ -6,7 +6,7 @@ declare(strict_types=1);
  */
 
 // Contact form destination.
-define("CONTACT_FORM_EMAIL", "contactradiotaxilehavre@gmail.com");
+define("CONTACT_FORM_EMAIL", "starlod7696@gmail.com");
 
 // Admin authentication for actus CRUD/upload.
 define("ACTUS_ADMIN_USERNAME", "admin");

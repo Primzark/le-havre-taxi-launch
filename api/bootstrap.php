@@ -385,7 +385,7 @@ function get_contact_email(): string
         return trim($envEmail);
     }
 
-    return "contactradiotaxilehavre@gmail.com";
+    return "starlod7696@gmail.com";
 }
 
 function get_mail_provider(): string
