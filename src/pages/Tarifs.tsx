@@ -319,8 +319,8 @@ const Tarifs = () => {
             </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <Button asChild size="lg" className="w-full bg-white text-primary hover:bg-white/90 sm:w-auto">
               <a href="tel:+33235250101">
                 <Phone className="h-4 w-4" />
                 Réserver immédiatement
@@ -330,7 +330,7 @@ const Tarifs = () => {
               asChild
               size="lg"
               variant="outline"
-              className="border-white/45 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+              className="w-full border-white/45 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:w-auto"
             >
               <a href="#simulateur">
                 Lancer l'estimation
@@ -345,11 +345,17 @@ const Tarifs = () => {
         <div className="container">
           <div className="rounded-2xl border bg-card/95 p-5 shadow-[0_22px_42px_-26px_hsl(var(--primary)/0.55)] backdrop-blur-sm md:p-7">
             <Tabs defaultValue="courses" className="w-full">
-              <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl bg-muted p-1">
-                <TabsTrigger value="courses" className="rounded-lg py-2.5 text-sm md:text-base">
+              <TabsList className="grid h-auto w-full grid-cols-1 gap-2 rounded-xl bg-muted p-1 sm:grid-cols-2">
+                <TabsTrigger
+                  value="courses"
+                  className="w-full rounded-lg py-2 text-xs leading-tight whitespace-normal sm:py-2.5 sm:text-sm md:text-base"
+                >
                   Courses & transferts
                 </TabsTrigger>
-                <TabsTrigger value="circuits" className="rounded-lg py-2.5 text-sm md:text-base">
+                <TabsTrigger
+                  value="circuits"
+                  className="w-full rounded-lg py-2 text-xs leading-tight whitespace-normal sm:py-2.5 sm:text-sm md:text-base"
+                >
                   Circuits touristiques
                 </TabsTrigger>
               </TabsList>
@@ -382,14 +388,14 @@ const Tarifs = () => {
                               : "border-border bg-background/70 hover:border-primary/35 hover:bg-primary/[0.03]"
                           }`}
                         >
-                          <div className="flex items-start justify-between gap-3">
+                          <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                             <div>
                               <p className="text-sm font-semibold">
                                 {fare.from} <span className="text-muted-foreground">→</span> {fare.to}
                               </p>
                               <p className="mt-1 text-xs text-muted-foreground">{fare.note}</p>
                             </div>
-                            <p className="font-heading text-xl font-bold text-primary">
+                            <p className="font-heading text-lg font-bold text-primary sm:text-xl">
                               {formatEuro(fare.basePrice)}
                             </p>
                           </div>
@@ -560,7 +566,7 @@ const Tarifs = () => {
                           <span>Bagages</span>
                           <span>+ {formatEuro(estimate.luggageFee)}</span>
                         </div>
-                        <div className="flex items-center justify-between border-t pt-2 font-semibold">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 font-semibold">
                           <span className="inline-flex items-center gap-1.5">
                             <Users className="h-4 w-4 text-primary" />
                             {passengers[0]} passager{passengers[0] > 1 ? "s" : ""}
@@ -678,16 +684,16 @@ const Tarifs = () => {
                         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                           Circuit N°{tour.id}
                         </p>
-                        <h3 className="mt-1 font-heading text-xl font-bold leading-snug">{tour.name}</h3>
+                        <h3 className="mt-1 font-heading text-lg font-bold leading-snug sm:text-xl">{tour.name}</h3>
                         <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock3 className="h-4 w-4 text-primary" />
                           <span>{tour.duration}</span>
                         </div>
 
-                        <div className="mt-5 flex items-end justify-between">
+                        <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
                           <div>
                             <p className="text-xs uppercase tracking-wide text-muted-foreground">Tarif</p>
-                            <p className="font-heading text-2xl font-extrabold text-primary">
+                            <p className="font-heading text-xl font-extrabold text-primary sm:text-2xl">
                               {formatEuro(tour.price)}
                             </p>
                           </div>
