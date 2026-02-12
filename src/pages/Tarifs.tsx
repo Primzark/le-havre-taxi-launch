@@ -274,7 +274,7 @@ const Tarifs = () => {
         <div className="tour-orb tour-orb--one" aria-hidden="true" />
         <div className="tour-orb tour-orb--two" aria-hidden="true" />
 
-        <div className="container relative py-16 md:py-20">
+        <div className="relative w-full px-4 py-16 sm:px-6 md:px-8 md:py-20 lg:px-10">
           <nav aria-label="Fil d'Ariane" className="mb-4 text-sm opacity-85">
             <Link to="/" className="underline-offset-2 transition hover:underline">
               Accueil
@@ -287,10 +287,10 @@ const Tarifs = () => {
             Mise à jour {lastTariffUpdateDate}
           </Badge>
 
-          <h1 className="mt-4 max-w-4xl font-heading text-3xl font-extrabold leading-tight md:text-5xl">
+          <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight md:text-5xl">
             Tarifs.
           </h1>
-          <p className="mt-4 max-w-3xl text-base text-white/90 md:text-lg">
+          <p className="mt-4 text-base text-white/90 md:text-lg">
             Estimez une course en direct, comparez les circuits par budget et gardez une vision
             transparente des prix indicatifs avant réservation.
           </p>
@@ -342,7 +342,7 @@ const Tarifs = () => {
       </section>
 
       <section id="simulateur" className="relative -mt-6 pb-16 md:-mt-8 md:pb-20">
-        <div className="container">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="rounded-2xl border bg-card/95 p-5 shadow-[0_22px_42px_-26px_hsl(var(--primary)/0.55)] backdrop-blur-sm md:p-7">
             <Tabs defaultValue="courses" className="w-full">
               <TabsList className="grid h-auto w-full grid-cols-1 gap-2 rounded-xl bg-muted p-1 sm:grid-cols-2">
@@ -733,7 +733,7 @@ const Tarifs = () => {
       </section>
 
       <section className="pb-16">
-        <div className="container max-w-5xl">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="rounded-2xl border bg-card/95 p-5 shadow-[0_18px_40px_-28px_hsl(var(--primary)/0.55)] md:p-7">
             <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
               <CheckCircle2 className="h-4 w-4" />
