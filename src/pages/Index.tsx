@@ -62,6 +62,7 @@ const Index = () => {
   const { toast } = useToast();
   const [query, setQuery] = useState("");
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [searchFeedback, setSearchFeedback] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState<MenuSearchSuggestion[]>(MENU_SEARCH_QUICK_LINKS);
 
@@ -77,11 +78,23 @@ const Index = () => {
       return;
     }
 
+    const updateActiveSlide = () => {
+      setActiveSlideIndex(carouselApi.selectedScrollSnap());
+    };
+
+    updateActiveSlide();
+    carouselApi.on("select", updateActiveSlide);
+    carouselApi.on("reInit", updateActiveSlide);
+
     const interval = window.setInterval(() => {
       carouselApi.scrollNext();
     }, 5000);
 
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearInterval(interval);
+      carouselApi.off("select", updateActiveSlide);
+      carouselApi.off("reInit", updateActiveSlide);
+    };
   }, [carouselApi]);
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -228,13 +241,16 @@ const Index = () => {
         <div className="container">
           <Carousel setApi={setCarouselApi} opts={{ loop: true }}>
             <CarouselContent className="ml-0">
-              {homeSlides.map((slide) => (
+              {homeSlides.map((slide, index) => (
                 <CarouselItem key={slide.title} className="pl-0">
                   <div className="relative overflow-hidden rounded-xl border shadow-sm">
                     <img
                       src={slide.image}
                       alt={slide.title}
-                      className="w-full h-[300px] sm:h-[380px] md:h-[480px] object-cover"
+                      className={`w-full h-[300px] sm:h-[380px] md:h-[480px] object-cover transform-gpu transition-transform ease-linear ${
+                        activeSlideIndex === index ? "scale-110" : "scale-100"
+                      }`}
+                      style={{ transitionDuration: "5000ms" }}
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
