@@ -13,6 +13,12 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { resolveMenuSearch } from "@/utils/menu-search";
 
+const PHONE_ANIMATION_DURATION_MS = 1800;
+const PHONE_DIGITS = CONTACT_PHONE_DISPLAY.replace(/\D/g, "");
+
+const formatPhoneDisplay = (digits: string) =>
+  (digits.match(/\d{1,2}/g) ?? []).join(" ");
+
 const navLinks = [
   { to: "/", label: "Accueil" },
   { to: "/services", label: "Services" },
@@ -27,6 +33,8 @@ const navLinks = [
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuQuery, setMenuQuery] = useState("");
+  const [animatedPhoneDisplay, setAnimatedPhoneDisplay] = useState(CONTACT_PHONE_DISPLAY);
+  const [phoneAnimationDone, setPhoneAnimationDone] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -34,6 +42,53 @@ const Header = () => {
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      setPhoneAnimationDone(true);
+      return;
+    }
+
+    const animationFlagKey = "taxi-phone-countup-done";
+    if (window.sessionStorage.getItem(animationFlagKey) === "1") {
+      setPhoneAnimationDone(true);
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setPhoneAnimationDone(true);
+      window.sessionStorage.setItem(animationFlagKey, "1");
+      return;
+    }
+
+    const targetValue = Number.parseInt(PHONE_DIGITS, 10);
+    const easeOutCubic = (progress: number) => 1 - Math.pow(1 - progress, 3);
+    const startTime = performance.now();
+    let frameId = 0;
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - startTime) / PHONE_ANIMATION_DURATION_MS, 1);
+      const currentValue = Math.floor(targetValue * easeOutCubic(progress));
+      const paddedDigits = String(currentValue).padStart(PHONE_DIGITS.length, "0");
+
+      setAnimatedPhoneDisplay(formatPhoneDisplay(paddedDigits));
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(tick);
+        return;
+      }
+
+      setAnimatedPhoneDisplay(CONTACT_PHONE_DISPLAY);
+      setPhoneAnimationDone(true);
+      window.sessionStorage.setItem(animationFlagKey, "1");
+    };
+
+    frameId = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, []);
 
   const isActiveLink = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
@@ -70,7 +125,14 @@ const Header = () => {
             className="inline-flex min-w-0 items-center gap-2 font-heading font-semibold transition hover:opacity-90"
           >
             <Phone className="h-4 w-4" />
-            <span className="truncate">Centrale de réservation : {CONTACT_PHONE_DISPLAY}</span>
+            <span className="truncate">
+              Centrale de réservation :{" "}
+              <span
+                className={`inline-block tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
+              >
+                {animatedPhoneDisplay}
+              </span>
+            </span>
           </a>
           <div className="hidden lg:flex items-center gap-4 shrink-0">
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Instagram</a>
@@ -81,15 +143,15 @@ const Header = () => {
 
       {/* Main nav */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b shadow-sm">
-        <div className="container flex h-20 items-center gap-3">
+        <div className="container flex h-24 md:h-28 items-center gap-3">
           <Link to="/" aria-label="Accueil Radio Taxi Le Havre" className="shrink-0 flex items-center">
-            <span className="rounded-lg bg-foreground/95 p-1.5 shadow-sm">
+            <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white shadow-[0_12px_28px_-14px_hsl(var(--primary)/0.7)] sm:h-20 sm:w-20 md:h-24 md:w-24">
               <img
-                src="/images/logo-taxi-le-havre.webp"
+                src="/images/logo-ancien.png"
                 alt="Radio Taxi Le Havre"
-                width={236}
-                height={62}
-                className="h-10 w-auto md:h-12"
+                width={1024}
+                height={1024}
+                className="h-full w-full object-contain p-1 md:p-1.5"
               />
             </span>
           </Link>
