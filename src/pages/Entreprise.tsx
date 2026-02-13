@@ -7,7 +7,7 @@ import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 const Entreprise = () => {
   useSEO({
     title: "Entreprise",
-    description: "Radio Taxi Le Havre : 115 véhicules, 35 stations et une centrale active depuis 1976.",
+    description: "SCA Radio Taxi Le Havre : 112 véhicules, une trentaine de stations et une centrale active depuis 1976.",
     canonicalPath: "/entreprise",
     ogImage: "/images/services/transport-entreprise.webp",
     keywords: [
@@ -30,7 +30,7 @@ const Entreprise = () => {
     <Layout>
       <PageHero
         title="Notre entreprise"
-        subtitle="Un groupement local, au service des Havrais comme des visiteurs depuis 1976."
+        subtitle="Services personnalisés aux particuliers et aux entreprises, au Havre et dans son agglomération."
         backgroundImage="/images/services/transport-entreprise.webp"
       />
 
@@ -40,7 +40,7 @@ const Entreprise = () => {
           <h2 className="font-heading font-bold text-2xl mb-6">Qui nous sommes</h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
             Radio Taxi Le Havre rassemble des chauffeurs indépendants sur toute l'agglomération.
-            Avec <strong>115 véhicules</strong> et <strong>35 stations</strong>, nous couvrons les besoins du quotidien comme les trajets plus spécifiques.
+            Avec <strong>112 véhicules</strong> et <strong>une trentaine de stations</strong>, nous couvrons les besoins du quotidien comme les trajets spécifiques.
           </p>
           <p className="text-muted-foreground leading-relaxed">
             La centrale de réservation fonctionne 24h/24 et 7j/7 pour vos déplacements personnels, professionnels,
@@ -70,7 +70,7 @@ const Entreprise = () => {
             </div>
             <div className="bg-card rounded-xl border p-6 shadow-sm">
               <MapPin className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-heading font-semibold mb-2">35 stations</h3>
+              <h3 className="font-heading font-semibold mb-2">Une trentaine de stations</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 Des points de présence répartis dans l'agglomération pour rester proches de vous.
               </p>

@@ -13,17 +13,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { resolveMenuSearch } from "@/utils/menu-search";
 
-type NavLinkItem = {
-  to: string;
-  label: string;
-};
-
-type SocialLinkItem = {
-  href: string;
-  label: string;
-};
-
-const navLinks: NavLinkItem[] = [
+const navLinks = [
   { to: "/", label: "Accueil" },
   { to: "/services", label: "Services" },
   { to: "/circuits-touristiques", label: "Circuits touristiques" },
@@ -33,13 +23,6 @@ const navLinks: NavLinkItem[] = [
   { to: "/actus", label: "Actus" },
   { to: "/contact", label: "Contact" },
 ];
-
-const socialLinks: SocialLinkItem[] = [
-  { href: INSTAGRAM_URL, label: "Instagram" },
-  { href: FACEBOOK_URL, label: "Facebook" },
-];
-
-const menuSearchPlaceholder = "Service, tarif, station ou circuit";
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -54,18 +37,6 @@ const Header = () => {
 
   const isActiveLink = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
-
-  const getNavLinkClassName = (to: string, isMobile: boolean) => {
-    const sharedStateClass = isActiveLink(to)
-      ? "bg-accent text-accent-foreground"
-      : "text-muted-foreground hover:text-foreground hover:bg-muted";
-
-    if (isMobile) {
-      return `block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${sharedStateClass}`;
-    }
-
-    return `px-2.5 py-2 rounded-md text-[13px] 2xl:text-sm font-medium whitespace-nowrap transition-colors ${sharedStateClass}`;
-  };
 
   const handleMenuSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -102,32 +73,23 @@ const Header = () => {
             <span className="truncate">Centrale de réservation : {CONTACT_PHONE_DISPLAY}</span>
           </a>
           <div className="hidden lg:flex items-center gap-4 shrink-0">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:opacity-80"
-              >
-                {social.label}
-              </a>
-            ))}
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Instagram</a>
+            <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Facebook</a>
           </div>
         </div>
       </div>
 
       {/* Main nav */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b shadow-sm">
-        <div className="container flex h-16 items-center gap-3">
+        <div className="container flex h-20 items-center gap-3">
           <Link to="/" aria-label="Accueil Radio Taxi Le Havre" className="shrink-0 flex items-center">
-            <span className="rounded-lg bg-foreground/95 p-1 shadow-sm">
+            <span className="rounded-lg bg-foreground/95 p-1.5 shadow-sm">
               <img
                 src="/images/logo-taxi-le-havre.webp"
                 alt="Radio Taxi Le Havre"
                 width={236}
                 height={62}
-                className="h-9 w-auto"
+                className="h-10 w-auto md:h-12"
               />
             </span>
           </Link>
@@ -138,7 +100,11 @@ const Header = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className={getNavLinkClassName(link.to, false)}
+                className={`px-2.5 py-2 rounded-md text-[13px] 2xl:text-sm font-medium whitespace-nowrap transition-colors ${
+                  isActiveLink(link.to)
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
               >
                 {link.label}
               </Link>
@@ -154,7 +120,7 @@ const Header = () => {
                 type="search"
                 value={menuQuery}
                 onChange={(event) => setMenuQuery(event.target.value)}
-                placeholder={menuSearchPlaceholder}
+                placeholder="Service, tarif, station ou circuit"
                 className="h-9 pl-9"
               />
             </div>
@@ -179,7 +145,7 @@ const Header = () => {
           {/* Mobile toggle */}
           <button
             className="ml-auto md:ml-0 xl:hidden p-2 rounded-md hover:bg-muted transition shrink-0"
-            onClick={() => setMobileOpen((isOpen) => !isOpen)}
+            onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
@@ -201,7 +167,7 @@ const Header = () => {
                     type="search"
                     value={menuQuery}
                     onChange={(event) => setMenuQuery(event.target.value)}
-                    placeholder={menuSearchPlaceholder}
+                    placeholder="Service, tarif, station ou circuit"
                     className="h-10 pl-9"
                   />
                 </div>
@@ -214,7 +180,11 @@ const Header = () => {
                     key={link.to}
                     to={link.to}
                     onClick={() => setMobileOpen(false)}
-                    className={getNavLinkClassName(link.to, true)}
+                    className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                      isActiveLink(link.to)
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
                   >
                     {link.label}
                   </Link>

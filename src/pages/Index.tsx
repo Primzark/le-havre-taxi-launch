@@ -22,9 +22,9 @@ import {
 
 const stats = [
   { icon: Clock, label: "Depuis", value: "1976" },
-  { icon: Car, label: "Taxis dans le réseau", value: "115" },
+  { icon: Car, label: "Taxis dans le réseau", value: "112" },
   { icon: Clock, label: "Service continu", value: "24h/7j" },
-  { icon: Users, label: "Courses traitées en 2024", value: "101 000" },
+  { icon: Users, label: "Stations dans l'agglomération", value: "30+" },
 ];
 
 const appFeatures = [
@@ -77,7 +77,7 @@ const Index = () => {
     () => ({
       title: "Accueil",
       description:
-        "Radio Taxi Le Havre : 115 taxis, 35 stations, service 24h/24 et 7j/7. Réservation immédiate et tarifs clairs.",
+        "Taxi Le Havre : appelez, voyagez, profitez. Centrale 24h/24 et 7j/7, flotte locale et circuits touristiques depuis Le Havre.",
       canonicalPath: "/",
       ogImage: "/images/home-pont-normandie.webp",
       keywords: [
@@ -171,11 +171,11 @@ const Index = () => {
           <div className="grid items-end gap-8 lg:grid-cols-[1.15fr_0.85fr]">
             <div className="max-w-2xl rounded-2xl border border-white/20 bg-black/20 p-6 md:p-8 shadow-2xl backdrop-blur-sm">
               <h1 className="font-heading font-extrabold text-4xl md:text-5xl mb-5 leading-tight">
-                Votre taxi au Havre,{" "}
-                <span className="text-secondary">24h/24</span>
+                Appelez, voyagez,{" "}
+                <span className="text-secondary">profitez...</span>
               </h1>
               <p className="text-lg md:text-xl opacity-90 mb-7 leading-relaxed">
-                Depuis 1976, Radio Taxi Le Havre accompagne les Havrais et les visiteurs, avec une centrale joignable jour et nuit.
+                Depuis 1976, SCA Radio Taxi Le Havre vous accompagne avec une centrale joignable 24h/24 et 7j/7.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-heading font-semibold" asChild>
@@ -199,11 +199,11 @@ const Index = () => {
             <div className="hidden lg:block">
               <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-md">
                 <p className="text-sm font-semibold uppercase tracking-widest text-secondary mb-2">Disponibilité</p>
-                <p className="font-heading text-2xl leading-tight mb-4">Courses locales, aéroport, gare et services dédiés</p>
+                <p className="font-heading text-2xl leading-tight mb-4">Course directe et réservation 24h/24, 7j/7</p>
                 <ul className="space-y-2 text-sm opacity-90">
-                  <li>Réservation immédiate ou planifiée</li>
-                  <li>Prise en charge 7j/7, de jour comme de nuit</li>
-                  <li>Flotte adaptée de 4 à 8 places</li>
+                  <li>Géolocalisation des stations de taxi</li>
+                  <li>Réservation immédiate ou programmée</li>
+                  <li>Flotte de 4 à 8 places</li>
                 </ul>
               </div>
             </div>
@@ -342,7 +342,7 @@ const Index = () => {
             <div>
               <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Une équipe locale et réactive</h2>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                115 taxis, 35 stations et une centrale disponible 24h/24 pour organiser vos déplacements sans attente inutile.
+                Une flotte de 112 taxis et une trentaine de stations pour vous prendre en charge rapidement au Havre.
               </p>
               <Button size="lg" asChild>
                 <Link to="/services">Découvrir nos services</Link>

@@ -18,8 +18,8 @@ const advantages = [
   "Intégrer un groupement reconnu depuis 1976",
   "Profiter d'une centrale de réservation active 24h/24",
   "Accéder à une clientèle variée (particuliers, entreprises, tourisme, médical)",
-  "S'appuyer sur 35 stations dans l'agglomération",
-  "Rejoindre un réseau de 115 taxis",
+  "S'appuyer sur une trentaine de stations dans l'agglomération",
+  "Rejoindre un réseau de 112 taxis",
 ];
 
 const DevenirTaxi = () => {

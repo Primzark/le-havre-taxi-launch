@@ -53,7 +53,7 @@ const Services = () => {
     <Layout>
       <PageHero
         title="Nos services"
-        subtitle="Retrouvez tous les services de Taxi Le Havre, avec une page détaillée pour chaque besoin."
+        subtitle="Services personnalisés aux particuliers et aux entreprises, avec prise en charge locale et transferts dédiés."
         backgroundImage="/images/services/navette-aeroport.webp"
       />
 

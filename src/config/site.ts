@@ -1,9 +1,9 @@
 export const SITE_NAME = "Taxi Le Havre";
 export const PRIMARY_DOMAIN = "https://taxis-lehavre.com";
 
-export const CONTACT_PHONE_NUMBER = "0235250101";
-export const CONTACT_PHONE_DISPLAY = "02 35 25 01 01";
-export const CONTACT_PHONE_LINK = "+33235250101";
+export const CONTACT_PHONE_NUMBER = "0235258181";
+export const CONTACT_PHONE_DISPLAY = "02 35 25 81 81";
+export const CONTACT_PHONE_LINK = "+33235258181";
 export const CONTACT_EMAIL = "starlod7696@gmail.com";
 
 export const INSTAGRAM_URL = "https://www.instagram.com/lehavretaxi";

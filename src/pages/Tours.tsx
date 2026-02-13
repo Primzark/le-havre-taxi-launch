@@ -36,7 +36,7 @@ const Tours = () => {
     <Layout>
       <PageHero
         title="Circuits touristiques"
-        subtitle="Treize idées de sorties pour visiter la Normandie et ses incontournables."
+        subtitle="Situé au cœur de la Normandie, Le Havre est idéalement placé pour découvrir les grands sites normands."
         backgroundImage="/images/tour-03-normandie.webp"
       />
 
@@ -54,7 +54,7 @@ const Tours = () => {
             </p>
             <h2 className="mt-4 font-heading text-2xl font-extrabold md:text-3xl">Choisissez votre itinéraire</h2>
             <p className="mt-3 text-muted-foreground">
-              Chaque circuit combine confort, flexibilité et accompagnement local pour profiter de la région sans contrainte.
+              Du Havre jusqu'à Paris, nos taxis vous accompagnent sur des parcours touristiques proches du site historique.
             </p>
           </div>
 

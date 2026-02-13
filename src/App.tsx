@@ -21,10 +21,6 @@ import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
-const routerFutureConfig = {
-  v7_startTransition: true,
-  v7_relativeSplatPath: true,
-} as const;
 
 const RouteScrollManager = () => {
   const { pathname, search, hash } = useLocation();
@@ -46,7 +42,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter future={routerFutureConfig}>
+      <BrowserRouter>
         <RouteScrollManager />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -59,8 +55,8 @@ const App = () => (
           <Route path="/devenir-taxi" element={<DevenirTaxi />} />
           <Route path="/actus" element={<Actus />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/nous-contact" element={<Navigate to="/" replace />} />
-          <Route path="/nous-contacter" element={<Navigate to="/" replace />} />
+          <Route path="/nous-contact" element={<Navigate to="/contact" replace />} />
+          <Route path="/nous-contacter" element={<Navigate to="/contact" replace />} />
           {serviceLegacyRedirects.map((redirect) => (
             <Route key={redirect.from} path={redirect.from} element={<Navigate to={redirect.to} replace />} />
           ))}
