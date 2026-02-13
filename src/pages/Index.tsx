@@ -1,5 +1,6 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import type { LucideIcon } from "lucide-react";
 import { Phone, Clock, Users, Car, MapPin, Star, Download, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
@@ -20,12 +21,101 @@ import {
   resolveMenuSearch,
 } from "@/utils/menu-search";
 
-const stats = [
-  { icon: Clock, label: "Depuis", value: "1976" },
-  { icon: Car, label: "Taxis dans le réseau", value: "112" },
-  { icon: Clock, label: "Service continu", value: "24h/7j" },
-  { icon: Users, label: "Stations dans l'agglomération", value: "30+" },
+type StatDefinition = {
+  icon: LucideIcon;
+  label: string;
+  target: number;
+  suffix?: string;
+  groupDigits?: boolean;
+};
+
+const stats: StatDefinition[] = [
+  { icon: Clock, label: "Depuis", target: 1976 },
+  { icon: Car, label: "Taxis dans le réseau", target: 112 },
+  { icon: Clock, label: "Service continu", target: 24, suffix: "h/7j" },
+  { icon: Users, label: "Stations et agglomération", target: 30, suffix: "+" },
+  { icon: Users, label: "Courses attribuées en 2018", target: 243426, groupDigits: true },
 ];
+
+const statNumberFormatter = new Intl.NumberFormat("fr-FR");
+
+const AnimatedStatValue = ({
+  stat,
+  animate,
+  delayMs,
+}: {
+  stat: StatDefinition;
+  animate: boolean;
+  delayMs: number;
+}) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (!animate) {
+      return;
+    }
+
+    if (typeof window === "undefined") {
+      setDisplayValue(stat.target);
+      setIsVisible(true);
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplayValue(stat.target);
+      setIsVisible(true);
+      return;
+    }
+
+    let frameId = 0;
+    let timeoutId = 0;
+    const duration = 1650;
+    const easeOutQuint = (progress: number) => 1 - Math.pow(1 - progress, 5);
+
+    const startAnimation = () => {
+      setIsVisible(true);
+      const startedAt = performance.now();
+
+      const frame = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const nextValue = Math.round(stat.target * easeOutQuint(progress));
+        setDisplayValue(nextValue);
+
+        if (progress < 1) {
+          frameId = window.requestAnimationFrame(frame);
+          return;
+        }
+
+        setDisplayValue(stat.target);
+      };
+
+      frameId = window.requestAnimationFrame(frame);
+    };
+
+    timeoutId = window.setTimeout(startAnimation, delayMs);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [animate, delayMs, stat.target]);
+
+  const renderedValue = stat.groupDigits
+    ? statNumberFormatter.format(displayValue).replace(/\u202f/g, " ")
+    : String(displayValue);
+
+  return (
+    <span
+      className={`inline-block tabular-nums font-heading font-extrabold text-2xl md:text-3xl transition-all duration-700 ${
+        isVisible ? "translate-y-0 opacity-100 blur-0" : "translate-y-1.5 opacity-0 blur-[2px]"
+      }`}
+    >
+      {renderedValue}
+      {stat.suffix ?? ""}
+    </span>
+  );
+};
 
 const appFeatures = [
   {
@@ -72,6 +162,8 @@ const Index = () => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [searchFeedback, setSearchFeedback] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState<MenuSearchSuggestion[]>(MENU_SEARCH_QUICK_LINKS);
+  const statsSectionRef = useRef<HTMLElement | null>(null);
+  const [shouldAnimateStats, setShouldAnimateStats] = useState(false);
 
   const homeSEO = useMemo(
     () => ({
@@ -124,6 +216,45 @@ const Index = () => {
       carouselApi.off("reInit", updateActiveSlide);
     };
   }, [carouselApi]);
+
+  useEffect(() => {
+    if (shouldAnimateStats) {
+      return;
+    }
+
+    if (typeof window === "undefined") {
+      setShouldAnimateStats(true);
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShouldAnimateStats(true);
+      return;
+    }
+
+    const target = statsSectionRef.current;
+
+    if (!target || typeof IntersectionObserver === "undefined") {
+      setShouldAnimateStats(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) {
+          return;
+        }
+
+        setShouldAnimateStats(true);
+        observer.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, [shouldAnimateStats]);
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -315,12 +446,14 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="bg-secondary text-secondary-foreground py-6">
+      <section ref={statsSectionRef} className="bg-secondary text-secondary-foreground py-6">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {stats.map((stat) => (
+          <div className="grid grid-cols-2 gap-6 text-center md:grid-cols-3 xl:grid-cols-5">
+            {stats.map((stat, index) => (
               <div key={stat.label}>
-                <p className="font-heading font-extrabold text-2xl md:text-3xl">{stat.value}</p>
+                <p>
+                  <AnimatedStatValue stat={stat} animate={shouldAnimateStats} delayMs={index * 140} />
+                </p>
                 <p className="text-sm font-medium opacity-85">{stat.label}</p>
               </div>
             ))}
