@@ -25,10 +25,19 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { toursData } from "@/data/tours";
 import { useSEO } from "@/hooks/use-seo";
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_LINK, PRIMARY_DOMAIN } from "@/config/site";
+import {
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_LINK,
+  PRIMARY_DOMAIN,
+} from "@/config/site";
 
 type QuickFare = {
   id: string;
@@ -40,7 +49,12 @@ type QuickFare = {
 };
 
 type PeriodMode = "jour" | "nuit";
-type DurationFilter = "all" | "express" | "demi-journee" | "journee" | "grand-format";
+type DurationFilter =
+  | "all"
+  | "express"
+  | "demi-journee"
+  | "journee"
+  | "grand-format";
 type TourSortMode = "price-asc" | "price-desc" | "duration-asc";
 
 const quickFares: QuickFare[] = [
@@ -70,7 +84,10 @@ const quickFares: QuickFare[] = [
   },
 ];
 
-const periodConfig: Record<PeriodMode, { label: string; multiplier: number; helper: string }> = {
+const periodConfig: Record<
+  PeriodMode,
+  { label: string; multiplier: number; helper: string }
+> = {
   jour: {
     label: "Jour",
     multiplier: 1,
@@ -103,7 +120,7 @@ const tourSortOptions: Array<{ id: TourSortMode; label: string }> = [
   { id: "duration-asc", label: "Durée la plus courte" },
 ];
 
-const lastTariffUpdateDate = "1er janvier 2025";
+const lastTariffUpdateDate = "01/01/2025";
 const routeScaleMax = Math.max(...quickFares.map((route) => route.basePrice));
 const minTourPrice = Math.min(...toursData.map((tour) => tour.price));
 const maxTourPrice = Math.max(...toursData.map((tour) => tour.price));
@@ -116,7 +133,8 @@ const currencyFormatter = new Intl.NumberFormat("fr-FR", {
   maximumFractionDigits: 0,
 });
 
-const formatEuro = (amount: number) => currencyFormatter.format(Math.round(amount));
+const formatEuro = (amount: number) =>
+  currencyFormatter.format(Math.round(amount));
 
 const parseDurationHours = (duration: string) => {
   const [hoursPart, minutesPart = "0"] = duration.split("h");
@@ -144,12 +162,14 @@ const Tarifs = () => {
   const [tourSortMode, setTourSortMode] = useState<TourSortMode>("price-asc");
 
   const selectedRoute = useMemo(
-    () => quickFares.find((route) => route.id === selectedRouteId) ?? quickFares[0],
+    () =>
+      quickFares.find((route) => route.id === selectedRouteId) ?? quickFares[0],
     [selectedRouteId],
   );
 
   const selectedLuggage =
-    luggageOptions.find((option) => option.id === luggageId) ?? luggageOptions[0];
+    luggageOptions.find((option) => option.id === luggageId) ??
+    luggageOptions[0];
 
   const estimate = useMemo(() => {
     const periodMultiplier = periodConfig[periodMode].multiplier;
@@ -170,7 +190,13 @@ const Tarifs = () => {
       min,
       max,
     };
-  }, [selectedLuggage.fee, selectedRoute.basePrice, periodMode, stops, waitingMinutes]);
+  }, [
+    selectedLuggage.fee,
+    selectedRoute.basePrice,
+    periodMode,
+    stops,
+    waitingMinutes,
+  ]);
 
   const filteredTours = useMemo(() => {
     const normalizedQuery = tourQuery.trim().toLowerCase();
@@ -197,7 +223,9 @@ const Tarifs = () => {
       .filter((tour) => tour.price <= maxBudget[0])
       .filter((tour) => matchesDuration(tour.duration))
       .filter((tour) =>
-        normalizedQuery ? `n°${tour.id} ${tour.name}`.toLowerCase().includes(normalizedQuery) : true,
+        normalizedQuery
+          ? `n°${tour.id} ${tour.name}`.toLowerCase().includes(normalizedQuery)
+          : true,
       );
 
     return tours.sort((a, b) => {
@@ -215,13 +243,15 @@ const Tarifs = () => {
 
   const filteredAveragePrice =
     filteredTours.length > 0
-      ? filteredTours.reduce((total, tour) => total + tour.price, 0) / filteredTours.length
+      ? filteredTours.reduce((total, tour) => total + tour.price, 0) /
+        filteredTours.length
       : 0;
 
   const shortestFilteredTour =
     filteredTours.length > 0
       ? [...filteredTours].sort(
-          (a, b) => parseDurationHours(a.duration) - parseDurationHours(b.duration),
+          (a, b) =>
+            parseDurationHours(a.duration) - parseDurationHours(b.duration),
         )[0]
       : null;
 
@@ -269,58 +299,105 @@ const Tarifs = () => {
   return (
     <Layout>
       <section className="relative overflow-hidden text-primary-foreground">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/85" />
-        <div className="absolute inset-0 bg-[radial-gradient(36rem_20rem_at_16%_12%,hsl(var(--secondary)/0.32),transparent_62%),radial-gradient(26rem_18rem_at_88%_18%,hsl(0_0%_100%/0.12),transparent_62%)]" />
+        <img
+          src="/images/tarifs-page-3.webp"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/96 via-primary/90 to-primary/78" />
+        <div className="absolute inset-0 bg-[radial-gradient(34rem_22rem_at_14%_16%,hsl(var(--secondary)/0.38),transparent_62%),radial-gradient(30rem_20rem_at_86%_20%,hsl(0_0%_100%/0.15),transparent_65%)]" />
+        <div className="absolute -left-16 top-10 h-52 w-52 rounded-full bg-secondary/45 blur-3xl" />
+        <div className="absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-white/15 blur-3xl" />
         <div className="tour-orb tour-orb--one" aria-hidden="true" />
         <div className="tour-orb tour-orb--two" aria-hidden="true" />
 
         <div className="relative w-full px-4 py-16 sm:px-6 md:px-8 md:py-20 lg:px-10">
-          <nav aria-label="Fil d'Ariane" className="mb-4 text-sm opacity-85">
-            <Link to="/" className="underline-offset-2 transition hover:underline">
+          <nav aria-label="Fil d'Ariane" className="mb-4 text-sm opacity-90">
+            <Link
+              to="/"
+              className="underline-offset-2 transition hover:underline"
+            >
               Accueil
             </Link>
             <span className="mx-2">/</span>
             <span aria-current="page">Tarifs</span>
           </nav>
 
-          <Badge className="border-white/25 bg-black/20 text-white hover:bg-black/30">
+          <Badge className="border-white/35 bg-black/25 text-white hover:bg-black/35">
             Mise à jour {lastTariffUpdateDate}
           </Badge>
 
           <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight md:text-5xl">
-            Tarifs.
+            Tarifs et estimations
           </h1>
-          <p className="mt-4 text-base text-white/90 md:text-lg">
-            Estimez une course en direct, comparez les circuits par budget et gardez une vision
-            transparente des prix indicatifs avant réservation.
+          <p className="mt-4 max-w-3xl text-base text-white/90 md:text-lg">
+            Consultez les prix de référence 2025, estimez une course en direct
+            et comparez les circuits touristiques en toute transparence avant
+            réservation.
           </p>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/20 bg-black/20 p-4 backdrop-blur-sm transition hover:bg-black/30">
-              <p className="text-xs uppercase tracking-wide text-white/75">Tarif urbain express</p>
-              <p className="mt-2 inline-flex items-center gap-1.5 text-2xl font-extrabold">
-                <Euro className="h-5 w-5" />
-                10 €
+          <div className="mt-8 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+            <div className="rounded-2xl border border-white/25 bg-black/25 p-5 shadow-[0_18px_42px_-28px_hsl(0_0%_0%/0.8)] backdrop-blur-sm md:p-6">
+              <p className="text-xs uppercase tracking-widest text-white/80">
+                Forfaits brochure 2025
               </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {quickFares.map((fare) => (
+                  <div
+                    key={fare.id}
+                    className="rounded-xl border border-white/20 bg-white/10 p-4 transition hover:bg-white/15"
+                  >
+                    <p className="text-xs uppercase tracking-wide text-white/75">
+                      {fare.from}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold">{fare.to}</p>
+                    <p className="mt-3 font-heading text-2xl font-extrabold text-secondary">
+                      {formatEuro(fare.basePrice)}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="rounded-xl border border-white/20 bg-black/20 p-4 backdrop-blur-sm transition hover:bg-black/30">
-              <p className="text-xs uppercase tracking-wide text-white/75">Circuits disponibles</p>
-              <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold">
-                <MapPin className="h-5 w-5" />
-                {toursData.length}
-              </p>
-            </div>
-            <div className="rounded-xl border border-white/20 bg-black/20 p-4 backdrop-blur-sm transition hover:bg-black/30">
-              <p className="text-xs uppercase tracking-wide text-white/75">Prix moyen circuit</p>
-              <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold">
-                <Sparkles className="h-5 w-5" />
-                {formatEuro(avgTourPrice)}
-              </p>
+
+            <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+              <div className="rounded-xl border border-white/20 bg-black/25 p-4 backdrop-blur-sm transition hover:bg-black/35">
+                <p className="text-xs uppercase tracking-wide text-white/75">
+                  Tarif urbain express
+                </p>
+                <p className="mt-2 inline-flex items-center gap-1.5 text-2xl font-extrabold">
+                  <Euro className="h-5 w-5" />
+                  10 €
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/20 bg-black/25 p-4 backdrop-blur-sm transition hover:bg-black/35">
+                <p className="text-xs uppercase tracking-wide text-white/75">
+                  Circuits disponibles
+                </p>
+                <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold">
+                  <MapPin className="h-5 w-5" />
+                  {toursData.length}
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/20 bg-black/25 p-4 backdrop-blur-sm transition hover:bg-black/35">
+                <p className="text-xs uppercase tracking-wide text-white/75">
+                  Prix moyen circuit
+                </p>
+                <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold">
+                  <Sparkles className="h-5 w-5" />
+                  {formatEuro(avgTourPrice)}
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <Button asChild size="lg" className="w-full bg-white text-primary hover:bg-white/90 sm:w-auto">
+            <Button
+              asChild
+              size="lg"
+              className="w-full bg-white text-primary hover:bg-white/90 sm:w-auto"
+            >
               <a href={`tel:${CONTACT_PHONE_LINK}`}>
                 <Phone className="h-4 w-4" />
                 Réserver immédiatement
@@ -341,11 +418,24 @@ const Tarifs = () => {
         </div>
       </section>
 
-      <section id="simulateur" className="relative -mt-6 pb-16 md:-mt-8 md:pb-20">
+      <section
+        id="simulateur"
+        className="relative -mt-10 pb-16 md:-mt-12 md:pb-20"
+      >
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,hsl(var(--primary)/0.08)_0%,hsl(var(--secondary)/0.08)_36%,transparent_100%)]" />
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="rounded-2xl border bg-card/95 p-5 shadow-[0_22px_42px_-26px_hsl(var(--primary)/0.55)] backdrop-blur-sm md:p-7">
+          <div className="rounded-[1.75rem] border border-primary/15 bg-card/95 p-5 shadow-[0_24px_48px_-26px_hsl(var(--primary)/0.45)] backdrop-blur-sm md:p-7">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <p className="font-heading text-lg font-bold md:text-xl">
+                Comparez rapidement vos tarifs de course et vos circuits
+              </p>
+              <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                Référence 2025
+              </span>
+            </div>
+
             <Tabs defaultValue="courses" className="w-full">
-              <TabsList className="grid h-auto w-full grid-cols-1 gap-2 rounded-xl bg-muted p-1 sm:grid-cols-2">
+              <TabsList className="grid h-auto w-full grid-cols-1 gap-2 rounded-xl border bg-muted/80 p-1 sm:grid-cols-2">
                 <TabsTrigger
                   value="courses"
                   className="w-full rounded-lg py-2 text-xs leading-tight whitespace-normal sm:py-2.5 sm:text-sm md:text-base"
@@ -360,7 +450,10 @@ const Tarifs = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="courses" className="mt-6 space-y-6 overflow-x-hidden">
+              <TabsContent
+                value="courses"
+                className="mt-6 space-y-6 overflow-x-hidden"
+              >
                 <div className="grid gap-6 xl:grid-cols-[1fr_1.15fr]">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -384,16 +477,20 @@ const Tarifs = () => {
                           onClick={() => setSelectedRouteId(fare.id)}
                           className={`w-full rounded-xl border p-4 text-left transition-all duration-300 ${
                             isActive
-                              ? "border-primary/55 bg-primary/5 shadow-[0_14px_26px_-20px_hsl(var(--primary)/0.75)]"
-                              : "border-border bg-background/70 hover:border-primary/35 hover:bg-primary/[0.03]"
+                              ? "border-primary/55 bg-[linear-gradient(135deg,hsl(var(--primary)/0.14),hsl(var(--secondary)/0.18))] shadow-[0_14px_26px_-20px_hsl(var(--primary)/0.75)]"
+                              : "border-border/80 bg-background/85 hover:border-primary/35 hover:bg-primary/[0.03]"
                           }`}
                         >
                           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                             <div className="min-w-0">
                               <p className="break-words text-sm font-semibold">
-                                {fare.from} <span className="text-muted-foreground">→</span> {fare.to}
+                                {fare.from}{" "}
+                                <span className="text-muted-foreground">→</span>{" "}
+                                {fare.to}
                               </p>
-                              <p className="mt-1 break-words text-xs text-muted-foreground">{fare.note}</p>
+                              <p className="mt-1 break-words text-xs text-muted-foreground">
+                                {fare.note}
+                              </p>
                             </div>
                             <p className="font-heading text-lg font-bold text-primary sm:text-xl">
                               {formatEuro(fare.basePrice)}
@@ -401,7 +498,7 @@ const Tarifs = () => {
                           </div>
 
                           <div className="mt-3">
-                            <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary/55">
+                            <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary/35">
                               <div
                                 className="h-full rounded-full bg-gradient-to-r from-secondary to-primary transition-all duration-500"
                                 style={{ width: `${progress}%` }}
@@ -417,7 +514,7 @@ const Tarifs = () => {
                     })}
                   </div>
 
-                  <div className="rounded-xl border bg-background/70 p-4 shadow-sm md:p-5">
+                  <div className="rounded-2xl border border-primary/15 bg-background/80 p-4 shadow-[0_18px_34px_-24px_hsl(var(--primary)/0.35)] md:p-5">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="inline-flex items-center gap-2 text-sm font-semibold">
                         <Sparkles className="h-4 w-4 text-primary" />
@@ -433,7 +530,10 @@ const Tarifs = () => {
                         <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                           Itinéraire
                         </label>
-                        <Select value={selectedRouteId} onValueChange={setSelectedRouteId}>
+                        <Select
+                          value={selectedRouteId}
+                          onValueChange={setSelectedRouteId}
+                        >
                           <SelectTrigger className="max-w-full">
                             <SelectValue placeholder="Choisir un trajet" />
                           </SelectTrigger>
@@ -471,23 +571,27 @@ const Tarifs = () => {
                         Période de course
                       </p>
                       <div className="mt-2 grid grid-cols-2 gap-2">
-                        {(Object.keys(periodConfig) as PeriodMode[]).map((mode) => (
-                          <button
-                            key={mode}
-                            type="button"
-                            onClick={() => setPeriodMode(mode)}
-                            className={`rounded-md border px-3 py-2 text-left text-sm transition ${
-                              periodMode === mode
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border bg-background hover:border-primary/40"
-                            }`}
-                          >
-                            <p className="font-semibold">{periodConfig[mode].label}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {periodConfig[mode].helper}
-                            </p>
-                          </button>
-                        ))}
+                        {(Object.keys(periodConfig) as PeriodMode[]).map(
+                          (mode) => (
+                            <button
+                              key={mode}
+                              type="button"
+                              onClick={() => setPeriodMode(mode)}
+                              className={`rounded-md border px-3 py-2 text-left text-sm transition ${
+                                periodMode === mode
+                                  ? "border-primary bg-primary/10 text-primary"
+                                  : "border-border bg-background hover:border-primary/40"
+                              }`}
+                            >
+                              <p className="font-semibold">
+                                {periodConfig[mode].label}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {periodConfig[mode].helper}
+                              </p>
+                            </button>
+                          ),
+                        )}
                       </div>
                     </div>
 
@@ -538,7 +642,7 @@ const Tarifs = () => {
                       </div>
                     </div>
 
-                    <div className="mt-5 rounded-xl border bg-card p-4 shadow-sm">
+                    <div className="mt-5 rounded-xl border border-primary/15 bg-card p-4 shadow-sm">
                       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                         Estimation indicative
                       </p>
@@ -546,7 +650,8 @@ const Tarifs = () => {
                         {formatEuro(estimate.subtotal)}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        Fourchette conseillée: {formatEuro(estimate.min)} à {formatEuro(estimate.max)}
+                        Fourchette conseillée : {formatEuro(estimate.min)} à{" "}
+                        {formatEuro(estimate.max)}
                       </p>
 
                       <div className="mt-4 space-y-2 text-sm">
@@ -569,14 +674,20 @@ const Tarifs = () => {
                         <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 font-semibold">
                           <span className="inline-flex items-center gap-1.5">
                             <Users className="h-4 w-4 text-primary" />
-                            {passengers[0]} passager{passengers[0] > 1 ? "s" : ""}
+                            {passengers[0]} passager
+                            {passengers[0] > 1 ? "s" : ""}
                           </span>
                           <span>1 à 4 inclus</span>
                         </div>
                       </div>
 
-                      <Button asChild className="mt-4 h-auto w-full whitespace-normal py-3 text-center leading-snug">
-                        <a href={`tel:${CONTACT_PHONE_LINK}`}>Valider cette estimation par téléphone</a>
+                      <Button
+                        asChild
+                        className="mt-4 h-auto w-full whitespace-normal py-3 text-center leading-snug"
+                      >
+                        <a href={`tel:${CONTACT_PHONE_LINK}`}>
+                          Valider cette estimation par téléphone
+                        </a>
                       </Button>
                     </div>
                   </div>
@@ -595,7 +706,12 @@ const Tarifs = () => {
                     />
                   </div>
 
-                  <Select value={tourSortMode} onValueChange={(value) => setTourSortMode(value as TourSortMode)}>
+                  <Select
+                    value={tourSortMode}
+                    onValueChange={(value) =>
+                      setTourSortMode(value as TourSortMode)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Trier les circuits" />
                     </SelectTrigger>
@@ -609,7 +725,7 @@ const Tarifs = () => {
                   </Select>
                 </div>
 
-                <div className="rounded-xl border bg-background/65 p-4">
+                <div className="rounded-2xl border border-primary/15 bg-background/80 p-4">
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <p className="inline-flex items-center gap-2 text-sm font-semibold">
                       <Euro className="h-4 w-4 text-primary" />
@@ -647,26 +763,32 @@ const Tarifs = () => {
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border bg-background/70 p-4">
+                  <div className="rounded-xl border border-primary/10 bg-background/80 p-4">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Circuits affichés
                     </p>
-                    <p className="mt-2 text-2xl font-extrabold">{filteredTours.length}</p>
+                    <p className="mt-2 text-2xl font-extrabold">
+                      {filteredTours.length}
+                    </p>
                   </div>
-                  <div className="rounded-xl border bg-background/70 p-4">
+                  <div className="rounded-xl border border-primary/10 bg-background/80 p-4">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Prix moyen filtré
                     </p>
                     <p className="mt-2 text-2xl font-extrabold text-primary">
-                      {filteredTours.length > 0 ? formatEuro(filteredAveragePrice) : "--"}
+                      {filteredTours.length > 0
+                        ? formatEuro(filteredAveragePrice)
+                        : "--"}
                     </p>
                   </div>
-                  <div className="rounded-xl border bg-background/70 p-4">
+                  <div className="rounded-xl border border-primary/10 bg-background/80 p-4">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Circuit le plus court
                     </p>
                     <p className="mt-2 text-2xl font-extrabold">
-                      {shortestFilteredTour ? shortestFilteredTour.duration : "--"}
+                      {shortestFilteredTour
+                        ? shortestFilteredTour.duration
+                        : "--"}
                     </p>
                   </div>
                 </div>
@@ -684,7 +806,9 @@ const Tarifs = () => {
                         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                           Circuit N°{tour.id}
                         </p>
-                        <h3 className="mt-1 font-heading text-lg font-bold leading-snug sm:text-xl">{tour.name}</h3>
+                        <h3 className="mt-1 font-heading text-lg font-bold leading-snug sm:text-xl">
+                          {tour.name}
+                        </h3>
                         <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock3 className="h-4 w-4 text-primary" />
                           <span>{tour.duration}</span>
@@ -692,7 +816,9 @@ const Tarifs = () => {
 
                         <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
                           <div>
-                            <p className="text-xs uppercase tracking-wide text-muted-foreground">Tarif</p>
+                            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                              Tarif
+                            </p>
                             <p className="font-heading text-xl font-extrabold text-primary sm:text-2xl">
                               {formatEuro(tour.price)}
                             </p>
@@ -707,9 +833,12 @@ const Tarifs = () => {
                   </div>
                 ) : (
                   <div className="rounded-xl border border-dashed bg-background/60 p-8 text-center">
-                    <p className="font-heading text-xl font-bold">Aucun circuit ne correspond à ce filtre.</p>
+                    <p className="font-heading text-xl font-bold">
+                      Aucun circuit ne correspond à ce filtre.
+                    </p>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      Ajustez le budget, la durée ou la recherche pour afficher davantage d'options.
+                      Ajustez le budget, la durée ou la recherche pour afficher
+                      davantage d'options.
                     </p>
                     <Button
                       type="button"
@@ -732,9 +861,10 @@ const Tarifs = () => {
         </div>
       </section>
 
-      <section className="pb-16">
+      <section className="relative pb-20">
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(36rem_22rem_at_78%_12%,hsl(var(--secondary)/0.12),transparent_65%)]" />
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="rounded-2xl border bg-card/95 p-5 shadow-[0_18px_40px_-28px_hsl(var(--primary)/0.55)] md:p-7">
+          <div className="rounded-[1.75rem] border border-primary/15 bg-card/95 p-5 shadow-[0_22px_46px_-30px_hsl(var(--primary)/0.55)] md:p-7">
             <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
               <CheckCircle2 className="h-4 w-4" />
               Transparence tarifaire
@@ -745,24 +875,33 @@ const Tarifs = () => {
 
             <Accordion type="single" collapsible className="mt-5">
               <AccordionItem value="item-1">
-                <AccordionTrigger>Les montants sont-ils fixes ?</AccordionTrigger>
+                <AccordionTrigger>
+                  Les montants sont-ils fixes ?
+                </AccordionTrigger>
                 <AccordionContent>
-                  Les montants affichés sont des tarifs indicatifs. Le prix final dépend du trajet réel,
-                  des conditions de circulation, des arrêts demandés et des éventuels suppléments.
+                  Les montants affichés sont des tarifs indicatifs. Le prix
+                  final dépend du trajet réel, des conditions de circulation,
+                  des arrêts demandés et des éventuels suppléments.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
-                <AccordionTrigger>Que couvre le tarif des circuits touristiques ?</AccordionTrigger>
+                <AccordionTrigger>
+                  Que couvre le tarif des circuits touristiques ?
+                </AccordionTrigger>
                 <AccordionContent>
-                  Le tarif couvre le transport pour 1 à 4 personnes. Les entrées de musées, repas, frais
-                  personnels et extras éventuels ne sont pas inclus.
+                  Le tarif couvre le transport pour 1 à 4 personnes. Les entrées
+                  de musées, repas, frais personnels et extras éventuels ne sont
+                  pas inclus.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
-                <AccordionTrigger>Comment confirmer un prix exact ?</AccordionTrigger>
+                <AccordionTrigger>
+                  Comment confirmer un prix exact ?
+                </AccordionTrigger>
                 <AccordionContent>
-                  L'option la plus fiable est une confirmation directe au dispatch. Une estimation
-                  personnalisée vous est donnée immédiatement selon votre point de départ, horaire et
+                  L'option la plus fiable est une confirmation directe auprès de
+                  la centrale. Une estimation personnalisée vous est donnée
+                  immédiatement selon votre point de départ, horaire et
                   contraintes.
                 </AccordionContent>
               </AccordionItem>
@@ -770,12 +909,16 @@ const Tarifs = () => {
 
             <div className="mt-6 rounded-xl border bg-background/75 p-4 text-sm text-muted-foreground">
               <p>
-                Tarifs indicatifs mis à jour le <strong>{lastTariffUpdateDate}</strong>, en référence à
-                l'arrêté préfectoral 2025.
+                Tarifs indicatifs mis à jour le{" "}
+                <strong>{lastTariffUpdateDate}</strong>, selon la brochure
+                circuits 2025 et l'arrêté préfectoral 2025.
               </p>
               <p className="mt-2">
                 Pour un chiffrage précis, appelez le{" "}
-                <a className="font-semibold text-primary underline-offset-2 hover:underline" href={`tel:${CONTACT_PHONE_LINK}`}>
+                <a
+                  className="font-semibold text-primary underline-offset-2 hover:underline"
+                  href={`tel:${CONTACT_PHONE_LINK}`}
+                >
                   {CONTACT_PHONE_DISPLAY}
                 </a>
                 .
