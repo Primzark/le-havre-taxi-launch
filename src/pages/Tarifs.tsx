@@ -56,6 +56,16 @@ type FareVisual = {
   imageAlt: string;
 };
 
+type SimulatorRoute = {
+  id: string;
+  from: string;
+  to: string;
+  basePrice: number;
+  eta: string;
+  note: string;
+  kind: "course" | "circuit";
+};
+
 type PeriodMode = "jour" | "nuit";
 type TourSortMode = "price-asc" | "price-desc" | "duration-asc";
 
@@ -141,6 +151,27 @@ const tourSortOptions: Array<{ id: TourSortMode; label: string }> = [
   { id: "duration-asc", label: "Durée la plus courte" },
 ];
 
+const simulatorRoutes: SimulatorRoute[] = [
+  ...quickFares.map((fare) => ({
+    id: fare.id,
+    from: fare.from,
+    to: fare.to,
+    basePrice: fare.basePrice,
+    eta: fare.eta,
+    note: fare.note,
+    kind: "course" as const,
+  })),
+  ...toursData.map((tour) => ({
+    id: `tour-${tour.id}`,
+    from: "Le Havre",
+    to: `Circuit N°${tour.id} - ${tour.name}`,
+    basePrice: tour.price,
+    eta: tour.duration,
+    note: "Circuit touristique aller-retour (base brochure).",
+    kind: "circuit" as const,
+  })),
+];
+
 const lastTariffUpdateDate = "01/01/2025";
 const minTourPrice = Math.min(...toursData.map((tour) => tour.price));
 const maxTourPrice = Math.max(...toursData.map((tour) => tour.price));
@@ -169,7 +200,7 @@ const parseDurationHours = (duration: string) => {
 };
 
 const Tarifs = () => {
-  const [selectedRouteId, setSelectedRouteId] = useState(quickFares[0].id);
+  const [selectedRouteId, setSelectedRouteId] = useState(simulatorRoutes[0].id);
   const [periodMode, setPeriodMode] = useState<PeriodMode>("jour");
   const [luggageId, setLuggageId] = useState(luggageOptions[0].id);
   const [stops, setStops] = useState<number[]>([0]);
@@ -182,7 +213,8 @@ const Tarifs = () => {
 
   const selectedRoute = useMemo(
     () =>
-      quickFares.find((route) => route.id === selectedRouteId) ?? quickFares[0],
+      simulatorRoutes.find((route) => route.id === selectedRouteId) ??
+      simulatorRoutes[0],
     [selectedRouteId],
   );
 
@@ -190,8 +222,8 @@ const Tarifs = () => {
     luggageOptions.find((option) => option.id === luggageId) ??
     luggageOptions[0];
 
-  const focusSimulatorWithFare = (fareId: QuickFare["id"]) => {
-    setSelectedRouteId(fareId);
+  const focusSimulatorWithRoute = (routeId: string) => {
+    setSelectedRouteId(routeId);
 
     if (typeof window === "undefined") {
       return;
@@ -203,6 +235,14 @@ const Tarifs = () => {
         block: "start",
       });
     });
+  };
+
+  const focusSimulatorWithFare = (fareId: QuickFare["id"]) => {
+    focusSimulatorWithRoute(fareId);
+  };
+
+  const focusSimulatorWithTour = (tourId: number) => {
+    focusSimulatorWithRoute(`tour-${tourId}`);
   };
 
   const estimate = useMemo(() => {
@@ -506,13 +546,19 @@ const Tarifs = () => {
                       <SelectValue placeholder="Choisir un trajet" />
                     </SelectTrigger>
                     <SelectContent>
-                      {quickFares.map((fare) => (
-                        <SelectItem key={fare.id} value={fare.id}>
-                          {fare.from} → {fare.to}
+                      {simulatorRoutes.map((route) => (
+                        <SelectItem key={route.id} value={route.id}>
+                          {route.kind === "circuit"
+                            ? `${route.to} (${formatEuro(route.basePrice)})`
+                            : `${route.from} → ${route.to}`}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Inclut les courses essentielles et tous les circuits
+                    touristiques.
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -605,10 +651,21 @@ const Tarifs = () => {
                 Fourchette conseillée : {formatEuro(estimate.min)} à{" "}
                 {formatEuro(estimate.max)}
               </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {selectedRoute.from} → {selectedRoute.to} • Durée{" "}
+                {selectedRoute.eta}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {selectedRoute.note}
+              </p>
 
               <div className="mt-5 space-y-2 rounded-xl border border-border/70 bg-background/70 p-4 text-sm">
                 <div className="flex items-center justify-between text-muted-foreground">
-                  <span>Base trajet</span>
+                  <span>
+                    {selectedRoute.kind === "circuit"
+                      ? "Base circuit"
+                      : "Base trajet"}
+                  </span>
                   <span>{formatEuro(estimate.base)}</span>
                 </div>
                 <div className="flex items-center justify-between text-muted-foreground">
@@ -757,12 +814,12 @@ const Tarifs = () => {
             </div>
 
             <div className="mt-5 overflow-hidden rounded-xl border border-border/70">
-              <div className="hidden grid-cols-[0.12fr_1fr_0.28fr_0.28fr_0.2fr] gap-2 bg-muted/65 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground md:grid">
+              <div className="hidden grid-cols-[0.12fr_1fr_0.24fr_0.24fr_0.4fr] gap-2 bg-muted/65 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground md:grid">
                 <p>N°</p>
                 <p>Circuit</p>
                 <p>Durée</p>
                 <p>Prix</p>
-                <p>Détails</p>
+                <p>Actions</p>
               </div>
 
               {filteredTours.length > 0 ? (
@@ -770,7 +827,7 @@ const Tarifs = () => {
                   {filteredTours.map((tour) => (
                     <div
                       key={tour.id}
-                      className="grid gap-3 px-4 py-4 md:grid-cols-[0.12fr_1fr_0.28fr_0.28fr_0.2fr] md:items-center"
+                      className="grid gap-3 px-4 py-4 md:grid-cols-[0.12fr_1fr_0.24fr_0.24fr_0.4fr] md:items-center"
                     >
                       <p className="text-sm font-semibold text-muted-foreground">
                         {tour.id}
@@ -783,16 +840,21 @@ const Tarifs = () => {
                       <p className="font-heading text-xl font-extrabold text-primary">
                         {formatEuro(tour.price)}
                       </p>
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="justify-self-start md:justify-self-end"
-                      >
-                        <Link to={`/circuits-touristiques/${tour.id}`}>
-                          Voir
-                        </Link>
-                      </Button>
+                      <div className="flex items-center gap-2 md:justify-end">
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => focusSimulatorWithTour(tour.id)}
+                        >
+                          Estimer
+                        </Button>
+                        <Button asChild variant="outline" size="sm">
+                          <Link to={`/circuits-touristiques/${tour.id}`}>
+                            Voir
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
