@@ -23,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -58,12 +57,6 @@ type FareVisual = {
 };
 
 type PeriodMode = "jour" | "nuit";
-type DurationFilter =
-  | "all"
-  | "express"
-  | "demi-journee"
-  | "journee"
-  | "grand-format";
 type TourSortMode = "price-asc" | "price-desc" | "duration-asc";
 
 const quickFares: QuickFare[] = [
@@ -127,7 +120,7 @@ const periodConfig: Record<
   jour: {
     label: "Jour",
     multiplier: 1,
-    helper: "Base standard",
+    helper: "Tarif de base",
   },
   nuit: {
     label: "Nuit",
@@ -142,14 +135,6 @@ const luggageOptions = [
   { id: "large", label: "3 bagages ou plus", fee: 7 },
 ];
 
-const durationFilters: Array<{ id: DurationFilter; label: string }> = [
-  { id: "all", label: "Tous" },
-  { id: "express", label: "Express (≤ 3h)" },
-  { id: "demi-journee", label: "Demi-journée" },
-  { id: "journee", label: "Journée" },
-  { id: "grand-format", label: "Grand format" },
-];
-
 const tourSortOptions: Array<{ id: TourSortMode; label: string }> = [
   { id: "price-asc", label: "Prix croissant" },
   { id: "price-desc", label: "Prix décroissant" },
@@ -157,7 +142,6 @@ const tourSortOptions: Array<{ id: TourSortMode; label: string }> = [
 ];
 
 const lastTariffUpdateDate = "01/01/2025";
-const routeScaleMax = Math.max(...quickFares.map((route) => route.basePrice));
 const minTourPrice = Math.min(...toursData.map((tour) => tour.price));
 const maxTourPrice = Math.max(...toursData.map((tour) => tour.price));
 const avgTourPrice =
@@ -194,7 +178,6 @@ const Tarifs = () => {
 
   const [tourQuery, setTourQuery] = useState("");
   const [maxBudget, setMaxBudget] = useState<number[]>([maxTourPrice]);
-  const [durationFilter, setDurationFilter] = useState<DurationFilter>("all");
   const [tourSortMode, setTourSortMode] = useState<TourSortMode>("price-asc");
 
   const selectedRoute = useMemo(
@@ -252,27 +235,8 @@ const Tarifs = () => {
   const filteredTours = useMemo(() => {
     const normalizedQuery = tourQuery.trim().toLowerCase();
 
-    const matchesDuration = (duration: string) => {
-      const hours = parseDurationHours(duration);
-
-      switch (durationFilter) {
-        case "express":
-          return hours <= 3;
-        case "demi-journee":
-          return hours > 3 && hours <= 6;
-        case "journee":
-          return hours > 6 && hours <= 8;
-        case "grand-format":
-          return hours > 8;
-        case "all":
-        default:
-          return true;
-      }
-    };
-
     const tours = toursData
       .filter((tour) => tour.price <= maxBudget[0])
-      .filter((tour) => matchesDuration(tour.duration))
       .filter((tour) =>
         normalizedQuery
           ? `n°${tour.id} ${tour.name}`.toLowerCase().includes(normalizedQuery)
@@ -290,7 +254,7 @@ const Tarifs = () => {
 
       return a.price - b.price;
     });
-  }, [durationFilter, maxBudget, tourQuery, tourSortMode]);
+  }, [maxBudget, tourQuery, tourSortMode]);
 
   const filteredAveragePrice =
     filteredTours.length > 0
@@ -298,18 +262,15 @@ const Tarifs = () => {
         filteredTours.length
       : 0;
 
-  const shortestFilteredTour =
+  const cheapestFilteredTour =
     filteredTours.length > 0
-      ? [...filteredTours].sort(
-          (a, b) =>
-            parseDurationHours(a.duration) - parseDurationHours(b.duration),
-        )[0]
+      ? [...filteredTours].sort((a, b) => a.price - b.price)[0]
       : null;
 
   useSEO({
     title: "Tarifs et estimation",
     description:
-      "Consultez les tarifs indicatifs taxi au Havre, simulez votre estimation en direct et filtrez les 13 circuits touristiques par budget, durée et prix.",
+      "Trouvez rapidement le tarif taxi au Havre : forfaits essentiels, simulateur clair et grille complète des 13 circuits touristiques.",
     canonicalPath: "/tarifs",
     ogImage: "/images/logo-taxi-le-havre.webp",
     keywords: [
@@ -349,162 +310,124 @@ const Tarifs = () => {
 
   return (
     <Layout>
-      <section className="relative overflow-hidden border-b bg-background py-14 md:py-20">
-        <div
-          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(44rem_24rem_at_8%_8%,hsl(var(--primary)/0.14),transparent_62%),radial-gradient(36rem_24rem_at_94%_4%,hsl(var(--secondary)/0.22),transparent_64%),linear-gradient(145deg,hsl(205_58%_97%)_0%,hsl(206_76%_94%)_46%,hsl(44_100%_91%)_100%)]"
-          aria-hidden="true"
-        />
+      <section className="relative overflow-hidden border-b bg-[linear-gradient(150deg,hsl(207_74%_96%)_0%,hsl(0_0%_100%)_48%,hsl(48_95%_92%)_100%)] py-12 md:py-16">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="grid items-start gap-8 xl:grid-cols-[1.02fr_0.98fr]">
+          <nav
+            aria-label="Fil d'Ariane"
+            className="mb-4 text-sm text-foreground/70"
+          >
+            <Link
+              to="/"
+              className="underline-offset-2 transition hover:underline"
+            >
+              Accueil
+            </Link>
+            <span className="mx-2">/</span>
+            <span aria-current="page">Tarifs</span>
+          </nav>
+
+          <Badge className="border-primary/25 bg-white/85 text-primary hover:bg-white">
+            Tarifs mis à jour le {lastTariffUpdateDate}
+          </Badge>
+
+          <div className="mt-4 grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
             <div>
-              <nav
-                aria-label="Fil d'Ariane"
-                className="mb-4 text-sm text-foreground/70"
-              >
-                <Link
-                  to="/"
-                  className="underline-offset-2 transition hover:underline"
-                >
-                  Accueil
-                </Link>
-                <span className="mx-2">/</span>
-                <span aria-current="page">Tarifs</span>
-              </nav>
-
-              <Badge className="border-primary/25 bg-white/80 text-primary hover:bg-white">
-                Mise à jour {lastTariffUpdateDate}
-              </Badge>
-
-              <h1 className="mt-4 max-w-3xl font-heading text-3xl font-extrabold leading-tight text-foreground md:text-5xl">
-                Tarifs et estimations
+              <h1 className="max-w-2xl font-heading text-3xl font-extrabold leading-tight text-foreground md:text-5xl">
+                Tarifs clairs, estimation rapide
               </h1>
               <p className="mt-4 max-w-2xl text-base text-foreground/75 md:text-lg">
-                Une architecture claire pour comparer vos forfaits, voir les
-                visuels de référence et simuler votre course en quelques
-                secondes.
+                Trouvez un prix en quelques secondes : forfaits immédiats,
+                simulateur simplifié et grille complète des circuits
+                touristiques.
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full shadow-sm sm:w-auto"
-                >
-                  <a href={`tel:${CONTACT_PHONE_LINK}`}>
-                    <Phone className="h-4 w-4" />
-                    Réserver immédiatement
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Button asChild size="lg" className="w-full sm:w-auto">
+                  <a href="#forfaits">
+                    Voir les forfaits
+                    <ArrowRight className="h-4 w-4" />
                   </a>
                 </Button>
                 <Button
                   asChild
                   size="lg"
                   variant="outline"
-                  className="w-full border-primary/30 bg-white/75 text-foreground hover:bg-white sm:w-auto"
+                  className="w-full border-primary/30 bg-white/80 sm:w-auto"
                 >
-                  <a href="#simulateur">
-                    Lancer l'estimation
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
+                  <a href="#simulateur">Estimer ma course</a>
                 </Button>
               </div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl border border-border/70 bg-white/75 p-4 shadow-sm backdrop-blur-sm transition hover:bg-white">
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-border/70 bg-white/80 p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                    Tarif urbain express
+                    Forfait minimum
                   </p>
-                  <p className="mt-2 inline-flex items-center gap-1.5 text-2xl font-extrabold text-foreground">
-                    <Euro className="h-5 w-5" />
+                  <p className="mt-1 font-heading text-2xl font-extrabold text-primary">
                     10 €
                   </p>
                 </div>
-                <div className="rounded-xl border border-border/70 bg-white/75 p-4 shadow-sm backdrop-blur-sm transition hover:bg-white">
+                <div className="rounded-xl border border-border/70 bg-white/80 p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                    Circuits disponibles
+                    Circuits officiels
                   </p>
-                  <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold text-foreground">
-                    <MapPin className="h-5 w-5" />
+                  <p className="mt-1 inline-flex items-center gap-1.5 font-heading text-2xl font-extrabold text-foreground">
+                    <MapPin className="h-4 w-4" />
                     {toursData.length}
                   </p>
                 </div>
-                <div className="rounded-xl border border-border/70 bg-white/75 p-4 shadow-sm backdrop-blur-sm transition hover:bg-white">
+                <div className="rounded-xl border border-border/70 bg-white/80 p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     Prix moyen circuit
                   </p>
-                  <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold text-foreground">
-                    <Sparkles className="h-5 w-5" />
+                  <p className="mt-1 inline-flex items-center gap-1.5 font-heading text-2xl font-extrabold text-foreground">
+                    <Sparkles className="h-4 w-4" />
                     {formatEuro(avgTourPrice)}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <figure className="relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-[0_24px_48px_-30px_hsl(var(--primary)/0.5)]">
-                <img
-                  src="/images/tarifs-page-2.webp"
-                  alt="Brochure des tarifs Taxi Le Havre."
-                  className="h-[320px] w-full object-cover md:h-[420px]"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-                <figcaption className="absolute bottom-4 left-4 right-4 rounded-lg border border-white/25 bg-black/45 px-3 py-2 text-white backdrop-blur-sm">
-                  <p className="text-xs uppercase tracking-wide text-white/75">
-                    Référence visuelle
-                  </p>
-                  <p className="font-heading text-base font-semibold md:text-lg">
-                    Forfaits Le Havre centre, gare et Honfleur
-                  </p>
-                </figcaption>
-              </figure>
-
-              <div className="grid grid-cols-2 gap-4">
-                {fareVisuals.slice(0, 2).map((visual) => {
-                  const linkedFare =
-                    quickFares.find((fare) => fare.id === visual.fareId) ??
-                    quickFares[0];
-
-                  return (
-                    <div
-                      key={visual.id}
-                      className="relative overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm"
-                    >
-                      <img
-                        src={visual.image}
-                        alt={visual.imageAlt}
-                        className="h-36 w-full object-cover"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      <p className="absolute left-3 top-3 rounded-full border border-white/40 bg-black/45 px-2.5 py-1 text-xs font-bold text-white">
-                        {formatEuro(linkedFare.basePrice)}
-                      </p>
-                      <p className="absolute bottom-3 left-3 right-3 text-sm font-semibold text-white">
-                        {visual.title}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <figure className="relative overflow-hidden rounded-3xl border border-border/70 bg-card shadow-[0_28px_58px_-34px_hsl(var(--primary)/0.5)]">
+              <img
+                src="/images/tarifs-hero-meter.jpg"
+                alt="Taximètre affichant le prix d'une course en temps réel."
+                className="h-[320px] w-full object-cover md:h-[420px]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+              <figcaption className="absolute bottom-4 left-4 right-4 rounded-lg border border-white/30 bg-black/45 px-3 py-2 text-white backdrop-blur-sm">
+                <p className="text-xs uppercase tracking-wide text-white/80">
+                  Référence tarif
+                </p>
+                <p className="text-sm font-semibold md:text-base">
+                  Une lecture immédiate des prix, avec confirmation par la
+                  centrale au {CONTACT_PHONE_DISPLAY}
+                </p>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
 
-      <section className="py-12 md:py-14">
+      <section id="forfaits" className="py-12 md:py-14">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="mb-6 max-w-2xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-              <Car className="h-3.5 w-3.5" />
-              Repères visuels
-            </p>
-            <h2 className="mt-3 font-heading text-2xl font-extrabold md:text-3xl">
-              Les forfaits rapides en image
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Sélectionnez un trajet pour préremplir le simulateur avec le bon
-              point de départ et un tarif de base déjà calé.
-            </p>
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                <Car className="h-3.5 w-3.5" />
+                Forfaits essentiels
+              </p>
+              <h2 className="mt-3 font-heading text-2xl font-extrabold md:text-3xl">
+                Les prix les plus recherchés
+              </h2>
+            </div>
+            <Button asChild variant="outline" className="border-primary/30">
+              <a href={`tel:${CONTACT_PHONE_LINK}`}>
+                <Phone className="h-4 w-4" />
+                Appeler la centrale
+              </a>
+            </Button>
           </div>
 
           <div className="grid gap-5 md:grid-cols-3">
@@ -518,7 +441,7 @@ const Tarifs = () => {
                   key={visual.id}
                   className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_16px_34px_-24px_hsl(var(--primary)/0.5)]"
                 >
-                  <div className="relative h-52">
+                  <div className="relative h-48">
                     <img
                       src={visual.image}
                       alt={visual.imageAlt}
@@ -526,21 +449,25 @@ const Tarifs = () => {
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-                    <p className="absolute left-4 top-4 rounded-full border border-white/35 bg-black/45 px-3 py-1 text-sm font-bold text-white">
+                    <p className="absolute left-3 top-3 rounded-full border border-white/35 bg-black/45 px-3 py-1 text-sm font-bold text-white">
                       {formatEuro(linkedFare.basePrice)}
                     </p>
-                    <p className="absolute bottom-4 left-4 right-4 font-heading text-lg font-semibold text-white">
+                    <p className="absolute bottom-3 left-3 right-3 font-heading text-lg font-semibold text-white">
                       {visual.title}
                     </p>
                   </div>
-                  <div className="space-y-3 p-4">
+
+                  <div className="space-y-2 p-4">
                     <p className="text-sm text-muted-foreground">
                       {visual.subtitle}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Durée moyenne : {linkedFare.eta}
                     </p>
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full"
+                      className="mt-2 w-full"
                       onClick={() => focusSimulatorWithFare(visual.fareId)}
                     >
                       Estimer ce trajet
@@ -553,503 +480,344 @@ const Tarifs = () => {
         </div>
       </section>
 
-      <section id="simulateur" className="relative pb-16 md:pb-20">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(36rem_20rem_at_88%_8%,hsl(var(--secondary)/0.14),transparent_66%),radial-gradient(28rem_18rem_at_10%_8%,hsl(var(--primary)/0.12),transparent_64%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--accent)/0.42)_46%,hsl(var(--background))_100%)]" />
+      <section id="simulateur" className="relative py-12 md:py-14">
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(30rem_18rem_at_90%_6%,hsl(var(--secondary)/0.12),transparent_65%),radial-gradient(24rem_16rem_at_8%_8%,hsl(var(--primary)/0.1),transparent_64%)]" />
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="grid gap-6 xl:grid-cols-[0.84fr_1.16fr]">
-            <aside className="rounded-[1.75rem] border border-border/70 bg-white/90 p-5 shadow-[0_22px_46px_-30px_hsl(var(--primary)/0.45)] backdrop-blur-sm md:p-6 xl:sticky xl:top-24 xl:h-fit">
-              <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-                <Sparkles className="h-3.5 w-3.5" />
-                Estimation guidée
-              </p>
-              <h2 className="mt-3 font-heading text-2xl font-extrabold leading-tight">
-                Simulez votre course et comparez les circuits
+          <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+            <div className="rounded-3xl border border-border/70 bg-white/90 p-5 shadow-[0_24px_50px_-34px_hsl(var(--primary)/0.5)] md:p-6">
+              <h2 className="font-heading text-2xl font-extrabold">
+                Simulateur de course
               </h2>
-              <p className="mt-3 text-sm text-muted-foreground md:text-base">
-                Configurez votre trajet, ajustez les paramètres utiles et
-                validez ensuite par téléphone avec la centrale.
+              <p className="mt-2 text-sm text-muted-foreground md:text-base">
+                Renseignez les options utiles pour obtenir une estimation
+                claire.
               </p>
 
-              <figure className="relative mt-5 overflow-hidden rounded-2xl border border-border/70">
-                <img
-                  src="/images/tarifs-page-3.webp"
-                  alt="Brochure des 13 circuits touristiques."
-                  className="h-64 w-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-                <figcaption className="absolute bottom-3 left-3 right-3 rounded-lg border border-white/25 bg-black/45 px-3 py-2 text-white backdrop-blur-sm">
-                  <p className="text-xs uppercase tracking-wide text-white/75">
-                    Circuits touristiques
+              <div className="mt-5 space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Trajet
+                  </label>
+                  <Select
+                    value={selectedRouteId}
+                    onValueChange={setSelectedRouteId}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir un trajet" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {quickFares.map((fare) => (
+                        <SelectItem key={fare.id} value={fare.id}>
+                          {fare.from} → {fare.to}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Période
                   </p>
-                  <p className="font-heading text-base font-semibold">
-                    {toursData.length} tours aller-retour
-                  </p>
-                </figcaption>
-              </figure>
-
-              <div className="mt-5 space-y-2 rounded-xl border border-primary/15 bg-background/85 p-3.5">
-                {quickFares.map((fare) => (
-                  <div
-                    key={`aside-${fare.id}`}
-                    className="flex items-center justify-between gap-3 text-sm"
-                  >
-                    <span className="font-medium">
-                      {fare.from} → {fare.to}
-                    </span>
-                    <span className="font-heading text-base font-bold text-primary">
-                      {formatEuro(fare.basePrice)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              <Button asChild className="mt-5 w-full">
-                <a href={`tel:${CONTACT_PHONE_LINK}`}>
-                  <Phone className="h-4 w-4" />
-                  Appeler la centrale
-                </a>
-              </Button>
-            </aside>
-
-            <div className="rounded-[1.75rem] border border-border/70 bg-white/90 p-5 shadow-[0_30px_64px_-34px_hsl(var(--primary)/0.45)] backdrop-blur-sm md:p-7">
-              <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                <p className="font-heading text-lg font-bold md:text-xl">
-                  Comparez rapidement vos tarifs de course et vos circuits
-                </p>
-                <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-                  Référence 2025
-                </span>
-              </div>
-
-              <Tabs defaultValue="courses" className="w-full">
-                <TabsList className="grid h-auto w-full grid-cols-1 gap-2 rounded-xl border bg-muted/80 p-1 sm:grid-cols-2">
-                  <TabsTrigger
-                    value="courses"
-                    className="w-full rounded-lg py-2 text-xs leading-tight whitespace-normal sm:py-2.5 sm:text-sm md:text-base"
-                  >
-                    Courses & transferts
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="circuits"
-                    className="w-full rounded-lg py-2 text-xs leading-tight whitespace-normal sm:py-2.5 sm:text-sm md:text-base"
-                  >
-                    Circuits touristiques
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent
-                  value="courses"
-                  className="mt-6 space-y-6 overflow-x-hidden"
-                >
-                  <div className="grid gap-6 xl:grid-cols-[1fr_1.15fr]">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <p className="inline-flex items-center gap-2 text-sm font-semibold">
-                          <Car className="h-4 w-4 text-primary" />
-                          Forfaits rapides
-                        </p>
-                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                          indicatifs
-                        </p>
-                      </div>
-
-                      {quickFares.map((fare) => {
-                        const isActive = selectedRoute.id === fare.id;
-                        const progress = (fare.basePrice / routeScaleMax) * 100;
-
-                        return (
-                          <button
-                            key={fare.id}
-                            type="button"
-                            onClick={() => setSelectedRouteId(fare.id)}
-                            className={`w-full rounded-xl border p-4 text-left transition-all duration-300 ${
-                              isActive
-                                ? "border-primary/55 bg-[linear-gradient(135deg,hsl(var(--primary)/0.14),hsl(var(--secondary)/0.18))] shadow-[0_14px_26px_-20px_hsl(var(--primary)/0.75)]"
-                                : "border-border/80 bg-background/85 hover:border-primary/35 hover:bg-primary/[0.03]"
-                            }`}
-                          >
-                            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-                              <div className="min-w-0">
-                                <p className="break-words text-sm font-semibold">
-                                  {fare.from}{" "}
-                                  <span className="text-muted-foreground">
-                                    →
-                                  </span>{" "}
-                                  {fare.to}
-                                </p>
-                                <p className="mt-1 break-words text-xs text-muted-foreground">
-                                  {fare.note}
-                                </p>
-                              </div>
-                              <p className="font-heading text-lg font-bold text-primary sm:text-xl">
-                                {formatEuro(fare.basePrice)}
-                              </p>
-                            </div>
-
-                            <div className="mt-3">
-                              <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary/35">
-                                <div
-                                  className="h-full rounded-full bg-gradient-to-r from-secondary to-primary transition-all duration-500"
-                                  style={{ width: `${progress}%` }}
-                                />
-                              </div>
-                              <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                                <Clock3 className="h-3.5 w-3.5" />
-                                {fare.eta}
-                              </p>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <div className="rounded-2xl border border-primary/15 bg-background/80 p-4 shadow-[0_18px_34px_-24px_hsl(var(--primary)/0.35)] md:p-5">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <p className="inline-flex items-center gap-2 text-sm font-semibold">
-                          <Sparkles className="h-4 w-4 text-primary" />
-                          Estimateur en direct
-                        </p>
-                        <Badge variant="outline" className="text-xs">
-                          Temps réel
-                        </Badge>
-                      </div>
-
-                      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                            Itinéraire
-                          </label>
-                          <Select
-                            value={selectedRouteId}
-                            onValueChange={setSelectedRouteId}
-                          >
-                            <SelectTrigger className="max-w-full">
-                              <SelectValue placeholder="Choisir un trajet" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {quickFares.map((fare) => (
-                                <SelectItem key={fare.id} value={fare.id}>
-                                  {fare.from} → {fare.to}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                            Bagages
-                          </label>
-                          <Select
-                            value={luggageId}
-                            onValueChange={setLuggageId}
-                          >
-                            <SelectTrigger className="max-w-full">
-                              <SelectValue placeholder="Volume bagages" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {luggageOptions.map((option) => (
-                                <SelectItem key={option.id} value={option.id}>
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 rounded-lg border bg-card p-3">
-                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                          Période de course
-                        </p>
-                        <div className="mt-2 grid grid-cols-2 gap-2">
-                          {(Object.keys(periodConfig) as PeriodMode[]).map(
-                            (mode) => (
-                              <button
-                                key={mode}
-                                type="button"
-                                onClick={() => setPeriodMode(mode)}
-                                className={`rounded-md border px-3 py-2 text-left text-sm transition ${
-                                  periodMode === mode
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-border bg-background hover:border-primary/40"
-                                }`}
-                              >
-                                <p className="font-semibold">
-                                  {periodConfig[mode].label}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {periodConfig[mode].helper}
-                                </p>
-                              </button>
-                            ),
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="mt-4 space-y-4">
-                        <div>
-                          <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                            <span>Arrêts intermédiaires</span>
-                            <span>{stops[0]}</span>
-                          </div>
-                          <Slider
-                            value={stops}
-                            onValueChange={setStops}
-                            min={0}
-                            max={4}
-                            step={1}
-                            aria-label="Nombre d'arrêts intermédiaires"
-                          />
-                        </div>
-
-                        <div>
-                          <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                            <span>Temps d'attente</span>
-                            <span>{waitingMinutes[0]} min</span>
-                          </div>
-                          <Slider
-                            value={waitingMinutes}
-                            onValueChange={setWaitingMinutes}
-                            min={0}
-                            max={30}
-                            step={5}
-                            aria-label="Temps d'attente"
-                          />
-                        </div>
-
-                        <div>
-                          <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                            <span>Passagers</span>
-                            <span>{passengers[0]} / 4</span>
-                          </div>
-                          <Slider
-                            value={passengers}
-                            onValueChange={setPassengers}
-                            min={1}
-                            max={4}
-                            step={1}
-                            aria-label="Nombre de passagers"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="mt-5 rounded-xl border border-primary/15 bg-card p-4 shadow-sm">
-                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                          Estimation indicative
-                        </p>
-                        <p className="mt-2 font-heading text-3xl font-extrabold text-primary">
-                          {formatEuro(estimate.subtotal)}
-                        </p>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          Fourchette conseillée : {formatEuro(estimate.min)} à{" "}
-                          {formatEuro(estimate.max)}
-                        </p>
-
-                        <div className="mt-4 space-y-2 text-sm">
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <span>Base trajet</span>
-                            <span>{formatEuro(estimate.base)}</span>
-                          </div>
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <span>Arrêts intermédiaires</span>
-                            <span>+ {formatEuro(estimate.stopFee)}</span>
-                          </div>
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <span>Attente</span>
-                            <span>+ {formatEuro(estimate.waitingFee)}</span>
-                          </div>
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <span>Bagages</span>
-                            <span>+ {formatEuro(estimate.luggageFee)}</span>
-                          </div>
-                          <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 font-semibold">
-                            <span className="inline-flex items-center gap-1.5">
-                              <Users className="h-4 w-4 text-primary" />
-                              {passengers[0]} passager
-                              {passengers[0] > 1 ? "s" : ""}
-                            </span>
-                            <span>1 à 4 inclus</span>
-                          </div>
-                        </div>
-
-                        <Button
-                          asChild
-                          className="mt-4 h-auto w-full whitespace-normal py-3 text-center leading-snug"
-                        >
-                          <a href={`tel:${CONTACT_PHONE_LINK}`}>
-                            Valider cette estimation par téléphone
-                          </a>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="circuits" className="mt-6 space-y-6">
-                  <div className="grid gap-3 md:grid-cols-[1.15fr_0.85fr]">
-                    <div className="relative">
-                      <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        value={tourQuery}
-                        onChange={(event) => setTourQuery(event.target.value)}
-                        placeholder="Rechercher un circuit (ex: Étretat, Rouen, Paris...)"
-                        className="pl-9"
-                      />
-                    </div>
-
-                    <Select
-                      value={tourSortMode}
-                      onValueChange={(value) =>
-                        setTourSortMode(value as TourSortMode)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Trier les circuits" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {tourSortOptions.map((option) => (
-                          <SelectItem key={option.id} value={option.id}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="rounded-2xl border border-primary/15 bg-background/80 p-4">
-                    <div className="mb-3 flex items-center justify-between gap-3">
-                      <p className="inline-flex items-center gap-2 text-sm font-semibold">
-                        <Euro className="h-4 w-4 text-primary" />
-                        Budget maximum
-                      </p>
-                      <p className="font-heading text-lg font-bold text-primary">
-                        {formatEuro(maxBudget[0])}
-                      </p>
-                    </div>
-                    <Slider
-                      value={maxBudget}
-                      onValueChange={setMaxBudget}
-                      min={minTourPrice}
-                      max={maxTourPrice}
-                      step={10}
-                      aria-label="Budget maximum pour les circuits"
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {durationFilters.map((filter) => (
+                  <div className="grid grid-cols-2 gap-2">
+                    {(Object.keys(periodConfig) as PeriodMode[]).map((mode) => (
                       <button
-                        key={filter.id}
+                        key={mode}
                         type="button"
-                        onClick={() => setDurationFilter(filter.id)}
-                        className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide transition ${
-                          durationFilter === filter.id
-                            ? "border-primary/55 bg-primary text-primary-foreground"
-                            : "border-border bg-background hover:border-primary/45"
+                        onClick={() => setPeriodMode(mode)}
+                        className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
+                          periodMode === mode
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border bg-background hover:border-primary/40"
                         }`}
                       >
-                        {filter.label}
+                        <p className="font-semibold">
+                          {periodConfig[mode].label}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {periodConfig[mode].helper}
+                        </p>
                       </button>
                     ))}
                   </div>
+                </div>
 
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-xl border border-primary/10 bg-background/80 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                        Circuits affichés
-                      </p>
-                      <p className="mt-2 text-2xl font-extrabold">
-                        {filteredTours.length}
-                      </p>
-                    </div>
-                    <div className="rounded-xl border border-primary/10 bg-background/80 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                        Prix moyen filtré
-                      </p>
-                      <p className="mt-2 text-2xl font-extrabold text-primary">
-                        {filteredTours.length > 0
-                          ? formatEuro(filteredAveragePrice)
-                          : "--"}
-                      </p>
-                    </div>
-                    <div className="rounded-xl border border-primary/10 bg-background/80 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                        Circuit le plus court
-                      </p>
-                      <p className="mt-2 text-2xl font-extrabold">
-                        {shortestFilteredTour
-                          ? shortestFilteredTour.duration
-                          : "--"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {filteredTours.length > 0 ? (
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {filteredTours.map((tour, index) => (
-                        <Link
-                          key={tour.id}
-                          to={`/circuits-touristiques/${tour.id}`}
-                          className="group relative overflow-hidden rounded-2xl border bg-card p-5 shadow-[0_14px_30px_-24px_hsl(var(--primary)/0.6)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_28px_52px_-24px_hsl(var(--primary)/0.55)]"
-                          style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                          <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-secondary via-primary to-secondary opacity-75" />
-                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Circuit N°{tour.id}
-                          </p>
-                          <h3 className="mt-1 font-heading text-lg font-bold leading-snug sm:text-xl">
-                            {tour.name}
-                          </h3>
-                          <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                            <Clock3 className="h-4 w-4 text-primary" />
-                            <span>{tour.duration}</span>
-                          </div>
-
-                          <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
-                            <div>
-                              <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                                Tarif
-                              </p>
-                              <p className="font-heading text-xl font-extrabold text-primary sm:text-2xl">
-                                {formatEuro(tour.price)}
-                              </p>
-                            </div>
-                            <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                              Voir le circuit
-                              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-                            </span>
-                          </div>
-                        </Link>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Bagages
+                  </label>
+                  <Select value={luggageId} onValueChange={setLuggageId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir le volume" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {luggageOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
                       ))}
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-dashed bg-background/60 p-8 text-center">
-                      <p className="font-heading text-xl font-bold">
-                        Aucun circuit ne correspond à ce filtre.
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    <span>Arrêts intermédiaires</span>
+                    <span>{stops[0]}</span>
+                  </div>
+                  <Slider
+                    value={stops}
+                    onValueChange={setStops}
+                    min={0}
+                    max={4}
+                    step={1}
+                    aria-label="Nombre d'arrêts intermédiaires"
+                  />
+                </div>
+
+                <div>
+                  <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    <span>Temps d'attente</span>
+                    <span>{waitingMinutes[0]} min</span>
+                  </div>
+                  <Slider
+                    value={waitingMinutes}
+                    onValueChange={setWaitingMinutes}
+                    min={0}
+                    max={30}
+                    step={5}
+                    aria-label="Temps d'attente"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-primary/15 bg-card p-5 shadow-[0_24px_58px_-34px_hsl(var(--primary)/0.55)] md:p-6">
+              <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                <Euro className="h-3.5 w-3.5" />
+                Estimation indicative
+              </p>
+
+              <p className="mt-4 font-heading text-4xl font-extrabold text-primary md:text-5xl">
+                {formatEuro(estimate.subtotal)}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground md:text-base">
+                Fourchette conseillée : {formatEuro(estimate.min)} à{" "}
+                {formatEuro(estimate.max)}
+              </p>
+
+              <div className="mt-5 space-y-2 rounded-xl border border-border/70 bg-background/70 p-4 text-sm">
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span>Base trajet</span>
+                  <span>{formatEuro(estimate.base)}</span>
+                </div>
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span>Arrêts intermédiaires</span>
+                  <span>+ {formatEuro(estimate.stopFee)}</span>
+                </div>
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span>Attente</span>
+                  <span>+ {formatEuro(estimate.waitingFee)}</span>
+                </div>
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span>Bagages</span>
+                  <span>+ {formatEuro(estimate.luggageFee)}</span>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 font-semibold">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Users className="h-4 w-4 text-primary" />
+                    {passengers[0]} passager{passengers[0] > 1 ? "s" : ""}
+                  </span>
+                  <span>1 à 4 inclus</span>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <span>Passagers</span>
+                  <span>{passengers[0]} / 4</span>
+                </div>
+                <Slider
+                  value={passengers}
+                  onValueChange={setPassengers}
+                  min={1}
+                  max={4}
+                  step={1}
+                  aria-label="Nombre de passagers"
+                />
+              </div>
+
+              <Button asChild className="mt-6 h-auto w-full py-3 text-center">
+                <a href={`tel:${CONTACT_PHONE_LINK}`}>
+                  <Phone className="h-4 w-4" />
+                  Confirmer ce prix avec la centrale
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-12 md:pb-16">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
+          <div className="rounded-3xl border border-border/70 bg-card p-5 shadow-[0_20px_44px_-32px_hsl(var(--primary)/0.45)] md:p-7">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="font-heading text-2xl font-extrabold md:text-3xl">
+                  Grille des circuits touristiques
+                </h2>
+                <p className="mt-2 text-sm text-muted-foreground md:text-base">
+                  Tous les prix officiels en une vue, avec recherche rapide.
+                </p>
+              </div>
+              <p className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                13 tours aller-retour
+              </p>
+            </div>
+
+            <div className="mt-5 grid gap-3 lg:grid-cols-[1.05fr_0.55fr_0.4fr]">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={tourQuery}
+                  onChange={(event) => setTourQuery(event.target.value)}
+                  placeholder="Rechercher un circuit (ex: Étretat, Rouen, Paris...)"
+                  className="pl-9"
+                />
+              </div>
+
+              <Select
+                value={tourSortMode}
+                onValueChange={(value) =>
+                  setTourSortMode(value as TourSortMode)
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Trier les circuits" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tourSortOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <div className="rounded-xl border border-border/70 bg-background/70 px-3 py-2">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Budget max
+                </p>
+                <p className="font-heading text-lg font-bold text-primary">
+                  {formatEuro(maxBudget[0])}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-3">
+              <Slider
+                value={maxBudget}
+                onValueChange={setMaxBudget}
+                min={minTourPrice}
+                max={maxTourPrice}
+                step={10}
+                aria-label="Budget maximum pour les circuits"
+              />
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-xl border border-primary/10 bg-background/75 p-4">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Circuits affichés
+                </p>
+                <p className="mt-1 text-2xl font-extrabold">
+                  {filteredTours.length}
+                </p>
+              </div>
+              <div className="rounded-xl border border-primary/10 bg-background/75 p-4">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Prix moyen filtré
+                </p>
+                <p className="mt-1 text-2xl font-extrabold text-primary">
+                  {filteredTours.length > 0
+                    ? formatEuro(filteredAveragePrice)
+                    : "--"}
+                </p>
+              </div>
+              <div className="rounded-xl border border-primary/10 bg-background/75 p-4">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Prix le plus bas
+                </p>
+                <p className="mt-1 text-2xl font-extrabold">
+                  {cheapestFilteredTour
+                    ? formatEuro(cheapestFilteredTour.price)
+                    : "--"}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 overflow-hidden rounded-xl border border-border/70">
+              <div className="hidden grid-cols-[0.12fr_1fr_0.28fr_0.28fr_0.2fr] gap-2 bg-muted/65 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground md:grid">
+                <p>N°</p>
+                <p>Circuit</p>
+                <p>Durée</p>
+                <p>Prix</p>
+                <p>Détails</p>
+              </div>
+
+              {filteredTours.length > 0 ? (
+                <div className="divide-y divide-border/70 bg-background">
+                  {filteredTours.map((tour) => (
+                    <div
+                      key={tour.id}
+                      className="grid gap-3 px-4 py-4 md:grid-cols-[0.12fr_1fr_0.28fr_0.28fr_0.2fr] md:items-center"
+                    >
+                      <p className="text-sm font-semibold text-muted-foreground">
+                        {tour.id}
                       </p>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Ajustez le budget, la durée ou la recherche pour
-                        afficher davantage d'options.
+                      <p className="font-semibold leading-snug">{tour.name}</p>
+                      <p className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <Clock3 className="h-3.5 w-3.5 text-primary" />
+                        {tour.duration}
+                      </p>
+                      <p className="font-heading text-xl font-extrabold text-primary">
+                        {formatEuro(tour.price)}
                       </p>
                       <Button
-                        type="button"
+                        asChild
                         variant="outline"
-                        className="mt-4"
-                        onClick={() => {
-                          setTourQuery("");
-                          setMaxBudget([maxTourPrice]);
-                          setDurationFilter("all");
-                          setTourSortMode("price-asc");
-                        }}
+                        size="sm"
+                        className="justify-self-start md:justify-self-end"
                       >
-                        Réinitialiser les filtres
+                        <Link to={`/circuits-touristiques/${tour.id}`}>
+                          Voir
+                        </Link>
                       </Button>
                     </div>
-                  )}
-                </TabsContent>
-              </Tabs>
+                  ))}
+                </div>
+              ) : (
+                <div className="px-4 py-8 text-center">
+                  <p className="font-heading text-xl font-bold">
+                    Aucun circuit ne correspond à ce filtre.
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Ajustez la recherche ou le budget maximum.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => {
+                      setTourQuery("");
+                      setMaxBudget([maxTourPrice]);
+                      setTourSortMode("price-asc");
+                    }}
+                  >
+                    Réinitialiser
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1058,7 +826,7 @@ const Tarifs = () => {
       <section className="relative pb-20">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(36rem_22rem_at_78%_12%,hsl(var(--secondary)/0.12),transparent_65%)]" />
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="rounded-[1.75rem] border border-primary/15 bg-card/95 p-5 shadow-[0_22px_46px_-30px_hsl(var(--primary)/0.55)] md:p-7">
+          <div className="rounded-3xl border border-primary/15 bg-card/95 p-5 shadow-[0_22px_46px_-30px_hsl(var(--primary)/0.55)] md:p-7">
             <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
               <CheckCircle2 className="h-4 w-4" />
               Transparence tarifaire
