@@ -97,17 +97,22 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Montserrat", sans-serif;
   }
 }
 
 @layer utilities {
   .font-heading {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
   }
   .font-body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
   }
 }
 
@@ -130,10 +135,22 @@
   .tour-section-bg {
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(42rem 28rem at 8% 8%, hsl(var(--primary) / 0.16), transparent 60%),
-      radial-gradient(34rem 24rem at 92% 14%, hsl(var(--secondary) / 0.2), transparent 58%),
-      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--accent) / 0.55) 48%, hsl(var(--background)) 100%);
+    background: radial-gradient(
+        42rem 28rem at 8% 8%,
+        hsl(var(--primary) / 0.16),
+        transparent 60%
+      ),
+      radial-gradient(
+        34rem 24rem at 92% 14%,
+        hsl(var(--secondary) / 0.2),
+        transparent 58%
+      ),
+      linear-gradient(
+        180deg,
+        hsl(var(--background)) 0%,
+        hsl(var(--accent) / 0.55) 48%,
+        hsl(var(--background)) 100%
+      );
   }
 
   .tour-orb {
@@ -191,11 +208,17 @@
     bottom: 0.55rem;
     height: 2px;
     border-radius: 9999px;
-    background: linear-gradient(90deg, hsl(var(--secondary) / 0.95), hsl(var(--primary) / 0.9));
+    background: linear-gradient(
+      90deg,
+      hsl(var(--secondary) / 0.95),
+      hsl(var(--primary) / 0.9)
+    );
     transform: scaleX(0.16);
     transform-origin: left;
     opacity: 0.55;
-    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease-out;
+    transition:
+      transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 320ms ease-out;
   }
 
   .tour-card:hover::after,
@@ -267,7 +290,11 @@
     padding: 0.55rem 0.8rem;
     border-radius: 0.7rem;
     border: 1px solid hsl(0 0% 100% / 0.35);
-    background: linear-gradient(135deg, hsl(0 0% 8% / 0.66), hsl(var(--primary) / 0.58));
+    background: linear-gradient(
+      135deg,
+      hsl(0 0% 8% / 0.66),
+      hsl(var(--primary) / 0.58)
+    );
     color: hsl(0 0% 100%);
     font-size: 0.85rem;
     font-weight: 600;
@@ -276,16 +303,120 @@
     z-index: 3;
   }
 
+  .tariff-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        46rem 24rem at -6% -4%,
+        hsl(var(--primary) / 0.2),
+        transparent 62%
+      ),
+      radial-gradient(
+        34rem 20rem at 108% 8%,
+        hsl(var(--secondary) / 0.28),
+        transparent 58%
+      ),
+      linear-gradient(
+        135deg,
+        hsl(205 54% 97%) 0%,
+        hsl(203 70% 93%) 48%,
+        hsl(43 100% 91%) 100%
+      );
+  }
+
+  .tariff-hero-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.65;
+    background-image: linear-gradient(
+        to right,
+        hsl(var(--primary) / 0.08) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        hsl(var(--primary) / 0.08) 1px,
+        transparent 1px
+      );
+    background-size: 34px 34px;
+    -webkit-mask-image: radial-gradient(
+      circle at 54% 42%,
+      black 16%,
+      transparent 86%
+    );
+    mask-image: radial-gradient(circle at 54% 42%, black 16%, transparent 86%);
+  }
+
+  .tariff-hero-orb {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    filter: blur(52px);
+    opacity: 0.55;
+    animation: tariff-orb-float 18s ease-in-out infinite;
+  }
+
+  .tariff-hero-orb--one {
+    top: -7rem;
+    right: 8%;
+    width: 16rem;
+    height: 16rem;
+    background: hsl(var(--primary) / 0.25);
+  }
+
+  .tariff-hero-orb--two {
+    bottom: -8rem;
+    left: 4%;
+    width: 20rem;
+    height: 20rem;
+    background: hsl(var(--secondary) / 0.3);
+    animation-delay: -6s;
+  }
+
+  .tariff-hero-orb--three {
+    top: 28%;
+    left: 46%;
+    width: 10rem;
+    height: 10rem;
+    background: hsl(0 0% 100% / 0.7);
+    filter: blur(24px);
+    animation-duration: 20s;
+    animation-delay: -3s;
+  }
+
+  .tariff-surface-bg {
+    background: radial-gradient(
+        32rem 18rem at 88% 6%,
+        hsl(var(--secondary) / 0.18),
+        transparent 64%
+      ),
+      radial-gradient(
+        30rem 20rem at 8% 8%,
+        hsl(var(--primary) / 0.12),
+        transparent 62%
+      ),
+      linear-gradient(
+        180deg,
+        hsl(var(--background)) 0%,
+        hsl(var(--accent) / 0.48) 45%,
+        hsl(var(--background)) 100%
+      );
+  }
+
   .phone-countup-fade {
     opacity: 0;
     filter: blur(4px);
-    animation: phone-countup-soft-fade 820ms cubic-bezier(0.22, 1, 0.36, 1) 120ms forwards;
+    animation: phone-countup-soft-fade 820ms cubic-bezier(0.22, 1, 0.36, 1)
+      120ms forwards;
   }
 
   .phone-countup-done {
     opacity: 1;
     filter: blur(0);
-    transition: opacity 320ms ease-out, filter 320ms ease-out;
+    transition:
+      opacity 320ms ease-out,
+      filter 320ms ease-out;
   }
 }
 
@@ -322,6 +453,16 @@
   }
 }
 
+@keyframes tariff-orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) scale(1.08);
+  }
+}
+
 @keyframes phone-countup-soft-fade {
   from {
     opacity: 0;
@@ -348,6 +489,10 @@
   }
 
   .tour-orb {
+    animation: none;
+  }
+
+  .tariff-hero-orb {
     animation: none;
   }
 
@@ -380,6 +525,15 @@
 
   .tour-orb {
     filter: blur(42px);
+    opacity: 0.45;
+  }
+
+  .tariff-hero-orb {
+    filter: blur(36px);
+    opacity: 0.42;
+  }
+
+  .tariff-hero-grid {
     opacity: 0.45;
   }
 

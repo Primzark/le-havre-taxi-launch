@@ -298,23 +298,27 @@ const Tarifs = () => {
 
   return (
     <Layout>
-      <section className="relative overflow-hidden text-primary-foreground">
-        <img
-          src="/images/tarifs-page-3.webp"
-          alt=""
+      <section className="relative overflow-hidden">
+        <div className="tariff-hero-bg" aria-hidden="true" />
+        <div className="tariff-hero-grid" aria-hidden="true" />
+        <div
+          className="tariff-hero-orb tariff-hero-orb--one"
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/96 via-primary/90 to-primary/78" />
-        <div className="absolute inset-0 bg-[radial-gradient(34rem_22rem_at_14%_16%,hsl(var(--secondary)/0.38),transparent_62%),radial-gradient(30rem_20rem_at_86%_20%,hsl(0_0%_100%/0.15),transparent_65%)]" />
-        <div className="absolute -left-16 top-10 h-52 w-52 rounded-full bg-secondary/45 blur-3xl" />
-        <div className="absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-white/15 blur-3xl" />
-        <div className="tour-orb tour-orb--one" aria-hidden="true" />
-        <div className="tour-orb tour-orb--two" aria-hidden="true" />
+        <div
+          className="tariff-hero-orb tariff-hero-orb--two"
+          aria-hidden="true"
+        />
+        <div
+          className="tariff-hero-orb tariff-hero-orb--three"
+          aria-hidden="true"
+        />
 
         <div className="relative w-full px-4 py-16 sm:px-6 md:px-8 md:py-20 lg:px-10">
-          <nav aria-label="Fil d'Ariane" className="mb-4 text-sm opacity-90">
+          <nav
+            aria-label="Fil d'Ariane"
+            className="mb-4 text-sm text-foreground/70"
+          >
             <Link
               to="/"
               className="underline-offset-2 transition hover:underline"
@@ -325,35 +329,35 @@ const Tarifs = () => {
             <span aria-current="page">Tarifs</span>
           </nav>
 
-          <Badge className="border-white/35 bg-black/25 text-white hover:bg-black/35">
+          <Badge className="border-primary/25 bg-white/80 text-primary hover:bg-white">
             Mise à jour {lastTariffUpdateDate}
           </Badge>
 
-          <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight md:text-5xl">
+          <h1 className="mt-4 max-w-3xl font-heading text-3xl font-extrabold leading-tight text-foreground md:text-5xl">
             Tarifs et estimations
           </h1>
-          <p className="mt-4 max-w-3xl text-base text-white/90 md:text-lg">
+          <p className="mt-4 max-w-3xl text-base text-foreground/75 md:text-lg">
             Consultez les prix de référence 2025, estimez une course en direct
             et comparez les circuits touristiques en toute transparence avant
             réservation.
           </p>
 
           <div className="mt-8 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-            <div className="rounded-2xl border border-white/25 bg-black/25 p-5 shadow-[0_18px_42px_-28px_hsl(0_0%_0%/0.8)] backdrop-blur-sm md:p-6">
-              <p className="text-xs uppercase tracking-widest text-white/80">
+            <div className="rounded-2xl border border-primary/15 bg-white/75 p-5 shadow-[0_24px_44px_-28px_hsl(var(--primary)/0.5)] backdrop-blur-sm md:p-6">
+              <p className="text-xs uppercase tracking-widest text-primary/85">
                 Forfaits brochure 2025
               </p>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {quickFares.map((fare) => (
                   <div
                     key={fare.id}
-                    className="rounded-xl border border-white/20 bg-white/10 p-4 transition hover:bg-white/15"
+                    className="rounded-xl border border-border/70 bg-background/92 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md"
                   >
-                    <p className="text-xs uppercase tracking-wide text-white/75">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       {fare.from}
                     </p>
                     <p className="mt-1 text-sm font-semibold">{fare.to}</p>
-                    <p className="mt-3 font-heading text-2xl font-extrabold text-secondary">
+                    <p className="mt-3 font-heading text-2xl font-extrabold text-primary">
                       {formatEuro(fare.basePrice)}
                     </p>
                   </div>
@@ -362,29 +366,29 @@ const Tarifs = () => {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-              <div className="rounded-xl border border-white/20 bg-black/25 p-4 backdrop-blur-sm transition hover:bg-black/35">
-                <p className="text-xs uppercase tracking-wide text-white/75">
+              <div className="rounded-xl border border-border/70 bg-white/75 p-4 shadow-sm backdrop-blur-sm transition hover:bg-white">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
                   Tarif urbain express
                 </p>
-                <p className="mt-2 inline-flex items-center gap-1.5 text-2xl font-extrabold">
+                <p className="mt-2 inline-flex items-center gap-1.5 text-2xl font-extrabold text-foreground">
                   <Euro className="h-5 w-5" />
                   10 €
                 </p>
               </div>
-              <div className="rounded-xl border border-white/20 bg-black/25 p-4 backdrop-blur-sm transition hover:bg-black/35">
-                <p className="text-xs uppercase tracking-wide text-white/75">
+              <div className="rounded-xl border border-border/70 bg-white/75 p-4 shadow-sm backdrop-blur-sm transition hover:bg-white">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
                   Circuits disponibles
                 </p>
-                <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold">
+                <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold text-foreground">
                   <MapPin className="h-5 w-5" />
                   {toursData.length}
                 </p>
               </div>
-              <div className="rounded-xl border border-white/20 bg-black/25 p-4 backdrop-blur-sm transition hover:bg-black/35">
-                <p className="text-xs uppercase tracking-wide text-white/75">
+              <div className="rounded-xl border border-border/70 bg-white/75 p-4 shadow-sm backdrop-blur-sm transition hover:bg-white">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
                   Prix moyen circuit
                 </p>
-                <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold">
+                <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold text-foreground">
                   <Sparkles className="h-5 w-5" />
                   {formatEuro(avgTourPrice)}
                 </p>
@@ -393,11 +397,7 @@ const Tarifs = () => {
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <Button
-              asChild
-              size="lg"
-              className="w-full bg-white text-primary hover:bg-white/90 sm:w-auto"
-            >
+            <Button asChild size="lg" className="w-full shadow-sm sm:w-auto">
               <a href={`tel:${CONTACT_PHONE_LINK}`}>
                 <Phone className="h-4 w-4" />
                 Réserver immédiatement
@@ -407,7 +407,7 @@ const Tarifs = () => {
               asChild
               size="lg"
               variant="outline"
-              className="w-full border-white/45 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:w-auto"
+              className="w-full border-primary/30 bg-white/70 text-foreground hover:bg-white sm:w-auto"
             >
               <a href="#simulateur">
                 Lancer l'estimation
@@ -420,11 +420,11 @@ const Tarifs = () => {
 
       <section
         id="simulateur"
-        className="relative -mt-10 pb-16 md:-mt-12 md:pb-20"
+        className="relative -mt-8 pb-16 md:-mt-10 md:pb-20"
       >
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,hsl(var(--primary)/0.08)_0%,hsl(var(--secondary)/0.08)_36%,transparent_100%)]" />
+        <div className="tariff-surface-bg pointer-events-none absolute inset-0 -z-10" />
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="rounded-[1.75rem] border border-primary/15 bg-card/95 p-5 shadow-[0_24px_48px_-26px_hsl(var(--primary)/0.45)] backdrop-blur-sm md:p-7">
+          <div className="rounded-[1.75rem] border border-border/70 bg-white/90 p-5 shadow-[0_30px_64px_-34px_hsl(var(--primary)/0.45)] backdrop-blur-sm md:p-7">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <p className="font-heading text-lg font-bold md:text-xl">
                 Comparez rapidement vos tarifs de course et vos circuits
