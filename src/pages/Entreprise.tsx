@@ -1,15 +1,37 @@
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
-import { Users, MapPin, Clock, Phone } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
 import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
+
+type LegacyReview = {
+  company: string;
+  quote: string;
+  author: string;
+  avatar: string;
+};
+
+const tripAdvisorReviews: LegacyReview[] = [
+  {
+    company: "TripAdvisor",
+    quote:
+      "Excellent company, this company is very good service on time pickup and driver very professorial cab need and clean best price",
+    author: "Jordanam227",
+    avatar: "/images/review-tripadvisor-jordanam227.png",
+  },
+  {
+    company: "TripAdVisor",
+    quote: "Wonderful driver made a wonderful day !",
+    author: "Jeani A",
+    avatar: "/images/review-tripadvisor-jeania.png",
+  },
+];
 
 const Entreprise = () => {
   useSEO({
     title: "Entreprise",
-    description: "SCA Radio Taxi Le Havre : 112 véhicules, une trentaine de stations et une centrale active depuis 1976.",
+    description: "SCA Radio Taxi Le Havre : 112 véhicules, 35 stations et une centrale active 365 jours sur 365.",
     canonicalPath: "/entreprise",
-    ogImage: "/images/services/transport-entreprise.webp",
+    ogImage: "/images/entreprise-legacy-hero.png",
     keywords: [
       "entreprise taxi le havre",
       "radio taxi le havre",
@@ -29,59 +51,95 @@ const Entreprise = () => {
   return (
     <Layout>
       <PageHero
-        title="Notre entreprise"
-        subtitle="Services personnalisés aux particuliers et aux entreprises, au Havre et dans son agglomération."
-        backgroundImage="/images/services/transport-entreprise.webp"
+        title="À propos de nous"
+        subtitle="Services personnalisés aux particuliers et aux entreprises, services d'assistance aux personnes à mobilité réduite ou bien circuits touristiques."
+        backgroundImage="/images/entreprise-legacy-hero.png"
       />
 
-      {/* À propos */}
+      <section className="bg-neutral-900 py-16 text-white">
+        <div className="container max-w-6xl grid gap-8 md:grid-cols-[1.35fr_0.65fr] md:items-start">
+          <div>
+            <h2 className="font-heading mb-6 text-2xl font-bold">À propos de nous</h2>
+            <p className="leading-relaxed text-white/90">
+              Services personnalisés aux particuliers et aux entreprises, services d'assistance aux
+              personnes à mobilité réduite ou bien circuits touristiques, avec une flotte de 112
+              véhicules de 4 à 8 places (berlines, break et monospaces), les Taxis du Havre
+              répondent à vos nombreuses demandes 365 jours sur 365. La satisfaction de nos clients
+              est pour nous une exigence constante. Nos 35 stations nous permettent de répondre à
+              votre demande dans les meilleurs délais. De plus, nous avons des des chauffeurs qui
+              maîtrisent l'anglais, l'espagnol, l'allemand, le portugais, l'arabe, le russe et le
+              japonais.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <img
+              src="/images/entreprise-circuit-lehavre-hdv.jpg"
+              alt="Vue du Havre"
+              className="w-full rounded-xl border border-white/20 object-cover shadow-sm"
+            />
+            <img
+              src="/images/entreprise-ancien-logo.png"
+              alt="Logo Taxi Le Havre"
+              className="mx-auto w-full max-w-[220px] rounded-xl border border-white/20 bg-white p-3 shadow-sm"
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="py-16">
         <div className="container max-w-4xl">
-          <h2 className="font-heading font-bold text-2xl mb-6">Qui nous sommes</h2>
-          <p className="text-muted-foreground leading-relaxed mb-4">
-            Radio Taxi Le Havre rassemble des chauffeurs indépendants sur toute l'agglomération.
-            Avec <strong>112 véhicules</strong> et <strong>une trentaine de stations</strong>, nous couvrons les besoins du quotidien comme les trajets spécifiques.
-          </p>
+          <h2 className="font-heading mb-6 text-2xl font-bold">Engagement global</h2>
           <p className="text-muted-foreground leading-relaxed">
-            La centrale de réservation fonctionne 24h/24 et 7j/7 pour vos déplacements personnels, professionnels,
-            médicaux ou touristiques, au Havre et autour.
+            «Parce que nous connaissons bien nos clients et leurs besoins spécifiques que vous soyez
+            un utilisateur occasionnel ou régulier du taxi, nous mettons tout en œuvre pour vous
+            satisfaire.» Créée en 1960 la Société Coopérative des Artisans Radio-Taxis du Havre
+            forte de ses 130 artisans hommes et femmes, assistés de quatre opératrices gérant le
+            centre d'appel et une secrétaire, est en constante évolution. L'investissement dans les
+            nouvelles technologies (centre d'appel avec 30000 appels pas mois), la formation
+            continue des chauffeurs, la recherche et la mise en place de nouveaux services sont la
+            preuve d'un dynamisme incontestable. Notre objectif constant est la réalisation de
+            prestations de qualité malgré la variablilté fréquente de nos appels. Les Radio-Taxis
+            du Havre, un groupement qui fonde ses relations commerciales sur l'efficacité, la
+            disponibilité et la réactivité.
           </p>
         </div>
       </section>
 
-      {/* Engagement */}
-      <section className="bg-muted py-16">
-        <div className="container max-w-4xl">
-          <h2 className="font-heading font-bold text-2xl mb-6">Ce qui nous guide</h2>
-          <div className="grid sm:grid-cols-2 gap-6 mb-8">
-            <div className="bg-card rounded-xl border p-6 shadow-sm">
-              <Clock className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-heading font-semibold mb-2">Depuis 1976</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Une présence continue au Havre, avec la même exigence de fiabilité sur la route.
-              </p>
-            </div>
-            <div className="bg-card rounded-xl border p-6 shadow-sm">
-              <Users className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-heading font-semibold mb-2">Une équipe organisée</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Chauffeurs, opératrices et personnel administratif travaillent ensemble pour une prise en charge rapide.
-              </p>
-            </div>
-            <div className="bg-card rounded-xl border p-6 shadow-sm">
-              <MapPin className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-heading font-semibold mb-2">Une trentaine de stations</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Des points de présence répartis dans l'agglomération pour rester proches de vous.
-              </p>
-            </div>
-            <div className="bg-card rounded-xl border p-6 shadow-sm">
-              <Phone className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-heading font-semibold mb-2">Disponibilité 24h/7j</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Une centrale joignable jour et nuit, week-ends et jours fériés inclus.
-              </p>
-            </div>
+      <section className="border-t py-16">
+        <div className="container max-w-5xl">
+          <h2 className="font-heading text-center text-2xl font-bold">Quelques avis sur nos taxis</h2>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {tripAdvisorReviews.map((review) => (
+              <article key={review.author} className="rounded-xl border bg-card p-6 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <img
+                    src={review.avatar}
+                    alt={review.author}
+                    className="h-16 w-16 rounded-full border object-cover"
+                    loading="lazy"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-primary">{review.company}</p>
+                    <p className="text-xs text-muted-foreground">Avis client</p>
+                  </div>
+                </div>
+
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{review.quote}</p>
+                <p className="mt-4 font-semibold">{review.author}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href="https://taxis-lehavre.com/testimonials-archive/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center rounded-md border border-primary/35 bg-primary px-5 py-2.5 font-medium text-primary-foreground transition hover:bg-primary/90"
+            >
+              Les voir tous
+            </a>
           </div>
         </div>
       </section>
