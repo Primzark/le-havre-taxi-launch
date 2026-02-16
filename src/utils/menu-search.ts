@@ -100,6 +100,12 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
     keywords: ["entreprise", "à propos", "histoire", "équipe", "opératrices", "secrétaires"],
   },
   {
+    route: "/avis-clients",
+    label: "Avis clients",
+    example: "avis taxi",
+    keywords: ["avis", "avis clients", "témoignages", "temoignages", "tripadvisor", "pages jaunes"],
+  },
+  {
     route: "/devenir-taxi",
     label: "Devenir taxi",
     example: "devenir taxi",

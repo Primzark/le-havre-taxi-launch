@@ -29,6 +29,7 @@ const navigationLinks: FooterLink[] = [
   { to: "/circuits-touristiques", label: "Circuits touristiques" },
   { to: "/tarifs", label: "Tarifs" },
   { to: "/entreprise", label: "Entreprise" },
+  { to: "/avis-clients", label: "Avis clients" },
   { to: "/devenir-taxi", label: "Devenir taxi" },
   { to: "/contact", label: "Contact" },
 ];

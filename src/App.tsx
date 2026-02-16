@@ -12,6 +12,7 @@ import Tours from "./pages/Tours";
 import TourDetail from "./pages/TourDetail";
 import Tarifs from "./pages/Tarifs";
 import Entreprise from "./pages/Entreprise";
+import AvisClients from "./pages/AvisClients";
 import DevenirTaxi from "./pages/DevenirTaxi";
 import Actus from "./pages/Actus";
 import Contact from "./pages/Contact";
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="/circuits-touristiques/:id" element={<TourDetail />} />
           <Route path="/tarifs" element={<Tarifs />} />
           <Route path="/entreprise" element={<Entreprise />} />
+          <Route path="/avis-clients" element={<AvisClients />} />
           <Route path="/devenir-taxi" element={<DevenirTaxi />} />
           <Route path="/actus" element={<Actus />} />
           <Route path="/contact" element={<Contact />} />
