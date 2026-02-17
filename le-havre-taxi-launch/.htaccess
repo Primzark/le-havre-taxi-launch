@@ -1,5 +1,8 @@
 RewriteEngine On
 
+# Block access to hidden files/directories (.git, .env, etc.)
+RedirectMatch 404 /\.
+
 # Force favicon requests to the generated taxi logo files.
 RewriteRule ^favicon\.ico$ favicon.ico [L]
 RewriteRule ^favicon\.png$ favicon.png [L]
