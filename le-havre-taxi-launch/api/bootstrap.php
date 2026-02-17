@@ -328,8 +328,9 @@ function get_admin_password_hash(): string
         return trim($fromEnv);
     }
 
-    // Hash for default password "change-this-password".
-    return '$2y$12$KFUC9kuwJjsVzCLQ9xMvGeUrzKIZjgGjmIaCzPRo0AAiSGDAI2NVm';
+    // No fallback — admin password MUST be configured.
+    error_log("[SECURITY] ACTUS_ADMIN_PASSWORD_HASH is not configured. Admin login disabled.");
+    return "";
 }
 
 function is_admin_authenticated(): bool
@@ -491,7 +492,7 @@ function send_email_with_php_mail(string $to, string $subject, string $body, str
         $headers[] = "Reply-To: " . $replyTo;
     }
     $headers[] = "Content-Type: text/plain; charset=UTF-8";
-    $headers[] = "X-Mailer: PHP/" . phpversion();
+    $headers[] = "X-Mailer: TaxiLeHavre";
 
     $delivered = @mail($to, $subject, $body, implode("\r\n", $headers));
 

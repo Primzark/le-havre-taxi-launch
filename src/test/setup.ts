@@ -40,7 +40,7 @@ Object.defineProperty(navigator, "geolocation", {
   value: {
     getCurrentPosition: (_success: PositionCallback, error?: PositionErrorCallback) => {
       if (error) {
-        error({ code: 1, message: "Geolocation unavailable", PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 } as PositionError);
+        error({ code: 1, message: "Geolocation unavailable", PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 } as GeolocationPositionError);
       }
     },
   },
