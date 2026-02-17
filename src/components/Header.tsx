@@ -15,6 +15,7 @@ import { resolveMenuSearch } from "@/utils/menu-search";
 
 const PHONE_ANIMATION_DURATION_MS = 1800;
 const PHONE_DIGITS = CONTACT_PHONE_DISPLAY.replace(/\D/g, "");
+const MENU_VIDEO_URL = "https://player.vimeo.com/video/340638002?dnt=1&title=0&byline=0&portrait=0";
 
 const formatPhoneDisplay = (digits: string) =>
   (digits.match(/\d{1,2}/g) ?? []).join(" ");
@@ -252,6 +253,34 @@ const Header = () => {
                   </Link>
                 ))}
               </div>
+
+              <section
+                className="mt-4 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_18px_34px_-24px_hsl(var(--primary)/0.8)]"
+                aria-label="Vidéo de présentation de l'application"
+              >
+                <div className="relative aspect-video bg-muted">
+                  <iframe
+                    title="Application Taxi Le Havre"
+                    src={MENU_VIDEO_URL}
+                    className="absolute inset-0 h-full w-full"
+                    loading="lazy"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+                <div className="space-y-1.5 px-3 py-3">
+                  <p className="inline-flex rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-foreground">
+                    Video App
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">
+                    Decouvrez l'application Taxi Le Havre
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Visionnez la video puis telechargez l'app en un clic.
+                  </p>
+                </div>
+              </section>
 
               <div className="mt-3 flex flex-col gap-2 border-t pt-3 sm:flex-row">
                 <Button variant="outline" size="sm" className="sm:flex-1" asChild>
