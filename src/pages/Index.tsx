@@ -38,6 +38,7 @@ const stats: StatDefinition[] = [
 ];
 
 const statNumberFormatter = new Intl.NumberFormat("fr-FR");
+const APP_VIDEO_URL = "https://player.vimeo.com/video/340638002?dnt=1&title=0&byline=0&portrait=0";
 
 const AnimatedStatValue = ({
   stat,
@@ -480,6 +481,44 @@ const Index = () => {
               <Button size="lg" asChild>
                 <Link to="/services">Découvrir nos services</Link>
               </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-card py-16 md:py-20">
+        <div className="container">
+          <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
+            <div>
+              <p className="mb-3 inline-flex rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-foreground">
+                Video officielle
+              </p>
+              <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">L'application Taxi Le Havre en images</h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Retrouvez la meme video que sur l'ancien site pour decouvrir rapidement l'experience de reservation et les fonctions clefs.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild>
+                  <Link to="/contact">Reserver une course</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <a href="#app-download">Telecharger l'application</a>
+                </Button>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-border/70 bg-muted shadow-[0_24px_44px_-28px_hsl(var(--primary)/0.75)]">
+              <div className="relative aspect-video">
+                <iframe
+                  title="Application Taxi Le Havre"
+                  src={APP_VIDEO_URL}
+                  className="absolute inset-0 h-full w-full"
+                  loading="lazy"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
             </div>
           </div>
         </div>
