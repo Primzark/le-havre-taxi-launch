@@ -54,7 +54,7 @@ describe("Contact page", () => {
         return {
           ok: true,
           status: 200,
-          json: async () => ({ success: true, recipient: "starlod7696@gmail.com", delivered: true, provider: "mail" }),
+          json: async () => ({ success: true, recipient: "bureautaxi@gmail.com", delivered: true, provider: "mail" }),
         } as unknown as Response;
       }
 
