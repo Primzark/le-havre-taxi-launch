@@ -148,7 +148,7 @@ const Header = () => {
           <Link to="/" aria-label="Accueil Radio Taxi Le Havre" className="shrink-0 flex items-center">
             <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white shadow-[0_12px_28px_-14px_hsl(var(--primary)/0.7)] sm:h-20 sm:w-20 md:h-24 md:w-24">
               <img
-                src="/images/logo-ancien.png"
+                src="/images/logo-taxi-le-havre.webp"
                 alt="Radio Taxi Le Havre"
                 width={1024}
                 height={1024}
