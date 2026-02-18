@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Clock, MapPin, Phone, Sparkles } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import { ArrowLeft, CheckCircle2, ChevronLeft, ChevronRight, Clock, MapPin, Phone, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
@@ -734,16 +734,233 @@ const processSteps = [
   },
 ];
 
+const SERVICE_GALLERY_FALLBACKS: Record<string, ServiceGalleryItem[]> = {
+  "navette-aeroport": [
+    {
+      src: "/images/home-pont-normandie.webp",
+      alt: "Pont de Normandie sur un itineraire de transfert depuis Le Havre.",
+      caption: "Trajets fluides vers les axes principaux",
+    },
+    {
+      src: "/images/tour-11-paris.webp",
+      alt: "Vue urbaine illustrant les correspondances longue distance.",
+      caption: "Connexion vers gares et hubs nationaux",
+    },
+    {
+      src: "/images/service-station.webp",
+      alt: "Station de taxis prete pour un depart planifie.",
+      caption: "Depart confirme et ponctuel",
+    },
+  ],
+  mariage: [
+    {
+      src: "/images/home-mairie.webp",
+      alt: "Mairie du Havre pour les deplacements ceremonie.",
+      caption: "Liaisons mairie et reception",
+    },
+    {
+      src: "/images/home-catene.webp",
+      alt: "Vue de la Catene au Havre pour illustrer les trajets de la journee.",
+      caption: "Accompagnement sur toute la journee",
+    },
+    {
+      src: "/images/home-bassin-commerce.webp",
+      alt: "Bassin du Commerce au Havre pour trajets invites.",
+      caption: "Rotations invitees organisees",
+    },
+  ],
+  "navette-transport-sanitaire": [
+    {
+      src: "/images/service-station.webp",
+      alt: "Station de taxis pour prise en charge medicale planifiee.",
+      caption: "Prises en charge regulieres",
+    },
+    {
+      src: "/images/home-mairie.webp",
+      alt: "Vue urbaine du Havre pour trajets medicaux locaux.",
+      caption: "Trajets medicaux locaux",
+    },
+    {
+      src: "/images/home-bassin-commerce.webp",
+      alt: "Vue du Havre pour illustrer les retours a domicile.",
+      caption: "Aller-retour coordonne selon vos soins",
+    },
+  ],
+  "navette-classe-affaire": [
+    {
+      src: "/images/services/transport-entreprise.webp",
+      alt: "Passager professionnel lors d'un transfert entreprise.",
+      caption: "Prise en charge business structuree",
+    },
+    {
+      src: "/images/home-bassin-commerce.webp",
+      alt: "Quartier d'affaires au Havre.",
+      caption: "Efficacite sur vos deplacements urbains",
+    },
+    {
+      src: "/images/home-pont-normandie.webp",
+      alt: "Axe regional pour deplacements professionnels.",
+      caption: "Longues liaisons professionnelles",
+    },
+  ],
+  "navette-transport-scolaire": [
+    {
+      src: "/images/service-station.webp",
+      alt: "Station de taxis prete pour des departs scolaires.",
+      caption: "Routines quotidiennes fiabilisees",
+    },
+    {
+      src: "/images/home-mairie.webp",
+      alt: "Centre-ville du Havre pour deplacements vers etablissements.",
+      caption: "Liaisons ecole et activites",
+    },
+    {
+      src: "/images/home-catene.webp",
+      alt: "Vue urbaine pour trajets eleves et etudiants.",
+      caption: "Organisation souple sur la semaine",
+    },
+  ],
+  "transport-professionnel-et-entreprise": [
+    {
+      src: "/images/services/classe-affaire.webp",
+      alt: "Transfert premium pour un environnement entreprise.",
+      caption: "Accueil client et collaborateurs",
+    },
+    {
+      src: "/images/home-pont-normandie.webp",
+      alt: "Axe de circulation normand pour deplacements entreprise.",
+      caption: "Deplacements regionaux optimises",
+    },
+    {
+      src: "/images/home-bassin-commerce.webp",
+      alt: "Zone centrale du Havre pour rendez-vous professionnels.",
+      caption: "Trajets inter-sites planifies",
+    },
+  ],
+  "personne-a-mobilite-reduite": [
+    {
+      src: "/images/service-station.webp",
+      alt: "Zone de prise en charge adaptee au Havre.",
+      caption: "Accompagnement des le depart",
+    },
+    {
+      src: "/images/home-mairie.webp",
+      alt: "Centre-ville pour deplacements administratifs PMR.",
+      caption: "Trajets personnels et administratifs",
+    },
+    {
+      src: "/images/home-bassin-commerce.webp",
+      alt: "Vue urbaine pour deplacements PMR planifies.",
+      caption: "Confort et attention continue",
+    },
+  ],
+  "croisieres-port": [
+    {
+      src: "/images/home-catene.webp",
+      alt: "Front de mer au Havre, proche des flux portuaires.",
+      caption: "Transferts en rythme d'escale",
+    },
+    {
+      src: "/images/home-bassin-commerce.webp",
+      alt: "Bassin du Commerce pour deplacements passagers.",
+      caption: "Liaisons rapides vers points cles",
+    },
+    {
+      src: "/images/tour-01-le-havre.webp",
+      alt: "Vue du Havre pour prolonger une escale croisiere.",
+      caption: "Escale courte ou tour local",
+    },
+  ],
+  "transport-groupes": [
+    {
+      src: "/images/tour-03-normandie.webp",
+      alt: "Circuit normand adapte aux deplacements collectifs.",
+      caption: "Sorties groupe et excursions",
+    },
+    {
+      src: "/images/tour-09-cote-fleurie.webp",
+      alt: "Paysage cotier pour trajets collectifs longue distance.",
+      caption: "Confort groupe sur trajets etendus",
+    },
+    {
+      src: "/images/service-station.webp",
+      alt: "Point de rendez-vous collectif au Havre.",
+      caption: "Depart commun, organisation simple",
+    },
+  ],
+};
+
+const GENERIC_GALLERY_FALLBACKS: ServiceGalleryItem[] = [
+  {
+    src: "/images/service-station.webp",
+    alt: "Station de taxis au Havre.",
+    caption: "Service local disponible",
+  },
+  {
+    src: "/images/home-mairie.webp",
+    alt: "Vue de la mairie du Havre.",
+    caption: "Deplacements urbains facilites",
+  },
+  {
+    src: "/images/home-catene.webp",
+    alt: "Vue de la Catene au Havre.",
+    caption: "Trajets adaptes a votre contexte",
+  },
+  {
+    src: "/images/home-bassin-commerce.webp",
+    alt: "Bassin du Commerce au Havre.",
+    caption: "Coordination claire avant depart",
+  },
+];
+
+const buildUniqueGallery = (service: ServiceDefinition, story: ServiceStory): ServiceGalleryItem[] => {
+  const seen = new Set<string>([service.imageSrc]);
+  const unique: ServiceGalleryItem[] = [];
+
+  const tryAdd = (item: ServiceGalleryItem) => {
+    if (!item.src || seen.has(item.src)) {
+      return;
+    }
+    seen.add(item.src);
+    unique.push(item);
+  };
+
+  story.gallery.forEach(tryAdd);
+  (SERVICE_GALLERY_FALLBACKS[service.slug] ?? []).forEach(tryAdd);
+  GENERIC_GALLERY_FALLBACKS.forEach(tryAdd);
+
+  return unique.slice(0, 4);
+};
+
 const ServiceDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const service = slug ? getServiceBySlug(slug) : undefined;
   const story = service ? SERVICE_STORIES[service.slug] ?? buildFallbackStory(service) : null;
   const prefersReducedMotion = useReducedMotion();
-  const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+
+  const galleryItems = useMemo(
+    () => (service && story ? buildUniqueGallery(service, story) : []),
+    [service, story],
+  );
 
   useEffect(() => {
-    setActiveScenarioIndex(0);
+    setActiveGalleryIndex(0);
   }, [service?.slug]);
+
+  useEffect(() => {
+    if (prefersReducedMotion || galleryItems.length <= 1) {
+      return;
+    }
+
+    const autoplay = window.setInterval(() => {
+      setActiveGalleryIndex((prev) => (prev + 1) % galleryItems.length);
+    }, 4800);
+
+    return () => {
+      window.clearInterval(autoplay);
+    };
+  }, [galleryItems.length, prefersReducedMotion]);
 
   useSEO(
     service
@@ -798,8 +1015,7 @@ const ServiceDetail = () => {
         whileInView: "visible" as const,
         viewport: { once: true, amount: 0.18 },
       };
-
-  const activeScenario = story.scenarios[Math.min(activeScenarioIndex, story.scenarios.length - 1)] ?? story.scenarios[0];
+  const activeGalleryItem = galleryItems[Math.min(activeGalleryIndex, galleryItems.length - 1)] ?? galleryItems[0];
 
   return (
     <Layout>
@@ -869,31 +1085,104 @@ const ServiceDetail = () => {
                 </span>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-                {story.gallery.map((image, index) => (
-                  <motion.figure
-                    key={image.src}
-                    variants={ITEM_VARIANTS}
-                    className={cn(
-                      "group relative overflow-hidden rounded-2xl border bg-card shadow-sm",
-                      index === 0 ? "lg:row-span-2" : "",
+              <div className="rounded-3xl border bg-card/95 p-3 shadow-sm md:p-4">
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  {galleryItems.map((image, index) => (
+                    <button
+                      key={`progress-${image.src}`}
+                      type="button"
+                      aria-label={`Voir l'image ${index + 1}`}
+                      onClick={() => setActiveGalleryIndex(index)}
+                      className="group rounded-full p-0.5"
+                    >
+                      <span
+                        className={cn(
+                          "block h-1.5 rounded-full transition-all duration-400",
+                          index === activeGalleryIndex ? "w-11 bg-primary" : "w-5 bg-border group-hover:bg-primary/50",
+                        )}
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl border bg-black/10">
+                  <AnimatePresence mode="wait">
+                    {activeGalleryItem && (
+                      <motion.img
+                        key={`${activeGalleryItem.src}-${activeGalleryIndex}`}
+                        src={activeGalleryItem.src}
+                        alt={activeGalleryItem.alt}
+                        loading="lazy"
+                        initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.06 }}
+                        animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+                        exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+                        transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+                        className="h-[340px] w-full object-cover md:h-[420px]"
+                      />
                     )}
-                  >
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      loading="lazy"
-                      className={cn(
-                        "w-full object-cover transition-transform duration-700 group-hover:scale-105",
-                        index === 0 ? "h-full min-h-[320px]" : "h-44",
-                      )}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+                  </AnimatePresence>
+
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  {activeGalleryItem && (
                     <figcaption className="absolute bottom-3 left-3 right-3 rounded-lg border border-white/25 bg-black/45 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm md:text-sm">
-                      {image.caption}
+                      <div className="mb-1 inline-flex rounded-full border border-white/35 bg-black/25 px-2 py-0.5 text-[11px] font-semibold">
+                        {String(activeGalleryIndex + 1).padStart(2, "0")} / {String(galleryItems.length).padStart(2, "0")}
+                      </div>
+                      <p>{activeGalleryItem.caption}</p>
                     </figcaption>
-                  </motion.figure>
-                ))}
+                  )}
+
+                  {galleryItems.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        aria-label="Image précédente"
+                        onClick={() =>
+                          setActiveGalleryIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length)
+                        }
+                        className="absolute left-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition hover:bg-black/60"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Image suivante"
+                        onClick={() => setActiveGalleryIndex((prev) => (prev + 1) % galleryItems.length)}
+                        className="absolute right-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white transition hover:bg-black/60"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {galleryItems.map((image, index) => (
+                    <button
+                      key={`thumb-${image.src}`}
+                      type="button"
+                      onClick={() => setActiveGalleryIndex(index)}
+                      className={cn(
+                        "group relative overflow-hidden rounded-xl border text-left transition",
+                        index === activeGalleryIndex ? "border-primary shadow-sm" : "border-border hover:border-primary/45",
+                      )}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        loading="lazy"
+                        className={cn(
+                          "h-20 w-full object-cover transition-transform duration-500",
+                          index === activeGalleryIndex ? "scale-105" : "group-hover:scale-105",
+                        )}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <span className="absolute bottom-1.5 left-1.5 right-1.5 line-clamp-2 text-[10px] font-semibold text-white">
+                        {image.caption}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </motion.section>
 
@@ -971,39 +1260,31 @@ const ServiceDetail = () => {
             </div>
 
             <div className="rounded-3xl border bg-gradient-to-br from-primary/10 via-background to-secondary/15 p-6 shadow-sm">
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <h3 className="font-heading text-lg font-semibold">Idées rapides</h3>
-                <button
-                  type="button"
-                  onClick={() => setActiveScenarioIndex((prev) => (prev + 1) % story.scenarios.length)}
-                  className="inline-flex items-center gap-1 rounded-full border bg-background px-3 py-1 text-xs font-semibold text-muted-foreground transition hover:border-primary hover:text-primary"
-                >
-                  <Sparkles className="h-3.5 w-3.5" />
-                  Surprise
-                </button>
-              </div>
+              <h3 className="font-heading text-lg font-semibold">Préparer votre demande</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Pour une confirmation plus rapide, partagez ces informations dès le premier message.
+              </p>
 
-              <div className="flex flex-wrap gap-2">
-                {story.scenarios.map((scenario, index) => (
-                  <button
-                    key={scenario.label}
-                    type="button"
-                    aria-pressed={index === activeScenarioIndex}
-                    onClick={() => setActiveScenarioIndex(index)}
-                    className={cn(
-                      "rounded-full border px-3 py-1 text-xs font-semibold transition",
-                      index === activeScenarioIndex
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "bg-background text-muted-foreground hover:border-primary/50 hover:text-primary",
-                    )}
-                  >
-                    {scenario.label}
-                  </button>
+              <ul className="mt-4 space-y-2">
+                {[
+                  "Date et heure souhaitées",
+                  "Adresse de départ et destination",
+                  "Nombre de passagers, bagages et contraintes spécifiques",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 rounded-lg border bg-card/85 px-3 py-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{item}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              <div className="mt-4 rounded-xl border bg-card/95 p-4">
-                <p className="text-sm leading-relaxed text-muted-foreground">{activeScenario.detail}</p>
+              <div className="mt-5 space-y-2.5">
+                {story.scenarios.map((scenario) => (
+                  <div key={scenario.label} className="rounded-xl border bg-card/95 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">{scenario.label}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{scenario.detail}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </motion.aside>
