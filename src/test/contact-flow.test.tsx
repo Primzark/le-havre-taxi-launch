@@ -17,7 +17,7 @@ describe("Contact page", () => {
   it("submits the contact form and shows success feedback", async () => {
     const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, recipient: "contactradiotaxilehavre@gmail.com", delivered: true, provider: "mail" }),
+      json: async () => ({ success: true, recipient: "bureautaxi@gmail.com", delivered: true, provider: "mail" }),
     } as unknown as Response);
 
     render(
@@ -59,7 +59,7 @@ describe("Contact page", () => {
         return {
           ok: true,
           status: 200,
-          json: async () => ({ success: true, recipient: "starlod7696@gmail.com", delivered: true, provider: "mail" }),
+          json: async () => ({ success: true, recipient: "bureautaxi@gmail.com", delivered: true, provider: "mail" }),
         } as unknown as Response;
       }
 

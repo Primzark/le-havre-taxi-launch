@@ -410,7 +410,7 @@ function get_contact_email(): string
         return trim($envEmail);
     }
 
-    return "starlod7696@gmail.com";
+    return "bureautaxi@gmail.com";
 }
 
 function get_mail_provider(): string
