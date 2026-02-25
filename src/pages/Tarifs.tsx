@@ -9,7 +9,6 @@ import {
   MapPin,
   Phone,
   Search,
-  Sparkles,
   Users,
 } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -172,11 +171,9 @@ const simulatorRoutes: SimulatorRoute[] = [
   })),
 ];
 
-const lastTariffUpdateDate = "01/01/2025";
+const lastTariffUpdateDate = "24/02/2026";
 const minTourPrice = Math.min(...toursData.map((tour) => tour.price));
 const maxTourPrice = Math.max(...toursData.map((tour) => tour.price));
-const avgTourPrice =
-  toursData.reduce((total, tour) => total + tour.price, 0) / toursData.length;
 
 const currencyFormatter = new Intl.NumberFormat("fr-FR", {
   style: "currency",
@@ -398,7 +395,7 @@ const Tarifs = () => {
                 </Button>
               </div>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 <div className="rounded-xl border border-border/70 bg-white/80 p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     Forfait minimum
@@ -414,15 +411,6 @@ const Tarifs = () => {
                   <p className="mt-1 inline-flex items-center gap-1.5 font-heading text-2xl font-extrabold text-foreground">
                     <MapPin className="h-4 w-4" />
                     {toursData.length}
-                  </p>
-                </div>
-                <div className="rounded-xl border border-border/70 bg-white/80 p-4 shadow-sm">
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                    Prix moyen circuit
-                  </p>
-                  <p className="mt-1 inline-flex items-center gap-1.5 font-heading text-2xl font-extrabold text-foreground">
-                    <Sparkles className="h-4 w-4" />
-                    {formatEuro(avgTourPrice)}
                   </p>
                 </div>
               </div>
@@ -935,7 +923,7 @@ const Tarifs = () => {
               <p>
                 Tarifs indicatifs mis à jour le{" "}
                 <strong>{lastTariffUpdateDate}</strong>, selon la brochure
-                circuits 2025 et l'arrêté préfectoral 2025.
+                {" "}circuits 2026 et l'arrêté préfectoral 09/02/2026.
               </p>
               <p className="mt-2">
                 Pour un chiffrage précis, appelez le{" "}

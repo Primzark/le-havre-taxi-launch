@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Actus from "@/pages/Actus";
@@ -16,6 +16,43 @@ const memoryRouterFutureConfig = {
 } as const;
 
 describe("Actus admin flow", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("keeps the public /actus page free of admin controls", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      const method = (init?.method || "GET").toUpperCase();
+
+      if (url.endsWith("/api/news.php") && method === "GET") {
+        return jsonResponse({ success: true, items: [] });
+      }
+
+      if (url.endsWith("/api/admin.php") && method === "GET") {
+        return jsonResponse({ success: true, authenticated: false, username: "" });
+      }
+
+      return jsonResponse({ success: false, error: "Unhandled route" }, false, 500);
+    });
+
+    vi.stubGlobal("fetch", fetchMock as unknown as typeof fetch);
+
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Actus />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Gestion des actus/i)).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText(/@lehavretaxi/i)).toBeInTheDocument();
+    expect(screen.getByText(/50 Ans/i)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Se connecter/i })).not.toBeInTheDocument();
+  });
+
   it("authenticates admin and publishes a new capture", async () => {
     let authenticated = false;
 
@@ -56,7 +93,7 @@ describe("Actus admin flow", () => {
 
     render(
       <MemoryRouter future={memoryRouterFutureConfig}>
-        <Actus />
+        <Actus adminMode />
       </MemoryRouter>,
     );
 
@@ -88,7 +125,5 @@ describe("Actus admin flow", () => {
       "/api/news.php",
       expect.objectContaining({ method: "POST", credentials: "same-origin" }),
     );
-
-    vi.unstubAllGlobals();
   }, 15000);
 });

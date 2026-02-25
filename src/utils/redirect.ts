@@ -1,4 +1,4 @@
-export const LEGACY_HOSTS = new Set(["taxihavre.com", "www.taxihavre.com"]);
+export const LEGACY_HOSTS = new Set(["taxihavre.com", "www.taxihavre.com", "taxis-lehavre.com"]);
 
 export const buildLegacyDomainRedirectUrl = (
   hostname: string,

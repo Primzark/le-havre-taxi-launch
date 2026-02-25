@@ -31,10 +31,10 @@ type StatDefinition = {
 
 const stats: StatDefinition[] = [
   { icon: Clock, label: "Depuis", target: 1976 },
-  { icon: Car, label: "Taxis dans le réseau", target: 112 },
+  { icon: Car, label: "Taxis dans le réseau", target: 115 },
   { icon: Clock, label: "Service continu", target: 24, suffix: "h/7j" },
   { icon: Users, label: "Stations et agglomération", target: 30, suffix: "+" },
-  { icon: Users, label: "Courses attribuées en 2018", target: 243426, groupDigits: true },
+  { icon: Users, label: "Courses attribuées en 2025", target: 150000, groupDigits: true },
 ];
 
 const statNumberFormatter = new Intl.NumberFormat("fr-FR");
@@ -322,7 +322,7 @@ const Index = () => {
                   asChild
                 >
                   <Link to="/contact">
-                    <MapPin className="h-5 w-5 mr-2" /> Voir les stations
+                    <MapPin className="h-5 w-5 mr-2" /> Envoyez-nous un message
                   </Link>
                 </Button>
               </div>
@@ -476,7 +476,7 @@ const Index = () => {
             <div>
               <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">Une équipe locale et réactive</h2>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                Une flotte de 112 taxis et une trentaine de stations pour vous prendre en charge rapidement au Havre.
+                Une flotte de 115 taxis et une trentaine de stations pour vous prendre en charge rapidement au Havre et sa périphérie.
               </p>
               <Button size="lg" asChild>
                 <Link to="/services">Découvrir nos services</Link>
@@ -569,11 +569,11 @@ const Index = () => {
               </h3>
               <p className="text-muted-foreground text-sm">Consultez les prix indicatifs, simples et transparents.</p>
             </Link>
-            <Link to="/services" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
+            <Link to="/liens" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
-                Nos services <ArrowRight className="inline h-4 w-4 ml-1" />
+                Liens utiles <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">Médical, gare, aéroport, croisière, groupes et trajets pros.</p>
+              <p className="text-muted-foreground text-sm">Tous les raccourcis utiles : contact, tarifs, applis et réseaux sociaux.</p>
             </Link>
           </div>
         </div>

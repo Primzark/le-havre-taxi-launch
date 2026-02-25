@@ -8,19 +8,31 @@ describe("buildLegacyDomainRedirectUrl", () => {
       "/contact",
       "?source=google",
       "#section",
-      "https://taxis-lehavre.com",
+      "https://www.taxis-lehavre.com",
     );
 
-    expect(result).toBe("https://taxis-lehavre.com/contact?source=google#section");
+    expect(result).toBe("https://www.taxis-lehavre.com/contact?source=google#section");
   });
 
-  it("returns null for non-legacy hosts", () => {
+  it("redirects non-www current domain to www", () => {
     const result = buildLegacyDomainRedirectUrl(
       "taxis-lehavre.com",
       "/",
       "",
       "",
-      "https://taxis-lehavre.com",
+      "https://www.taxis-lehavre.com",
+    );
+
+    expect(result).toBe("https://www.taxis-lehavre.com/");
+  });
+
+  it("returns null for the canonical host", () => {
+    const result = buildLegacyDomainRedirectUrl(
+      "www.taxis-lehavre.com",
+      "/",
+      "",
+      "",
+      "https://www.taxis-lehavre.com",
     );
 
     expect(result).toBeNull();

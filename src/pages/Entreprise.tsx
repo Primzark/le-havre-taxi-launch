@@ -16,13 +16,13 @@ type EngagementPoint = {
 const engagementPoints: EngagementPoint[] = [
   {
     icon: Clock,
-    title: "Créée en 1960",
+    title: "Créée en 1976",
     description:
       "Une coopérative historique au Havre, en évolution continue pour garder un service rapide et fiable.",
   },
   {
     icon: Users,
-    title: "130 artisans engagés",
+    title: "115 artisans engagés",
     description:
       "Hommes et femmes de terrain, épaulés par une équipe de dispatch, pour une prise en charge fluide.",
   },
@@ -34,7 +34,7 @@ const engagementPoints: EngagementPoint[] = [
   },
   {
     icon: Phone,
-    title: "30 000 appels par mois",
+    title: "12 500 appels par mois",
     description:
       "Un centre d'appel structuré, capable d'absorber des volumes élevés avec régularité.",
   },

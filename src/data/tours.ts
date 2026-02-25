@@ -198,11 +198,6 @@ export const toursData: Tour[] = [
           "Le Mont Saint-Michel.",
         ),
         slide(
-          "/images/circuits/tour-04-mont-saint-michel-01.jpg",
-          "Vue principale du Mont Saint-Michel.",
-          "Arrivée sur le site.",
-        ),
-        slide(
           "/images/circuits/tour-04-mont-saint-michel-02.jpg",
           "Remparts du Mont Saint-Michel.",
           "Promenade sur les remparts.",
@@ -216,11 +211,6 @@ export const toursData: Tour[] = [
           "/images/tour-10-landing-beaches.webp",
           "Plages historiques en Normandie.",
           "Combinez avec un itinéraire mémoire.",
-        ),
-        slide(
-          "/images/tour-03-normandie.webp",
-          "Itinéraire normand sur route.",
-          "Traversée des paysages normands.",
         ),
       ],
     },
@@ -261,11 +251,6 @@ export const toursData: Tour[] = [
           "/images/circuits/tour-05-honfleur-03.jpg",
           "Chapelle Notre-Dame de Grâce.",
           "Hauteurs de Honfleur.",
-        ),
-        slide(
-          "/images/tour-09-cote-fleurie.webp",
-          "Littoral normand de la Côte Fleurie.",
-          "Extension Côte Fleurie.",
         ),
         slide(
           "/images/home-pont-normandie.webp",
@@ -317,11 +302,6 @@ export const toursData: Tour[] = [
           "Jardins de Giverny.",
           "Peut se combiner avec Giverny.",
         ),
-        slide(
-          "/images/tour-03-normandie.webp",
-          "Route normande.",
-          "Itinéraire confortable depuis Le Havre.",
-        ),
       ],
     },
   },
@@ -367,11 +347,6 @@ export const toursData: Tour[] = [
           "Patrimoine de Rouen.",
           "Possible extension vers Rouen.",
         ),
-        slide(
-          "/images/tour-03-normandie.webp",
-          "Route normande.",
-          "Trajet panoramique en Normandie.",
-        ),
       ],
     },
   },
@@ -380,7 +355,7 @@ export const toursData: Tour[] = [
     name: "La côte d'Albâtre, le musée de Bénédictine",
     duration: "4h00",
     price: 250,
-    image: "/images/tour-08-cote-albatre.webp",
+    image: "/images/circuits/tour-08-cote-albatre-01.jpg",
     story: {
       title: "Côte d'Albâtre, valleuses et Fécamp",
       intro:
@@ -393,24 +368,9 @@ export const toursData: Tour[] = [
       ],
       gallery: [
         slide(
-          "/images/tour-08-cote-albatre.webp",
-          "Littoral de la Côte d'Albâtre.",
-          "Falaises de la Côte d'Albâtre.",
-        ),
-        slide(
           "/images/circuits/tour-08-cote-albatre-01.jpg",
           "Architecture patrimoniale sur la Côte d'Albâtre.",
           "Patrimoine côtier.",
-        ),
-        slide(
-          "/images/circuits/tour-08-cote-albatre-02.jpg",
-          "Plage et horizon marin.",
-          "Panorama littoral.",
-        ),
-        slide(
-          "/images/circuits/tour-08-cote-albatre-03.jpg",
-          "Port normand sur la côte.",
-          "Escale portuaire.",
         ),
         slide(
           "/images/tour-02-etretat.webp",
@@ -448,19 +408,9 @@ export const toursData: Tour[] = [
           "Côte Fleurie.",
         ),
         slide(
-          "/images/circuits/tour-09-cote-fleurie-01.jpg",
-          "Casino et architecture de Deauville.",
-          "Deauville et son casino.",
-        ),
-        slide(
           "/images/tour-05-honfleur.webp",
           "Vieux bassin de Honfleur.",
           "Départ de l'itinéraire par Honfleur.",
-        ),
-        slide(
-          "/images/tour-03-normandie.webp",
-          "Route touristique normande.",
-          "Route panoramique normande.",
         ),
         slide(
           "/images/home-pont-normandie.webp",
@@ -503,19 +453,9 @@ export const toursData: Tour[] = [
           "Lieux de recueillement.",
         ),
         slide(
-          "/images/circuits/tour-10-debarquement-03.jpg",
-          "Canon historique sur la côte.",
-          "Batteries côtières.",
-        ),
-        slide(
           "/images/tour-04-mont-saint-michel.webp",
           "Mont Saint-Michel en Normandie.",
           "Autre grande excursion possible.",
-        ),
-        slide(
-          "/images/tour-03-normandie.webp",
-          "Littoral normand.",
-          "Parcours côtier normand.",
         ),
       ],
     },
@@ -543,11 +483,6 @@ export const toursData: Tour[] = [
           "Paris, Ville Lumière.",
         ),
         slide(
-          "/images/circuits/tour-11-paris-01.jpg",
-          "Tour Eiffel vue rapprochée.",
-          "Tour Eiffel.",
-        ),
-        slide(
           "/images/circuits/tour-11-paris-02.jpg",
           "Pyramide du Louvre.",
           "Le Louvre.",
@@ -561,11 +496,6 @@ export const toursData: Tour[] = [
           "/images/tour-12-versailles.webp",
           "Domaine de Versailles.",
           "Peut se combiner avec Versailles.",
-        ),
-        slide(
-          "/images/tour-06-rouen.webp",
-          "Étape régionale vers Paris.",
-          "Trajet confortable depuis Le Havre.",
         ),
       ],
     },
@@ -593,11 +523,6 @@ export const toursData: Tour[] = [
           "Versailles, résidence royale.",
         ),
         slide(
-          "/images/circuits/tour-12-versailles-01.jpg",
-          "Dôme et architecture de Versailles.",
-          "Architecture monumentale.",
-        ),
-        slide(
           "/images/circuits/tour-12-versailles-02.jpg",
           "Jardins du château de Versailles.",
           "Jardins à la française.",
@@ -611,11 +536,6 @@ export const toursData: Tour[] = [
           "/images/tour-11-paris.webp",
           "Paris et ses monuments.",
           "Extension possible vers Paris.",
-        ),
-        slide(
-          "/images/tour-03-normandie.webp",
-          "Route régionale.",
-          "Transfert privé sur la journée.",
         ),
       ],
     },
@@ -661,11 +581,6 @@ export const toursData: Tour[] = [
           "/images/tour-05-honfleur.webp",
           "Escales normandes complémentaires.",
           "Itinéraire normand élargi.",
-        ),
-        slide(
-          "/images/tour-03-normandie.webp",
-          "Paysages du Pays d'Auge.",
-          "Route intérieure de Normandie.",
         ),
       ],
     },

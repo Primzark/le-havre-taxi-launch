@@ -12,6 +12,12 @@ npm install
 npm run dev
 ```
 
+Optional frontend env (contact email shown on the site):
+
+```sh
+VITE_CONTACT_EMAIL=bureautaxi@gmail.com
+```
+
 If you need PHP endpoints locally:
 
 ```sh
@@ -22,6 +28,7 @@ php -S 127.0.0.1:8090 -t .
 
 1. Copy `api/config.sample.php` to `api/config.php`.
 2. Set production values for:
+- Frontend build env `VITE_CONTACT_EMAIL=contact@radiotaxi-lehavre.com`
 - `CONTACT_FORM_EMAIL`
 - `ACTUS_ADMIN_USERNAME`
 - `ACTUS_ADMIN_PASSWORD_HASH`

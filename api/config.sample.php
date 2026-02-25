@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Copy this file to `api/config.php` and set your own values.
  */
 
-// Contact form destination.
+// Contact form destination (production: contact@radiotaxi-lehavre.com).
 define("CONTACT_FORM_EMAIL", "bureautaxi@gmail.com");
 
 // Admin authentication for actus CRUD/upload.
