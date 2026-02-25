@@ -5,7 +5,9 @@ import {
   Car,
   CheckCircle2,
   Clock3,
+  Download,
   Euro,
+  ExternalLink,
   MapPin,
   Phone,
   Search,
@@ -36,6 +38,12 @@ import {
   CONTACT_PHONE_LINK,
   PRIMARY_DOMAIN,
 } from "@/config/site";
+import {
+  TAXI_DECREE_2026,
+  calculateTariffEstimate,
+  type SimulatorRouteKind,
+  type TariffPeriodMode,
+} from "@/lib/tariff-simulator";
 
 type QuickFare = {
   id: string;
@@ -62,11 +70,14 @@ type SimulatorRoute = {
   basePrice: number;
   eta: string;
   note: string;
-  kind: "course" | "circuit";
+  kind: SimulatorRouteKind;
 };
 
-type PeriodMode = "jour" | "nuit";
+type PeriodMode = TariffPeriodMode;
 type TourSortMode = "price-asc" | "price-desc" | "duration-asc";
+
+const PREFECTORAL_DECREE_PDF_URL = "/documents/arrete-prefectoral-taxi-2026-02-09.pdf";
+const PREFECTORAL_DECREE_DATE_LABEL = "9 février 2026";
 
 const quickFares: QuickFare[] = [
   {
@@ -124,24 +135,22 @@ const fareVisuals: FareVisual[] = [
 
 const periodConfig: Record<
   PeriodMode,
-  { label: string; multiplier: number; helper: string }
+  { label: string; helper: string }
 > = {
   jour: {
     label: "Jour",
-    multiplier: 1,
-    helper: "Tarif de base",
+    helper: "Tarifs A/C (7h-19h)",
   },
   nuit: {
     label: "Nuit",
-    multiplier: 1.2,
-    helper: "Majoration indicative",
+    helper: "Tarifs B/D (19h-7h, dimanches et jours fériés)",
   },
 };
 
 const luggageOptions = [
-  { id: "light", label: "0 à 1 bagage", fee: 0 },
-  { id: "standard", label: "2 bagages", fee: 3 },
-  { id: "large", label: "3 bagages ou plus", fee: 7 },
+  { id: "none", label: "Aucun supplément bagage", supplementCount: 0 },
+  { id: "one", label: "1 supplément bagage (cas décret)", supplementCount: 1 },
+  { id: "two", label: "2 suppléments bagages (cas cumulés)", supplementCount: 2 },
 ];
 
 const tourSortOptions: Array<{ id: TourSortMode; label: string }> = [
@@ -180,9 +189,17 @@ const currencyFormatter = new Intl.NumberFormat("fr-FR", {
   currency: "EUR",
   maximumFractionDigits: 0,
 });
+const preciseCurrencyFormatter = new Intl.NumberFormat("fr-FR", {
+  style: "currency",
+  currency: "EUR",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 
 const formatEuro = (amount: number) =>
   currencyFormatter.format(Math.round(amount));
+const formatEuroPrecise = (amount: number) =>
+  preciseCurrencyFormatter.format(amount);
 
 const parseDurationHours = (duration: string) => {
   const [hoursPart, minutesPart = "0"] = duration.split("h");
@@ -218,6 +235,9 @@ const Tarifs = () => {
   const selectedLuggage =
     luggageOptions.find((option) => option.id === luggageId) ??
     luggageOptions[0];
+  const stopsValue = stops[0] ?? 0;
+  const waitingMinutesValue = waitingMinutes[0] ?? 0;
+  const passengersValue = passengers[0] ?? 1;
 
   const focusSimulatorWithRoute = (routeId: string) => {
     setSelectedRouteId(routeId);
@@ -243,31 +263,30 @@ const Tarifs = () => {
   };
 
   const estimate = useMemo(() => {
-    const periodMultiplier = periodConfig[periodMode].multiplier;
-    const base = selectedRoute.basePrice * periodMultiplier;
-    const stopFee = stops[0] * 4;
-    const waitingFee = Math.ceil(waitingMinutes[0] / 5) * 2;
-    const luggageFee = selectedLuggage.fee;
-    const subtotal = base + stopFee + waitingFee + luggageFee;
-    const min = Math.max(selectedRoute.basePrice, subtotal - 4);
-    const max = subtotal + (periodMode === "nuit" ? 10 : 7);
-
-    return {
-      base,
-      stopFee,
-      waitingFee,
-      luggageFee,
-      subtotal,
-      min,
-      max,
-    };
+    return calculateTariffEstimate({
+      decree: TAXI_DECREE_2026,
+      kind: selectedRoute.kind,
+      periodMode,
+      basePrice: selectedRoute.basePrice,
+      stops: stopsValue,
+      waitingMinutes: waitingMinutesValue,
+      passengers: passengersValue,
+      luggageSupplementCount: selectedLuggage.supplementCount,
+    });
   }, [
-    selectedLuggage.fee,
-    selectedRoute.basePrice,
+    passengersValue,
     periodMode,
-    stops,
-    waitingMinutes,
+    selectedLuggage.supplementCount,
+    selectedRoute.basePrice,
+    selectedRoute.kind,
+    stopsValue,
+    waitingMinutesValue,
   ]);
+
+  const appliedTariffFamilyLabel =
+    selectedRoute.kind === "course"
+      ? "Référence tarif direct (A/B)"
+      : "Référence aller-retour/circulaire (C/D)";
 
   const filteredTours = useMemo(() => {
     const normalizedQuery = tourQuery.trim().toLowerCase();
@@ -315,7 +334,7 @@ const Tarifs = () => {
       "prix taxi le havre",
       "estimateur taxi havre",
       "circuit touristique taxi prix",
-      "arrêté préfectoral taxi 2025",
+      "arrêté préfectoral taxi 2026",
     ],
     structuredData: [
       {
@@ -518,7 +537,8 @@ const Tarifs = () => {
               </h2>
               <p className="mt-2 text-sm text-muted-foreground md:text-base">
                 Renseignez les options utiles pour obtenir une estimation
-                claire.
+                indicative recalibrée selon l&apos;arrêté préfectoral du
+                09/02/2026.
               </p>
 
               <div className="mt-5 space-y-4">
@@ -597,7 +617,7 @@ const Tarifs = () => {
                 <div>
                   <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     <span>Arrêts intermédiaires</span>
-                    <span>{stops[0]}</span>
+                    <span>{stopsValue}</span>
                   </div>
                   <Slider
                     value={stops}
@@ -612,7 +632,7 @@ const Tarifs = () => {
                 <div>
                   <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     <span>Temps d'attente</span>
-                    <span>{waitingMinutes[0]} min</span>
+                    <span>{waitingMinutesValue} min</span>
                   </div>
                   <Slider
                     value={waitingMinutes}
@@ -629,15 +649,15 @@ const Tarifs = () => {
             <div className="rounded-3xl border border-primary/15 bg-card p-5 shadow-[0_24px_58px_-34px_hsl(var(--primary)/0.55)] md:p-6">
               <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
                 <Euro className="h-3.5 w-3.5" />
-                Estimation indicative
+                Estimation indicative recalibrée
               </p>
 
               <p className="mt-4 font-heading text-4xl font-extrabold text-primary md:text-5xl">
-                {formatEuro(estimate.subtotal)}
+                {formatEuroPrecise(estimate.subtotal)}
               </p>
               <p className="mt-2 text-sm text-muted-foreground md:text-base">
-                Fourchette conseillée : {formatEuro(estimate.min)} à{" "}
-                {formatEuro(estimate.max)}
+                Fourchette indicative : {formatEuroPrecise(estimate.min)} à{" "}
+                {formatEuroPrecise(estimate.max)}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {selectedRoute.from} → {selectedRoute.to} • Durée{" "}
@@ -646,50 +666,81 @@ const Tarifs = () => {
               <p className="mt-1 text-xs text-muted-foreground">
                 {selectedRoute.note}
               </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {appliedTariffFamilyLabel} • Classe appliquée : TARIF{" "}
+                {estimate.appliedTariffClass}
+              </p>
 
               <div className="mt-5 space-y-2 rounded-xl border border-border/70 bg-background/70 p-4 text-sm">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span>
                     {selectedRoute.kind === "circuit"
-                      ? "Base circuit"
-                      : "Base trajet"}
+                      ? "Base circuit (brochure)"
+                      : "Base trajet (référence)"}
                   </span>
-                  <span>{formatEuro(estimate.base)}</span>
+                  <span>{formatEuroPrecise(estimate.base)}</span>
                 </div>
                 <div className="flex items-center justify-between text-muted-foreground">
-                  <span>Arrêts intermédiaires</span>
-                  <span>+ {formatEuro(estimate.stopFee)}</span>
+                  <span>Arrêts intermédiaires (proxy 5 min/arrêt)</span>
+                  <span>+ {formatEuroPrecise(estimate.stopFee)}</span>
                 </div>
                 <div className="flex items-center justify-between text-muted-foreground">
-                  <span>Attente</span>
-                  <span>+ {formatEuro(estimate.waitingFee)}</span>
+                  <span>Attente ({formatEuroPrecise(estimate.waitingRatePerHour)}/h)</span>
+                  <span>+ {formatEuroPrecise(estimate.waitingFee)}</span>
                 </div>
                 <div className="flex items-center justify-between text-muted-foreground">
-                  <span>Bagages</span>
-                  <span>+ {formatEuro(estimate.luggageFee)}</span>
+                  <span>Bagages (suppléments décret)</span>
+                  <span>+ {formatEuroPrecise(estimate.luggageFee)}</span>
                 </div>
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span>Passagers (à partir du 5e)</span>
+                  <span>+ {formatEuroPrecise(estimate.passengerFee)}</span>
+                </div>
+                {estimate.minimumApplied ? (
+                  <div className="flex items-center justify-between rounded-md bg-primary/5 px-2 py-1 text-primary">
+                    <span>Course minimale (arrêté)</span>
+                    <span>{formatEuroPrecise(TAXI_DECREE_2026.courseMinimale)}</span>
+                  </div>
+                ) : null}
                 <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 font-semibold">
                   <span className="inline-flex items-center gap-1.5">
                     <Users className="h-4 w-4 text-primary" />
-                    {passengers[0]} passager{passengers[0] > 1 ? "s" : ""}
+                    {passengersValue} passager{passengersValue > 1 ? "s" : ""}
                   </span>
-                  <span>1 à 4 inclus</span>
+                  <span>
+                    {passengersValue <= 4
+                      ? "1 à 4 inclus"
+                      : `+ ${formatEuroPrecise(estimate.passengerFee)} au-delà de 4`}
+                  </span>
                 </div>
               </div>
+
+              <p className="mt-3 text-xs text-muted-foreground">
+                Estimation indicative basée sur les prix de référence affichés
+                (forfaits/circuits) et des modificateurs recalibrés selon
+                l&apos;arrêté préfectoral. Le montant final dépend du trajet
+                réel, de la circulation et des suppléments effectivement
+                appliqués.
+              </p>
 
               <div className="mt-4">
                 <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   <span>Passagers</span>
-                  <span>{passengers[0]} / 4</span>
+                  <span>{passengersValue} / 8</span>
                 </div>
                 <Slider
                   value={passengers}
                   onValueChange={setPassengers}
                   min={1}
-                  max={4}
+                  max={8}
                   step={1}
                   aria-label="Nombre de passagers"
                 />
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Supplément légal : +{" "}
+                  {formatEuroPrecise(TAXI_DECREE_2026.supplementPassager5Plus)}{" "}
+                  par passager à partir du 5e.
+                </p>
               </div>
 
               <Button asChild className="mt-6 h-auto w-full py-3 text-center">
@@ -885,15 +936,148 @@ const Tarifs = () => {
               Ce que comprend le tarif affiché
             </h2>
 
+            <div className="mt-5 rounded-2xl border border-primary/20 bg-background/80 p-4 md:p-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-heading text-lg font-extrabold md:text-xl">
+                    Arrêté préfectoral du {PREFECTORAL_DECREE_DATE_LABEL}
+                  </h3>
+                  <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+                    Synthèse des valeurs officielles utilisées pour le taximètre
+                    et les suppléments (décret 2026) afin de recalibrer
+                    l&apos;estimation affichée ci-dessus.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button asChild variant="outline" size="sm">
+                    <a
+                      href={PREFECTORAL_DECREE_PDF_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Consulter le décret (PDF)
+                    </a>
+                  </Button>
+                  <Button asChild size="sm">
+                    <a
+                      href={PREFECTORAL_DECREE_PDF_URL}
+                      download="arrete-prefectoral-taxi-2026-02-09.pdf"
+                    >
+                      <Download className="h-4 w-4" />
+                      Télécharger le décret
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="mt-4 overflow-x-auto rounded-xl border border-border/70">
+                <table className="min-w-full text-sm">
+                  <thead className="bg-muted/60 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th className="px-3 py-2 font-semibold">Élément</th>
+                      <th className="px-3 py-2 font-semibold">Valeur</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/70 bg-background">
+                    <tr>
+                      <td className="px-3 py-2 font-medium">Prise en charge</td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.priseEnCharge)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 font-medium">TARIF A (jour direct)</td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.tarifA)} / km
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 font-medium">TARIF B (nuit direct)</td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.tarifB)} / km
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 font-medium">
+                        TARIF C (jour circulaire / aller-retour)
+                      </td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.tarifC)} / km
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 font-medium">
+                        TARIF D (nuit circulaire / aller-retour)
+                      </td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.tarifD)} / km
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 font-medium">
+                        Heure d&apos;attente (jour)
+                      </td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.attenteJourParHeure)}{" "}
+                        / h
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 font-medium">
+                        Heure d&apos;attente (nuit)
+                      </td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.attenteNuitParHeure)}{" "}
+                        / h
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 font-medium">Course minimale</td>
+                      <td className="px-3 py-2">
+                        {formatEuroPrecise(TAXI_DECREE_2026.courseMinimale)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    Supplément passagers
+                  </p>
+                  <p className="mt-1 text-sm">
+                    +{" "}
+                    {formatEuroPrecise(
+                      TAXI_DECREE_2026.supplementPassager5Plus,
+                    )}{" "}
+                    par passager à partir du 5e.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    Suppléments bagages (cas prévus)
+                  </p>
+                  <p className="mt-1 text-sm">
+                    + {formatEuroPrecise(TAXI_DECREE_2026.supplementBagage)} par
+                    supplément applicable (cumul possible).
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <Accordion type="single" collapsible className="mt-5">
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   Les montants sont-ils fixes ?
                 </AccordionTrigger>
                 <AccordionContent>
-                  Les montants affichés sont des tarifs indicatifs. Le prix
-                  final dépend du trajet réel, des conditions de circulation,
-                  des arrêts demandés et des éventuels suppléments.
+                  Les montants affichés sont des tarifs indicatifs. Le
+                  simulateur est recalibré selon l&apos;arrêté préfectoral du
+                  09/02/2026, mais le prix final dépend du trajet réel, des
+                  conditions de circulation, des arrêts demandés et des
+                  éventuels suppléments.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
@@ -923,7 +1107,16 @@ const Tarifs = () => {
               <p>
                 Tarifs indicatifs mis à jour le{" "}
                 <strong>{lastTariffUpdateDate}</strong>, selon la brochure
-                {" "}circuits 2026 et l'arrêté préfectoral 09/02/2026.
+                {" "}circuits 2026 et l&apos;arrêté préfectoral 09/02/2026 (
+                <a
+                  className="font-semibold text-primary underline-offset-2 hover:underline"
+                  href={PREFECTORAL_DECREE_PDF_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  consulter le PDF
+                </a>
+                ).
               </p>
               <p className="mt-2">
                 Pour un chiffrage précis, appelez le{" "}
