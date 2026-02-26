@@ -47,6 +47,53 @@ php -r 'echo password_hash("your-strong-password", PASSWORD_DEFAULT), PHP_EOL;'
 - `GET/POST/DELETE /api/admin.php`
 - `POST /api/upload.php`
 
+## Vercel deployment (frontend) + PHP origin (backend)
+
+This project is deployed with:
+- `Vercel` for the Vite frontend (`www.taxis-lehavre.com`)
+- a separate PHP host for the existing backend APIs/uploads (`origin.taxis-lehavre.com`)
+
+### Why
+- Vercel hosts the frontend well.
+- The current backend uses PHP sessions and file persistence (`var/`, `public/uploads/`), which should stay on a PHP host.
+
+### Repo files for Vercel
+- `vercel.json`: Vercel rewrites/proxy for `/api/*` and `/uploads/*`, plus SPA fallback.
+- `.vercelignore`: excludes PHP backend files and local artifacts from the Vercel upload.
+
+### Vercel project settings
+- Framework preset: `Vite`
+- Root directory: `/`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Frontend env: `VITE_CONTACT_EMAIL=contact@radiotaxi-lehavre.com`
+
+### PHP origin host layout (`origin.taxis-lehavre.com`)
+Deploy these paths from the repo root to the PHP host (same relative layout):
+- `api/`
+- `var/` (or allow creation at runtime)
+- `public/uploads/`
+
+The PHP host document root should be the project root (the directory containing `api/`, `public/`, `var/`).
+
+Required PHP host permissions:
+- writable `var/`
+- writable `public/uploads/` (and `public/uploads/actus/`)
+
+### DNS / domains
+- Public site on Vercel:
+  - `www.taxis-lehavre.com` (primary)
+  - `taxis-lehavre.com` -> redirect to `www.taxis-lehavre.com`
+  - `taxihavre.com` -> redirect to `www.taxis-lehavre.com`
+  - `www.taxihavre.com` -> redirect to `www.taxis-lehavre.com`
+- Hidden backend origin:
+  - `origin.taxis-lehavre.com` -> PHP host
+
+### Important note
+- `.htaccess` and `public/_redirects` are not used by Vercel.
+- Domain redirects for apex/legacy hosts must be configured in Vercel project domain settings.
+- `vercel.json` handles path rewrites and SPA routing.
+
 ## Security and reliability
 - Session-based admin authentication for Actus operations.
 - File upload validation (type + size) and restricted upload directory.

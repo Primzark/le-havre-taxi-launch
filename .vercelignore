@@ -1,0 +1,13 @@
+# Frontend deploy on Vercel only; PHP backend stays on origin host.
+api/
+var/
+public/uploads/
+
+# Local/build artifacts and duplicate nested copy.
+dist/
+node_modules/
+le-havre-taxi-launch/
+
+# Local machine noise / secrets.
+.env
+.DS_Store
