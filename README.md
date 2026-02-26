@@ -3,7 +3,8 @@
 ## Stack
 - Vite + React + TypeScript
 - Tailwind + shadcn/ui
-- PHP APIs in `api/`
+- Vercel Functions (JS) in `api/` for production
+- Legacy PHP APIs in `api/*.php` kept temporarily for migration/cutover
 
 ## Local run
 
@@ -47,38 +48,56 @@ php -r 'echo password_hash("your-strong-password", PASSWORD_DEFAULT), PHP_EOL;'
 - `GET/POST/DELETE /api/admin.php`
 - `POST /api/upload.php`
 
-## Vercel deployment (frontend) + PHP origin (backend)
+## Vercel-only deployment (frontend + functions + Supabase)
 
-This project is deployed with:
-- `Vercel` for the Vite frontend (`www.taxis-lehavre.com`)
-- a separate PHP host for the existing backend APIs/uploads (`origin.taxis-lehavre.com`)
-
-### Why
-- Vercel hosts the frontend well.
-- The current backend uses PHP sessions and file persistence (`var/`, `public/uploads/`), which should stay on a PHP host.
-
-### Repo files for Vercel
-- `vercel.json`: Vercel rewrites/proxy for `/api/*` and `/uploads/*`, plus SPA fallback.
-- `.vercelignore`: excludes PHP backend files and local artifacts from the Vercel upload.
+Production target:
+- `Vercel` hosts the Vite frontend and serverless API functions
+- `Supabase` provides database + storage persistence (replaces PHP file storage)
 
 ### Vercel project settings
 - Framework preset: `Vite`
 - Root directory: `/`
 - Build command: `npm run build`
 - Output directory: `dist`
-- Frontend env: `VITE_CONTACT_EMAIL=contact@radiotaxi-lehavre.com`
 
-### PHP origin host layout (`origin.taxis-lehavre.com`)
-Deploy these paths from the repo root to the PHP host (same relative layout):
-- `api/`
-- `var/` (or allow creation at runtime)
-- `public/uploads/`
+### Frontend env (Vercel)
+- `VITE_CONTACT_EMAIL=contact@radiotaxi-lehavre.com`
 
-The PHP host document root should be the project root (the directory containing `api/`, `public/`, `var/`).
+### Server env (Vercel Functions)
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_ACTUS_BUCKET=actus` (optional if using default `actus`)
+- `ACTUS_ADMIN_USERNAME`
+- `ACTUS_ADMIN_PASSWORD_HASH`
+- `ADMIN_SESSION_SECRET` (recommended)
+- `CONTACT_FORM_EMAIL`
+- `MAIL_PROVIDER=resend`
+- `RESEND_API_KEY`
+- `MAIL_FROM_EMAIL` (recommended)
+- `MAIL_FROM_NAME` (recommended)
+- Optional alerts: `ALERT_WEBHOOK_URL`
+- Optional anti-spam tuning:
+  - `CONTACT_RATE_LIMIT_MAX`
+  - `CONTACT_RATE_LIMIT_WINDOW_SECONDS`
+  - `LOGIN_RATE_LIMIT_MAX`
+  - `LOGIN_RATE_LIMIT_WINDOW_SECONDS`
+  - `ACTUS_UPLOAD_MAX_MB`
 
-Required PHP host permissions:
-- writable `var/`
-- writable `public/uploads/` (and `public/uploads/actus/`)
+### Supabase setup
+Run the SQL migration:
+- `supabase/migrations/20260226_vercel_backend_core.sql`
+
+It creates:
+- `public.actus_items`
+- `public.contact_messages`
+- `public.api_rate_limits`
+- `public.api_events` (optional logs)
+- public storage bucket `actus`
+
+### Vercel routing in this repo
+- `/api/*.php` -> Vercel Functions (`api/*.php.js`)
+- `/uploads/*` -> rewritten to `/api/uploads.php` then redirected to Supabase public storage URL
+- SPA fallback and canonical host redirects are handled in `vercel.json`
 
 ### DNS / domains
 - Public site on Vercel:
@@ -86,13 +105,10 @@ Required PHP host permissions:
   - `taxis-lehavre.com` -> redirect to `www.taxis-lehavre.com`
   - `taxihavre.com` -> redirect to `www.taxis-lehavre.com`
   - `www.taxihavre.com` -> redirect to `www.taxis-lehavre.com`
-- Hidden backend origin:
-  - `origin.taxis-lehavre.com` -> PHP host
 
-### Important note
-- `.htaccess` and `public/_redirects` are not used by Vercel.
-- Domain redirects for apex/legacy hosts must be configured in Vercel project domain settings.
-- `vercel.json` handles path rewrites and SPA routing.
+### Legacy PHP backend (temporary only)
+- Old PHP endpoints remain in `api/*.php` for migration fallback/cutover.
+- Vercel excludes them via `.vercelignore` in Vercel-only mode.
 
 ## Security and reliability
 - Session-based admin authentication for Actus operations.

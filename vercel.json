@@ -59,12 +59,8 @@
   ],
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://origin.taxis-lehavre.com/api/:path*"
-    },
-    {
       "source": "/uploads/:path*",
-      "destination": "https://origin.taxis-lehavre.com/public/uploads/:path*"
+      "destination": "/api/uploads.php?path=:path*"
     },
     {
       "source": "/:path*",

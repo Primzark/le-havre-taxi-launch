@@ -1,5 +1,6 @@
-# Frontend deploy on Vercel only; PHP backend stays on origin host.
-api/
+# Vercel-only deploy: keep JS serverless functions, exclude legacy PHP backend and local data.
+api/*.php
+api/.htaccess
 var/
 public/uploads/
 
