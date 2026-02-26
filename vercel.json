@@ -4,6 +4,39 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "taxihavre.com"
+        }
+      ],
+      "destination": "https://www.taxis-lehavre.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.taxihavre.com"
+        }
+      ],
+      "destination": "https://www.taxis-lehavre.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "taxis-lehavre.com"
+        }
+      ],
+      "destination": "https://www.taxis-lehavre.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/nous-contact",
       "destination": "/",
       "permanent": true
