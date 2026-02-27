@@ -301,7 +301,7 @@ const Index = () => {
 
         <div className="container relative py-14 md:py-20">
           <div className="grid items-end gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="max-w-2xl rounded-2xl border border-white/20 bg-black/20 p-6 md:p-8 shadow-2xl backdrop-blur-sm">
+            <div className="mx-auto w-full min-w-0 max-w-2xl rounded-2xl border border-white/20 bg-black/20 p-6 md:p-8 shadow-2xl backdrop-blur-sm lg:mx-0">
               <h1 className="font-heading font-extrabold text-4xl md:text-5xl mb-5 leading-tight">
                 Appelez, voyagez,{" "}
                 <span className="text-secondary">profitez...</span>
