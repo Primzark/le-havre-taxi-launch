@@ -49,8 +49,8 @@ describe("Actus admin flow", () => {
     });
 
     expect(screen.getByText(/@lehavretaxi/i)).toBeInTheDocument();
-    expect(screen.getByText(/Instagram et Facebook en lecture seule/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /News publiées depuis l'administration/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /^Instagram et Facebook$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Actualités Radio Taxi Le Havre/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Se connecter/i })).not.toBeInTheDocument();
   });
 

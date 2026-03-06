@@ -130,7 +130,7 @@ const JSON_REQUEST_HEADERS = {
   "Content-Type": "application/json",
   Accept: "application/json",
 } as const;
-const NEWS_SOURCE_LABEL = "Actualité site";
+const NEWS_SOURCE_LABEL = "Actualité du site";
 const NEWS_LINK_LABEL = "Lire l'actualité";
 const FACEBOOK_PLUGIN_URL = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
   FACEBOOK_URL,
@@ -141,27 +141,27 @@ const liveFeeds: LiveSocialFeed[] = [
     label: "Instagram",
     handle: "@lehavretaxi",
     description:
-      "Le dernier contenu Instagram s'affiche directement depuis le compte officiel, sans copie manuelle dans le back-office.",
+      "Retrouvez notre univers Instagram et accédez directement au compte officiel de Radio Taxi Le Havre.",
     href: INSTAGRAM_URL,
     embedUrl: "https://www.instagram.com/lehavretaxi/embed/",
     icon: Instagram,
     chipClass: "bg-rose-500/10 text-rose-700",
     surfaceClass: "from-rose-50 via-white to-amber-50",
     frameClass: "bg-[#faf7f4]",
-    note: "Lecture seule. Les posts Instagram se publient depuis Instagram, pas depuis l'administration du site.",
+    note: "Consultez le compte officiel pour voir les publications, stories et nouveautés du réseau.",
   },
   {
     label: "Facebook",
     handle: "TaxiLeHavre",
     description:
-      "La timeline Facebook officielle reste affichée en direct via le plugin Meta, séparée des actualités du site.",
+      "Accédez à notre page Facebook officielle pour suivre les publications et informations du réseau.",
     href: FACEBOOK_URL,
     embedUrl: FACEBOOK_PLUGIN_URL,
     icon: Facebook,
     chipClass: "bg-sky-500/10 text-sky-700",
     surfaceClass: "from-sky-50 via-white to-cyan-50",
     frameClass: "bg-[#f4f7fb]",
-    note: "Lecture seule. Les posts Facebook restent gérés sur Facebook et simplement exposés ici en direct.",
+    note: "Ouvrez la page Facebook pour parcourir les posts, les commentaires et les dernières informations.",
   },
 ];
 
@@ -313,7 +313,7 @@ const NewsHeroCard = ({ item, onDelete, showDelete = false }: NewsHeroCardProps)
         <div className="absolute left-5 top-5 flex flex-wrap gap-2">
           <span className="inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-900">
             <BadgeCheck className="h-3.5 w-3.5 text-amber-500" />
-            Dernière news
+            Dernière actualité
           </span>
           <span className="inline-flex rounded-full bg-slate-950/55 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur">
             {NEWS_SOURCE_LABEL}
@@ -331,22 +331,22 @@ const NewsHeroCard = ({ item, onDelete, showDelete = false }: NewsHeroCardProps)
 
       <div className="flex flex-col justify-between p-6 md:p-8">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Actualité publiée par l'équipe</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">À la une</p>
           <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-            Cette carte vient du panneau d'administration du site. Elle est distincte des publications Instagram et Facebook affichées en direct plus haut.
+            Retrouvez ici les informations importantes, les nouveautés du service et les annonces publiées par l'équipe.
           </p>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <MetricCard
               eyebrow="Canal"
               value={NEWS_SOURCE_LABEL}
-              caption="Contenu éditorial interne au site."
+              caption="Rubrique éditoriale du site."
               valueClassName="text-2xl"
             />
             <MetricCard
               eyebrow="Publication"
               value={formatPublishedDate(item.created_at)}
-              caption="Date visible sur la page publique."
+              caption="Date affichée sur la page."
               valueClassName="text-lg"
             />
           </div>
@@ -402,7 +402,7 @@ const NewsGridCard = ({ item, onDelete, showDelete = false }: NewsGridCardProps)
 
     <div className="p-5">
       <p className="text-sm leading-relaxed text-slate-600">
-        Actualité ajoutée depuis l'administration du site, séparée des contenus des réseaux sociaux.
+        Information publiée par Radio Taxi Le Havre pour orienter les visiteurs vers le contenu complet.
       </p>
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
@@ -519,7 +519,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
         : {
             title: "Actus",
             description:
-              "Consultez les publications sociales en direct et les actualités du site Taxi Le Havre dans deux espaces séparés.",
+              "Consultez les actualités de Taxi Le Havre et retrouvez nos comptes Instagram et Facebook officiels.",
             canonicalPath: "/actus",
             ogImage: "/images/home-catene.webp",
             keywords: [
@@ -551,10 +551,10 @@ const Actus = ({ adminMode = false }: ActusProps) => {
       {
         id: "featured",
         label: "À la une",
-        description: "La première news visible sur la page publique.",
+        description: "La première actualité visible sur la page publique.",
         items: latestNews ? [latestNews] : [],
         accentClass: "from-amber-500/18 via-white to-white",
-        emptyMessage: "Aucune news mise en avant pour le moment.",
+        emptyMessage: "Aucune actualité mise en avant pour le moment.",
       },
       {
         id: "recent",
@@ -562,12 +562,12 @@ const Actus = ({ adminMode = false }: ActusProps) => {
         description: "Les dernières actualités publiées par l'équipe.",
         items: newsItems.slice(1, 3),
         accentClass: "from-sky-500/18 via-white to-white",
-        emptyMessage: "Aucune news récente supplémentaire.",
+        emptyMessage: "Aucune actualité récente supplémentaire.",
       },
       {
         id: "library",
         label: "Bibliothèque",
-        description: "Les autres news déjà en ligne.",
+        description: "Les autres actualités déjà en ligne.",
         items: newsItems.slice(3),
         accentClass: "from-slate-400/18 via-white to-white",
         emptyMessage: "La bibliothèque est vide.",
@@ -900,8 +900,8 @@ const Actus = ({ adminMode = false }: ActusProps) => {
         title={adminMode ? "Gestion des actualités" : "Actus"}
         subtitle={
           adminMode
-            ? "Le dashboard publie uniquement les news du site. Les contenus Instagram et Facebook restent affichés en direct en lecture seule."
-            : "La page sépare enfin deux flux: les réseaux sociaux en direct d'un côté, les actualités publiées depuis l'administration de l'autre."
+            ? "Espace de publication et de suivi des actualités du site Taxi Le Havre."
+            : "Retrouvez nos actualités, nos comptes officiels et les informations utiles de Radio Taxi Le Havre."
         }
         backgroundImage="/images/home-catene.webp"
       />
@@ -919,38 +919,38 @@ const Actus = ({ adminMode = false }: ActusProps) => {
               <div className="relative">
                 <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-600 shadow-sm">
                   <Globe2 className="h-3.5 w-3.5 text-amber-500" />
-                  Double flux
+                  Actus en un coup d'oeil
                 </div>
 
                 <h2 className="mt-5 max-w-3xl font-heading text-4xl font-extrabold leading-tight text-slate-950 md:text-5xl">
-                  Les posts sociaux restent live. Les news du site restent gérées par l'admin.
+                  Suivez l'actualité de Radio Taxi Le Havre
                 </h2>
                 <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg">
-                  La page Actus ne mélange plus deux logiques différentes. Instagram et Facebook sont affichés en direct depuis les plateformes, tandis que le back-office sert uniquement à publier les actualités du site.
+                  Retrouvez nos publications Instagram et Facebook ainsi que les informations utiles du site dans un espace clair, rapide et agréable à parcourir.
                 </p>
 
                 <div className="mt-7 grid gap-3 sm:grid-cols-3">
                   <MetricCard
                     eyebrow="Flux sociaux"
                     value={liveFeeds.length}
-                    caption="Deux espaces live en lecture seule."
+                    caption="Instagram et Facebook officiels."
                   />
                   <MetricCard
-                    eyebrow="News du site"
+                    eyebrow="Actualités du site"
                     value={newsItems.length}
-                    caption="Actualités publiées par l'équipe admin."
+                    caption="Annonces, nouveautés et informations du service."
                   />
                   <MetricCard
-                    eyebrow="Dernière news"
+                    eyebrow="Dernière publication"
                     value={latestNewsLabel}
-                    caption="Repère rapide sur l'activité éditoriale."
+                    caption="Date de la publication la plus récente."
                     valueClassName="text-lg"
                   />
                 </div>
 
                 <div className="mt-6 rounded-[24px] border border-slate-200/80 bg-slate-950 px-5 py-4 text-white shadow-[0_18px_40px_-28px_rgba(15,23,42,0.75)]">
                   <p className="text-sm leading-relaxed text-white/82 md:text-base">
-                    <span className="font-semibold text-white">Règle claire :</span> le site n'ajoute plus de faux posts Instagram ou Facebook. Le panneau admin publie seulement des news internes avec leur propre mise en avant.
+                    Découvrez d'abord nos réseaux officiels pour suivre le quotidien du service, puis les actualités du site pour retrouver annonces, nouveautés et informations pratiques.
                   </p>
                 </div>
               </div>
@@ -958,15 +958,15 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
             <div className="grid gap-4">
               <MetricCard
-                eyebrow="Mode social"
-                value="Live"
-                caption="Les réseaux sont affichés avec leurs widgets officiels, sans ressaisie dans l'admin."
+                eyebrow="Réseaux officiels"
+                value="2 canaux"
+                caption="Accès direct à Instagram et Facebook."
                 className="rounded-[30px]"
               />
               <MetricCard
-                eyebrow="Mode admin"
-                value="News"
-                caption="Le dashboard compose et publie uniquement les actualités du site."
+                eyebrow="Rubrique info"
+                value="Actualités"
+                caption="Communiqués, annonces et infos utiles du site."
                 className="rounded-[30px]"
               />
               <div className="rounded-[30px] border border-slate-200/80 bg-white/90 p-6 shadow-sm">
@@ -978,7 +978,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                     onClick={() => jumpToSection("social-live")}
                     className="justify-start rounded-[22px] border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                   >
-                    Instagram + Facebook live
+                    Instagram + Facebook
                   </Button>
                   <Button
                     type="button"
@@ -1007,17 +1007,15 @@ const Actus = ({ adminMode = false }: ActusProps) => {
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">En direct des réseaux</p>
-                <h2 className="mt-2 font-heading text-3xl font-extrabold text-slate-950 md:text-4xl">
-                  Instagram et Facebook en lecture seule
-                </h2>
+                <h2 className="mt-2 font-heading text-3xl font-extrabold text-slate-950 md:text-4xl">Instagram et Facebook</h2>
                 <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
-                  Ces deux blocs affichent le contenu social directement depuis les plateformes officielles. Ils ne passent plus par la base de données Actus ni par le formulaire d'administration.
+                  Retrouvez ici nos comptes officiels et accédez directement aux plateformes pour consulter l'ensemble des publications.
                 </p>
               </div>
 
               <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
                 <BadgeCheck className="h-4 w-4 text-emerald-500" />
-                Lecture seule
+                Comptes officiels
               </div>
             </div>
 
@@ -1032,11 +1030,9 @@ const Actus = ({ adminMode = false }: ActusProps) => {
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Actualités du site</p>
-                <h2 className="mt-2 font-heading text-3xl font-extrabold text-slate-950 md:text-4xl">
-                  News publiées depuis l'administration
-                </h2>
+                <h2 className="mt-2 font-heading text-3xl font-extrabold text-slate-950 md:text-4xl">Actualités Radio Taxi Le Havre</h2>
                 <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
-                  Cette zone est réservée aux informations rédigées et ajoutées par l'équipe depuis le back-office du site. Elle ne duplique pas les posts des réseaux sociaux.
+                  Communiqués, informations de service, événements et nouveautés publiés par Radio Taxi Le Havre.
                 </p>
               </div>
 
@@ -1072,7 +1068,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                   Aucune actualité du site pour le moment.
                 </h3>
                 <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 md:text-base">
-                  Les réseaux sociaux restent visibles juste au-dessus en direct. Dès qu'une news sera ajoutée par l'administration, elle apparaîtra ici dans son propre espace.
+                  Revenez bientôt pour découvrir les prochaines informations du service, de la centrale et de la vie du réseau.
                 </p>
               </div>
             ) : (
@@ -1120,9 +1116,9 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                     {isAdmin ? "Session active" : "Accès protégé"}
                   </div>
 
-                  <h2 className="mt-4 font-heading text-3xl font-extrabold">Dashboard news</h2>
+                  <h2 className="mt-4 font-heading text-3xl font-extrabold">Espace actualités</h2>
                   <p className="mt-3 text-sm leading-relaxed text-white/70">
-                    Ce panneau ne gère plus Instagram ni Facebook. Il compose uniquement les actualités du site.
+                    Centralisez ici la création, l'aperçu et le suivi des actualités publiées sur le site.
                   </p>
 
                   <div className="mt-6 grid gap-3">
@@ -1150,7 +1146,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                       )}
                     >
                       <Plus className="h-4 w-4" />
-                      Composer une news
+                      Composer une actu
                     </button>
                     <button
                       type="button"
@@ -1163,13 +1159,13 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                       )}
                     >
                       <BarChart3 className="h-4 w-4" />
-                      Kanban news
+                      Kanban actus
                     </button>
                   </div>
 
                   <div className="mt-6 grid gap-3">
                     <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">News en ligne</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">Actus en ligne</p>
                       <p className="mt-2 font-heading text-3xl font-bold">{newsItems.length}</p>
                     </div>
                     <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
@@ -1254,9 +1250,9 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                     <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Vue d'ensemble</p>
-                        <h3 className="mt-3 font-heading text-3xl font-extrabold">Deux espaces bien séparés</h3>
+                        <h3 className="mt-3 font-heading text-3xl font-extrabold">Vue d'ensemble éditoriale</h3>
                         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/65 md:text-base">
-                          Le public voit des réseaux live et, en dessous, les actualités du site. L'admin ne touche qu'à la seconde partie.
+                          Suivez le volume d'actualités en ligne, la présence des comptes officiels et le rythme de publication.
                         </p>
                       </div>
                       <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/70">
@@ -1267,24 +1263,24 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
                     <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                       <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">News site</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">Actus site</p>
                         <p className="mt-3 font-heading text-4xl font-bold">{newsItems.length}</p>
-                        <p className="mt-2 text-sm text-white/60">Cartes éditoriales gérées ici.</p>
+                        <p className="mt-2 text-sm text-white/60">Cartes actuellement visibles sur la page.</p>
                       </div>
                       <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">Instagram</p>
-                        <p className="mt-3 font-heading text-4xl font-bold">Live</p>
-                        <p className="mt-2 text-sm text-white/60">Lecture seule depuis le compte officiel.</p>
+                        <p className="mt-3 font-heading text-4xl font-bold">Direct</p>
+                        <p className="mt-2 text-sm text-white/60">Compte officiel affiché sur la page.</p>
                       </div>
                       <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">Facebook</p>
-                        <p className="mt-3 font-heading text-4xl font-bold">Live</p>
-                        <p className="mt-2 text-sm text-white/60">Lecture seule via le plugin Meta.</p>
+                        <p className="mt-3 font-heading text-4xl font-bold">Direct</p>
+                        <p className="mt-2 text-sm text-white/60">Page officielle affichée sur la page.</p>
                       </div>
                       <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">Règle</p>
-                        <p className="mt-3 font-heading text-4xl font-bold">News only</p>
-                        <p className="mt-2 text-sm text-white/60">Aucun faux post social ne passe par ce dashboard.</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">Objectif</p>
+                        <p className="mt-3 font-heading text-4xl font-bold">Informer</p>
+                        <p className="mt-2 text-sm text-white/60">Mettre en avant une information claire, utile et visuelle.</p>
                       </div>
                     </div>
                   </section>
@@ -1292,28 +1288,28 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                   <section id="admin-compose" className="mt-10">
                     {!isAdmin ? (
                       <div className="rounded-[30px] border border-white/10 bg-white/5 p-6 md:p-8">
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Règle de publication</p>
-                        <h3 className="mt-3 font-heading text-3xl font-extrabold">Le back-office publie des news, pas des posts sociaux</h3>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Mode d'emploi</p>
+                        <h3 className="mt-3 font-heading text-3xl font-extrabold">Publier une actualité claire et utile</h3>
                         <div className="mt-6 grid gap-4 md:grid-cols-3">
                           <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
                             <ShieldCheck className="h-5 w-5 text-emerald-300" />
                             <p className="mt-4 font-heading text-lg font-bold">1. Connexion</p>
                             <p className="mt-2 text-sm leading-relaxed text-white/65">
-                              Ouvrez une session admin pour activer création, suppression et upload.
+                              Connectez-vous pour accéder à la publication, à la suppression et au téléversement.
                             </p>
                           </div>
                           <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
                             <ImagePlus className="h-5 w-5 text-amber-300" />
                             <p className="mt-4 font-heading text-lg font-bold">2. Visuel + lien</p>
                             <p className="mt-2 text-sm leading-relaxed text-white/65">
-                              Préparez une image WebP et le lien de la news à ouvrir depuis la carte.
+                              Préparez un visuel WebP et le lien à ouvrir depuis la carte.
                             </p>
                           </div>
                           <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
                             <Newspaper className="h-5 w-5 text-sky-300" />
                             <p className="mt-4 font-heading text-lg font-bold">3. Publication</p>
                             <p className="mt-2 text-sm leading-relaxed text-white/65">
-                              La news rejoint automatiquement la section éditoriale du site, distincte des réseaux.
+                              L'actualité s'affiche dans la rubrique dédiée avec sa date et son bouton d'ouverture.
                             </p>
                           </div>
                         </div>
@@ -1321,10 +1317,10 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                     ) : (
                       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)]">
                         <form onSubmit={addNews} className="rounded-[30px] border border-white/10 bg-white/5 p-6 md:p-8">
-                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Composer une news</p>
+                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Composer une actualité</p>
                           <h3 className="mt-3 font-heading text-3xl font-extrabold">Actualité du site</h3>
                           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/65">
-                            Le formulaire publie uniquement une carte éditoriale interne au site. Il n'alimente pas les blocs sociaux live.
+                            Renseignez un titre, un lien et un visuel pour publier une nouvelle carte sur la page Actus.
                           </p>
 
                           <div className="mt-6 grid gap-4 xl:grid-cols-2">
@@ -1436,10 +1432,10 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
                         <div className="grid gap-6">
                           <div className="rounded-[30px] border border-white/10 bg-white/5 p-6">
-                            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Rappel structure</p>
-                            <h3 className="mt-3 font-heading text-2xl font-extrabold">Social = live, news = admin</h3>
+                            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Repère visiteur</p>
+                            <h3 className="mt-3 font-heading text-2xl font-extrabold">Ce que voit le visiteur</h3>
                             <p className="mt-3 text-sm leading-relaxed text-white/65">
-                              Les deux cartes sociales en haut de page se mettent à jour depuis Instagram et Facebook. Les cartes créées ici apparaissent uniquement dans la section "Actualités du site".
+                              Chaque carte publiée apparaît dans la rubrique "Actualités du site" avec son visuel, sa date et son lien.
                             </p>
                           </div>
 
@@ -1468,10 +1464,10 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                   <section id="admin-board" className="mt-10">
                     <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Kanban news</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Kanban actualités</p>
                         <h3 className="mt-3 font-heading text-3xl font-extrabold">Pilotage éditorial du site</h3>
                         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/65 md:text-base">
-                          Les colonnes suivent uniquement les actualités du site. Les réseaux sociaux restent hors de cette vue, car ils sont affichés en direct au public.
+                          Suivez vos cartes mises en avant, les plus récentes et la bibliothèque d'archives pour garder une page claire.
                         </p>
                       </div>
                     </div>
@@ -1562,10 +1558,10 @@ const Actus = ({ adminMode = false }: ActusProps) => {
               <div className="flex-1 px-6 py-6 sm:px-8">
                 <SheetHeader className="space-y-3 text-left">
                   <SheetTitle className="font-heading text-3xl font-extrabold text-slate-950">
-                    Preview drawer
+                    Aperçu de la carte
                   </SheetTitle>
                   <SheetDescription className="text-sm leading-relaxed text-slate-600">
-                    Vérifiez le rendu de la carte dans la section "Actualités du site". Les blocs Instagram et Facebook ne sont pas concernés par cet aperçu.
+                    Vérifiez le rendu du visuel, du titre et de la date avant ou après publication dans la rubrique "Actualités du site".
                   </SheetDescription>
                 </SheetHeader>
 
@@ -1600,7 +1596,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                 <div className="mt-6 rounded-[28px] border border-slate-200/80 bg-white p-6 shadow-sm">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Résumé</p>
                   <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-                    Cette carte appartient à la section éditoriale du site. Elle ne remplace pas les publications sociales, qui restent affichées via leurs intégrations live.
+                    Cette carte met en avant une information du service avec un lien direct vers son contenu complet.
                   </p>
 
                   <div className="mt-6 flex flex-wrap gap-3">
