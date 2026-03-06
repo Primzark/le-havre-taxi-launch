@@ -8,31 +8,31 @@ describe("buildLegacyDomainRedirectUrl", () => {
       "/contact",
       "?source=google",
       "#section",
-      "https://www.taxis-lehavre.com",
+      "https://le-havre-taxi-launch.vercel.app",
     );
 
-    expect(result).toBe("https://www.taxis-lehavre.com/contact?source=google#section");
+    expect(result).toBe("https://le-havre-taxi-launch.vercel.app/contact?source=google#section");
   });
 
-  it("redirects non-www current domain to www", () => {
+  it("redirects legacy custom domains to the Vercel alias", () => {
     const result = buildLegacyDomainRedirectUrl(
       "taxis-lehavre.com",
       "/",
       "",
       "",
-      "https://www.taxis-lehavre.com",
+      "https://le-havre-taxi-launch.vercel.app",
     );
 
-    expect(result).toBe("https://www.taxis-lehavre.com/");
+    expect(result).toBe("https://le-havre-taxi-launch.vercel.app/");
   });
 
   it("returns null for the canonical host", () => {
     const result = buildLegacyDomainRedirectUrl(
-      "www.taxis-lehavre.com",
+      "le-havre-taxi-launch.vercel.app",
       "/",
       "",
       "",
-      "https://www.taxis-lehavre.com",
+      "https://le-havre-taxi-launch.vercel.app",
     );
 
     expect(result).toBeNull();

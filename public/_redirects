@@ -1,5 +1,6 @@
-https://taxihavre.com/* https://www.taxis-lehavre.com/:splat 301!
-https://www.taxihavre.com/* https://www.taxis-lehavre.com/:splat 301!
-https://taxis-lehavre.com/* https://www.taxis-lehavre.com/:splat 301!
+https://taxihavre.com/* https://le-havre-taxi-launch.vercel.app/:splat 301!
+https://www.taxihavre.com/* https://le-havre-taxi-launch.vercel.app/:splat 301!
+https://taxis-lehavre.com/* https://le-havre-taxi-launch.vercel.app/:splat 301!
+https://www.taxis-lehavre.com/* https://le-havre-taxi-launch.vercel.app/:splat 301!
 /nous-contact /
 /nous-contacter /

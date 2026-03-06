@@ -11,7 +11,7 @@
           "value": "taxihavre.com"
         }
       ],
-      "destination": "https://www.taxis-lehavre.com/:path*",
+      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
       "permanent": true
     },
     {
@@ -22,7 +22,7 @@
           "value": "www.taxihavre.com"
         }
       ],
-      "destination": "https://www.taxis-lehavre.com/:path*",
+      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
       "permanent": true
     },
     {
@@ -33,7 +33,18 @@
           "value": "taxis-lehavre.com"
         }
       ],
-      "destination": "https://www.taxis-lehavre.com/:path*",
+      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.taxis-lehavre.com"
+        }
+      ],
+      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
       "permanent": true
     },
     {

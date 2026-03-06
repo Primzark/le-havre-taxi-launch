@@ -1,5 +1,5 @@
 export const SITE_NAME = "Taxi Le Havre";
-export const PRIMARY_DOMAIN = "https://www.taxis-lehavre.com";
+export const PRIMARY_DOMAIN = "https://le-havre-taxi-launch.vercel.app";
 
 export const CONTACT_PHONE_NUMBER = "0235258181";
 export const CONTACT_PHONE_DISPLAY = "02 35 25 81 81";

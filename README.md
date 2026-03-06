@@ -127,10 +127,11 @@ It creates:
 
 ### DNS / domains
 - Public site on Vercel:
-  - `www.taxis-lehavre.com` (primary)
-  - `taxis-lehavre.com` -> redirect to `www.taxis-lehavre.com`
-  - `taxihavre.com` -> redirect to `www.taxis-lehavre.com`
-  - `www.taxihavre.com` -> redirect to `www.taxis-lehavre.com`
+  - `le-havre-taxi-launch.vercel.app` (primary)
+  - `taxis-lehavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
+  - `www.taxis-lehavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
+  - `taxihavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
+  - `www.taxihavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
 
 ### Legacy PHP backend (temporary only)
 - Old PHP endpoints remain in `api/*.php` for migration fallback/cutover.

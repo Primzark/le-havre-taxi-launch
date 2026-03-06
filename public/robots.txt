@@ -3,5 +3,5 @@ Allow: /
 Disallow: /api/
 Disallow: /var/
 
-Sitemap: https://www.taxis-lehavre.com/sitemap.xml
-Host: www.taxis-lehavre.com
+Sitemap: https://le-havre-taxi-launch.vercel.app/sitemap.xml
+Host: le-havre-taxi-launch.vercel.app
