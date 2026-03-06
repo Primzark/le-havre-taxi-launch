@@ -123,13 +123,14 @@ const Header = () => {
         <div className="container relative flex min-h-9 items-center justify-center gap-3 py-1 text-sm">
           <a
             href={`tel:${CONTACT_PHONE_LINK}`}
-            className="inline-flex max-w-full items-center justify-center gap-2 text-center font-heading font-semibold transition hover:opacity-90 lg:max-w-[calc(100%-12rem)]"
+            className="inline-flex max-w-full items-center justify-center gap-2 text-center font-heading font-semibold transition hover:opacity-90 max-[380px]:gap-1.5 max-[380px]:text-[13px] lg:max-w-[calc(100%-12rem)]"
           >
-            <Phone className="h-4 w-4" />
+            <Phone className="h-4 w-4 max-[380px]:h-3.5 max-[380px]:w-3.5" />
             <span>
-              Centrale de réservation :{" "}
+              <span className="max-[380px]:hidden">Centrale de réservation : </span>
+              <span className="hidden max-[380px]:inline">Réservation : </span>
               <span
-                className={`inline-block tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
+                className={`inline-block whitespace-nowrap tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
               >
                 {animatedPhoneDisplay}
               </span>
