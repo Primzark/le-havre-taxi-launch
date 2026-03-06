@@ -54,13 +54,6 @@ const defaultCards: NewsCard[] = [
     sourceUrl: FACEBOOK_URL,
     sourceName: "Facebook",
   },
-  {
-    id: "instagram-2",
-    title: "Publication Instagram",
-    image: "/images/actus-instagram-2.webp",
-    sourceUrl: INSTAGRAM_URL,
-    sourceName: "Instagram",
-  },
 ];
 
 const isHttpUrl = (value: string) => {
