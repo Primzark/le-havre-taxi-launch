@@ -239,7 +239,26 @@ export function isWebpReference(value) {
 }
 
 export function normalizeNewsSourceName(value) {
-  return value === "Facebook" ? "Facebook" : "Instagram";
+  if (value === "Facebook") {
+    return "Facebook";
+  }
+
+  if (value === "Actualite") {
+    return "Actualite";
+  }
+
+  return "Instagram";
+}
+
+export function isAdminNewsRow(row) {
+  const id = String(row?.id || "");
+  const sourceName = String(row?.source_name || row?.sourceName || "");
+
+  return (
+    sourceName === "Actualite" ||
+    id.startsWith("news-") ||
+    id.startsWith("manual-")
+  );
 }
 
 export function isValidNewsImageReference(image) {
@@ -914,7 +933,9 @@ export function normalizeNewsItemRow(row) {
     title: String(row.title),
     image: String(row.image),
     sourceUrl: String(row.source_url),
-    sourceName: normalizeNewsSourceName(String(row.source_name || "Instagram")),
+    sourceName: isAdminNewsRow(row)
+      ? "Actualite"
+      : normalizeNewsSourceName(String(row.source_name || "Instagram")),
     created_at: row.created_at || new Date().toISOString(),
   };
 }

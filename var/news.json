@@ -1,18 +1,1 @@
-[
-  {
-    "id": "instagram-1",
-    "title": "BÉTON LE HAVRE 2025",
-    "image": "/images/actus-instagram-1.webp",
-    "sourceUrl": "https://www.instagram.com/lehavretaxi",
-    "sourceName": "Instagram",
-    "created_at": "2026-01-01T00:00:00Z"
-  },
-  {
-    "id": "facebook-1",
-    "title": "Profil Facebook TaxiLeHavre",
-    "image": "/images/actus-facebook-1.webp",
-    "sourceUrl": "https://www.facebook.com/TaxiLeHavre",
-    "sourceName": "Facebook",
-    "created_at": "2026-01-01T00:00:00Z"
-  }
-]
+[]

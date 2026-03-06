@@ -6,6 +6,7 @@ import {
   getRequestPayload,
   getSupabaseAdminClient,
   handleOptions,
+  isAdminNewsRow,
   isValidHttpUrl,
   isValidNewsImageReference,
   jsonResponse,
@@ -23,7 +24,7 @@ function extractNewsFields(payload = {}, fallback = {}) {
   const image = sanitizeText(payload.image ?? fallback.image ?? "", 500);
   const sourceUrl = sanitizeText(payload.sourceUrl ?? fallback.sourceUrl ?? "", 500);
   const sourceName = normalizeNewsSourceName(
-    sanitizeText(payload.sourceName ?? fallback.sourceName ?? "Instagram", 30),
+    sanitizeText(payload.sourceName ?? fallback.sourceName ?? "Actualite", 30),
   );
 
   return { title, image, sourceUrl, sourceName };
@@ -54,7 +55,7 @@ async function fetchNewsRows() {
     throw new Error(`Unable to load news: ${error.message}`);
   }
 
-  return Array.isArray(data) ? data : [];
+  return Array.isArray(data) ? data.filter(isAdminNewsRow) : [];
 }
 
 export default async function handler(req, res) {
@@ -89,7 +90,7 @@ export default async function handler(req, res) {
       validateNewsFields(fields);
 
       const item = {
-        id: `manual-${randomHex(6)}`,
+        id: `news-${randomHex(6)}`,
         title: fields.title,
         image: fields.image,
         source_url: fields.sourceUrl,
@@ -178,7 +179,7 @@ export default async function handler(req, res) {
         title: existing.title,
         image: existing.image,
         sourceUrl: existing.source_url,
-        sourceName: existing.source_name,
+        sourceName: isAdminNewsRow(existing) ? "Actualite" : existing.source_name,
       });
       validateNewsFields(fields);
 

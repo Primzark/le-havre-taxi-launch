@@ -49,11 +49,12 @@ describe("Actus admin flow", () => {
     });
 
     expect(screen.getByText(/@lehavretaxi/i)).toBeInTheDocument();
-    expect(screen.getByText(/50 Ans/i)).toBeInTheDocument();
+    expect(screen.getByText(/Instagram et Facebook en lecture seule/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /News publiées depuis l'administration/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Se connecter/i })).not.toBeInTheDocument();
   });
 
-  it("authenticates admin and publishes a new capture", async () => {
+  it("authenticates admin and publishes a new site news", async () => {
     let authenticated = false;
 
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -77,11 +78,11 @@ describe("Actus admin flow", () => {
         return jsonResponse({
           success: true,
           item: {
-            id: "manual-test",
-            title: "Nouvelle capture",
+            id: "news-test",
+            title: "Nouvelle actualité",
             image: "/images/actus-instagram-1.webp",
-            sourceUrl: "https://www.instagram.com/lehavretaxi",
-            sourceName: "Instagram",
+            sourceUrl: "https://www.taxis-lehavre.com/actus/nouvelle-actualite",
+            sourceName: "Actualite",
           },
         });
       }
@@ -109,16 +110,16 @@ describe("Actus admin flow", () => {
       expect(screen.getByText(/Connexion admin active/i)).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByLabelText(/Titre/i), { target: { value: "Nouvelle capture" } });
+    fireEvent.change(screen.getByLabelText(/Titre/i), { target: { value: "Nouvelle actualité" } });
     fireEvent.change(screen.getByLabelText(/URL image/i), { target: { value: "/images/actus-instagram-1.webp" } });
-    fireEvent.change(screen.getByLabelText(/Lien source/i), {
-      target: { value: "https://www.instagram.com/lehavretaxi" },
+    fireEvent.change(screen.getByLabelText(/Lien de l'actualité/i), {
+      target: { value: "https://www.taxis-lehavre.com/actus/nouvelle-actualite" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /Ajouter la capture/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Publier l'actualité/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Capture publiée/i)).toBeInTheDocument();
+      expect(screen.getByText(/^Actualité publiée\.$/i)).toBeInTheDocument();
     });
 
     expect(fetchMock).toHaveBeenCalledWith(

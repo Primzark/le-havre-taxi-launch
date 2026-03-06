@@ -38,7 +38,14 @@ function read_news(string $filePath): array
         return strcmp($bDate, $aDate);
     });
 
-    return $items;
+    return array_values(array_filter($items, static function (array $item): bool {
+        $id = (string) ($item["id"] ?? "");
+        $sourceName = (string) ($item["sourceName"] ?? "");
+
+        return $sourceName === "Actualite"
+            || str_starts_with($id, "news-")
+            || str_starts_with($id, "manual-");
+    }));
 }
 
 /**
@@ -52,7 +59,15 @@ function write_news(string $filePath, array $items): void
 
 function normalize_source_name(string $sourceName): string
 {
-    return $sourceName === "Facebook" ? "Facebook" : "Instagram";
+    if ($sourceName === "Facebook") {
+        return "Facebook";
+    }
+
+    if ($sourceName === "Actualite") {
+        return "Actualite";
+    }
+
+    return "Instagram";
 }
 
 function is_webp_reference(string $image): bool
@@ -102,7 +117,7 @@ function extract_news_fields(array $payload, array $fallback = []): array
     $image = sanitize_text((string) ($payload["image"] ?? ($fallback["image"] ?? "")), 500);
     $sourceUrl = sanitize_text((string) ($payload["sourceUrl"] ?? ($fallback["sourceUrl"] ?? "")), 500);
     $sourceName = normalize_source_name(
-        sanitize_text((string) ($payload["sourceName"] ?? ($fallback["sourceName"] ?? "Instagram")), 30)
+        sanitize_text((string) ($payload["sourceName"] ?? ($fallback["sourceName"] ?? "Actualite")), 30)
     );
 
     return [
@@ -153,7 +168,7 @@ if ($method === "POST") {
     validate_news_fields($fields);
 
     $item = [
-        "id" => "manual-" . bin2hex(random_bytes(6)),
+        "id" => "news-" . bin2hex(random_bytes(6)),
         "title" => $fields["title"],
         "image" => $fields["image"],
         "sourceUrl" => $fields["sourceUrl"],
@@ -217,7 +232,15 @@ if ($method === "PUT") {
 
         $found = true;
 
-        $fields = extract_news_fields($payload, $item);
+        $id = (string) ($item["id"] ?? "");
+        $fields = extract_news_fields($payload, [
+            "title" => $item["title"] ?? "",
+            "image" => $item["image"] ?? "",
+            "sourceUrl" => $item["sourceUrl"] ?? "",
+            "sourceName" => str_starts_with($id, "news-") || str_starts_with($id, "manual-")
+                ? "Actualite"
+                : ($item["sourceName"] ?? "Actualite"),
+        ]);
         validate_news_fields($fields);
 
         $item["title"] = $fields["title"];
