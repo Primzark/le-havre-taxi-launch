@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { Clock, MapPin, Phone, Star, Users, type LucideIcon } from "lucide-react";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
+import ClientReviewCard from "@/components/ClientReviewCard";
 import { Button } from "@/components/ui/button";
-import { clientReviews } from "@/data/reviews";
+import { useClientReviews } from "@/hooks/use-client-reviews";
 import { useSEO } from "@/hooks/use-seo";
 import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 
@@ -41,7 +42,8 @@ const engagementPoints: EngagementPoint[] = [
 ];
 
 const Entreprise = () => {
-  const featuredReviews = clientReviews.slice(0, 3);
+  const { data: reviewsData } = useClientReviews();
+  const featuredReviews = reviewsData.reviews.slice(0, 3);
 
   useSEO({
     title: "Entreprise",
@@ -118,37 +120,37 @@ const Entreprise = () => {
 
       <section className="border-t py-16">
         <div className="container max-w-5xl">
-          <h2 className="font-heading text-center text-2xl font-bold">Quelques avis sur nos taxis</h2>
+          <h2 className="font-heading text-center text-2xl font-bold">Quelques avis Google sur nos taxis</h2>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {featuredReviews.map((review) => (
-              <article key={review.author} className="rounded-xl border bg-card p-6 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={review.avatar}
-                    alt={review.author}
-                    className="h-16 w-16 rounded-full border object-cover"
-                    loading="lazy"
-                  />
-                  <div>
-                    <p className="text-sm font-semibold text-primary">{review.source}</p>
-                    <p className="text-xs text-muted-foreground">Avis client</p>
-                  </div>
-                </div>
+          {featuredReviews.length > 0 ? (
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {featuredReviews.map((review) => (
+                <ClientReviewCard key={review.id} review={review} compact />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10 rounded-xl border bg-card p-8 text-center shadow-sm">
+              <p className="text-muted-foreground leading-relaxed">
+                Les prochains avis Google apparaîtront ici dès qu'ils seront disponibles.
+              </p>
+            </div>
+          )}
 
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{review.quote}</p>
-                <p className="mt-4 font-semibold">{review.author}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild>
               <Link to="/avis-clients">
                 <Star className="h-4 w-4" />
                 Voir tous les avis
               </Link>
             </Button>
+            {reviewsData.googleMapsUri && (
+              <Button asChild variant="outline">
+                <a href={reviewsData.googleMapsUri} target="_blank" rel="noopener noreferrer">
+                  <Star className="h-4 w-4" />
+                  Voir sur Google
+                </a>
+              </Button>
+            )}
           </div>
         </div>
       </section>

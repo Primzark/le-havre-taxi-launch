@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, Phone, Star } from "lucide-react";
+import { CheckCircle2, MessageSquareQuote, Phone, Star } from "lucide-react";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
+import ClientReviewCard from "@/components/ClientReviewCard";
 import { Button } from "@/components/ui/button";
-import { clientReviews } from "@/data/reviews";
+import { useClientReviews } from "@/hooks/use-client-reviews";
 import { useSEO } from "@/hooks/use-seo";
 import {
   CONTACT_PHONE_DISPLAY,
@@ -12,26 +13,43 @@ import {
   SITE_NAME,
 } from "@/config/site";
 
+const formatRatingValue = (value: number | null) => {
+  if (value === null) {
+    return "4+/5";
+  }
+
+  return `${value.toFixed(1)}/5`;
+};
+
+const formatCount = (value: number | null, fallback: number) => {
+  if (value === null) {
+    return fallback.toString();
+  }
+
+  return value.toLocaleString("fr-FR");
+};
+
 const AvisClients = () => {
-  const sources = Array.from(new Set(clientReviews.map((review) => review.source)));
+  const { data: reviewsData } = useClientReviews();
+  const reviews = reviewsData.reviews;
 
   useSEO({
     title: "Avis clients",
     description:
-      "Consultez les avis clients Radio Taxi Le Havre : retours Google, Pages Jaunes et TripAdvisor.",
+      "Consultez les avis Google de Radio Taxi Le Havre et retrouvez les retours publiés sur notre fiche établissement.",
     canonicalPath: "/avis-clients",
     ogImage: "/images/services/transport-entreprise.webp",
     keywords: [
       "avis taxi le havre",
-      "temoignages taxi le havre",
-      "tripadvisor taxi le havre",
       "avis google taxi le havre",
+      "google reviews taxi le havre",
+      "temoignages taxi le havre",
     ],
     structuredData: {
       "@context": "https://schema.org",
       "@type": "ItemList",
       name: `Avis clients ${SITE_NAME}`,
-      itemListElement: clientReviews.map((review, index) => ({
+      itemListElement: reviews.map((review, index) => ({
         "@type": "Review",
         position: index + 1,
         author: {
@@ -43,10 +61,15 @@ const AvisClients = () => {
           "@type": "Organization",
           name: review.source,
         },
+        reviewRating: {
+          "@type": "Rating",
+          ratingValue: review.rating,
+          bestRating: 5,
+        },
         itemReviewed: {
           "@type": "LocalBusiness",
-          name: SITE_NAME,
-          url: `${PRIMARY_DOMAIN}/avis-clients`,
+          name: reviewsData.placeName || SITE_NAME,
+          url: reviewsData.googleMapsUri || `${PRIMARY_DOMAIN}/avis-clients`,
         },
       })),
     },
@@ -56,7 +79,7 @@ const AvisClients = () => {
     <Layout>
       <PageHero
         title="Avis clients"
-        subtitle="Les retours publiés sur nos services, regroupés sur une page unique pour une lecture rapide."
+        subtitle="Retrouvez une sélection d'avis Google récents publiés sur la fiche Radio Taxi Le Havre."
         backgroundImage="/images/services/transport-entreprise.webp"
       />
 
@@ -64,46 +87,42 @@ const AvisClients = () => {
         <div className="container max-w-5xl">
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl border bg-card p-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Avis publiés</p>
-              <p className="mt-2 text-2xl font-extrabold">{clientReviews.length}</p>
-            </div>
-            <div className="rounded-xl border bg-card p-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Plateformes</p>
-              <p className="mt-2 text-2xl font-extrabold">{sources.length}</p>
-            </div>
-            <div className="rounded-xl border bg-card p-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Service</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">Note Google</p>
               <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold text-primary">
-                <CheckCircle2 className="h-5 w-5" />
-                24h/24
+                <Star className="h-5 w-5 fill-current" />
+                {formatRatingValue(reviewsData.rating)}
+              </p>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">Avis affichés</p>
+              <p className="mt-2 text-2xl font-extrabold">{reviews.length}</p>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">Avis Google</p>
+              <p className="mt-2 inline-flex items-center gap-2 text-2xl font-extrabold">
+                <MessageSquareQuote className="h-5 w-5 text-primary" />
+                {formatCount(reviewsData.userRatingCount, reviews.length)}
               </p>
             </div>
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {clientReviews.map((review) => (
-              <article key={review.id} className="rounded-xl border bg-card p-5 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={review.avatar}
-                    alt={review.author}
-                    className="h-14 w-14 rounded-full border object-cover"
-                    loading="lazy"
-                  />
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">{review.source}</p>
-                    <p className="font-semibold">{review.author}</p>
-                  </div>
-                </div>
-
-                <p className="mt-4 leading-relaxed text-muted-foreground">{review.quote}</p>
-                <p className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                  <Star className="h-4 w-4 fill-current" />
-                  Avis publié
-                </p>
-              </article>
-            ))}
-          </div>
+          {reviews.length > 0 ? (
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {reviews.map((review) => (
+                <ClientReviewCard key={review.id} review={review} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 rounded-xl border bg-card p-8 text-center shadow-sm">
+              <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <CheckCircle2 className="h-7 w-7" />
+              </div>
+              <h2 className="mt-4 font-heading text-2xl font-bold">Aucun avis à afficher pour le moment</h2>
+              <p className="mx-auto mt-3 max-w-2xl text-muted-foreground leading-relaxed">
+                La fiche Google est prête à être consultée dès qu'un nouvel avis correspond aux critères d'affichage du site.
+              </p>
+            </div>
+          )}
 
           <div className="mt-10 rounded-xl border bg-muted/45 p-5">
             <p className="text-sm text-muted-foreground">
@@ -117,6 +136,14 @@ const AvisClients = () => {
                   {CONTACT_PHONE_DISPLAY}
                 </a>
               </Button>
+              {reviewsData.googleMapsUri && (
+                <Button asChild variant="outline">
+                  <a href={reviewsData.googleMapsUri} target="_blank" rel="noopener noreferrer">
+                    <Star className="h-4 w-4" />
+                    Voir la fiche Google
+                  </a>
+                </Button>
+              )}
               <Button asChild variant="outline">
                 <Link to="/entreprise">Retour à la page entreprise</Link>
               </Button>
