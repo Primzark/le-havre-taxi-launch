@@ -52,7 +52,7 @@ php -S 127.0.0.1:8090 -t .
 - Frontend build env `VITE_CONTACT_EMAIL=contact@radiotaxi-lehavre.com`
 - `CONTACT_FORM_EMAIL`
 - `ACTUS_ADMIN_USERNAME`
-- `ACTUS_ADMIN_PASSWORD_HASH`
+- `ACTUS_ADMIN_PASSWORD_HASH` (bootstrap / sync source for `public.admin_users`)
 - `MAIL_PROVIDER` + mail provider credentials
 - Optional alerting (`ALERT_WEBHOOK_URL`, `ALERT_EMAIL`)
 
@@ -94,7 +94,7 @@ Production target:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_ACTUS_BUCKET=actus` (optional if using default `actus`)
 - `ACTUS_ADMIN_USERNAME`
-- `ACTUS_ADMIN_PASSWORD_HASH`
+- `ACTUS_ADMIN_PASSWORD_HASH` (used to sync / bootstrap the Supabase admin row)
 - `ADMIN_SESSION_SECRET` (recommended)
 - `CONTACT_FORM_EMAIL`
 - `MAIL_PROVIDER=resend`
@@ -115,10 +115,17 @@ Run the SQL migration:
 
 It creates:
 - `public.actus_items`
+- `public.admin_users`
 - `public.contact_messages`
 - `public.api_rate_limits`
 - `public.api_events` (optional logs)
 - public storage bucket `actus`
+
+Sync the admin row after migrations:
+
+```sh
+npm run admin:sync
+```
 
 ### Vercel routing in this repo
 - `/api/*.php` -> Vercel Functions (`api/*.php.js`)
@@ -138,7 +145,7 @@ It creates:
 - Vercel excludes them via `.vercelignore` in Vercel-only mode.
 
 ## Security and reliability
-- Session-based admin authentication for Actus operations.
+- Session-based admin authentication for Actus operations backed by `public.admin_users`.
 - File upload validation (type + size) and restricted upload directory.
 - IP-based rate limiting for contact submissions and admin login.
 - API structured logs in `var/api.log` and optional alert hooks.

@@ -20,6 +20,7 @@ const LOCAL_DEV_ORIGINS = new Set([
 const ADMIN_COOKIE_NAME = "taxi_admin_session";
 const ADMIN_SESSION_TTL_SECONDS = 8 * 60 * 60;
 const DEFAULT_UPLOAD_BUCKET = "actus";
+const ADMIN_USERS_TABLE = "admin_users";
 
 let supabaseAdminClient;
 
@@ -430,7 +431,101 @@ function normalizeBcryptHash(hash) {
   return String(hash);
 }
 
+function isMissingAdminUsersTableError(error) {
+  const code = String(error?.code ?? "");
+  const message = String(error?.message ?? "").toLowerCase();
+
+  if (code === "42P01") {
+    return true;
+  }
+
+  if (code === "PGRST205" && message.includes(ADMIN_USERS_TABLE)) {
+    return true;
+  }
+
+  return (
+    message.includes(`relation "${ADMIN_USERS_TABLE}" does not exist`) ||
+    message.includes(`table '${ADMIN_USERS_TABLE}'`) ||
+    message.includes(`table "${ADMIN_USERS_TABLE}"`)
+  );
+}
+
+async function getDatabaseAdminUser(username) {
+  const supabase = safeGetSupabaseClient();
+  if (!supabase) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from(ADMIN_USERS_TABLE)
+    .select("username, password_hash, is_active")
+    .eq("username", String(username))
+    .maybeSingle();
+
+  if (error) {
+    if (isMissingAdminUsersTableError(error)) {
+      return null;
+    }
+
+    await apiLog("error", "admin_user_lookup_failed", {
+      username,
+      error: error.message,
+    });
+    return null;
+  }
+
+  return data ?? null;
+}
+
+async function touchDatabaseAdminLogin(username) {
+  const supabase = safeGetSupabaseClient();
+  if (!supabase) {
+    return;
+  }
+
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from(ADMIN_USERS_TABLE)
+    .update({
+      updated_at: now,
+      last_login_at: now,
+    })
+    .eq("username", String(username));
+
+  if (error && !isMissingAdminUsersTableError(error)) {
+    await apiLog("warning", "admin_last_login_update_failed", {
+      username,
+      error: error.message,
+    });
+  }
+}
+
 export async function verifyAdminCredentials(username, password) {
+  const submittedUsername = String(username);
+  const submittedPassword = String(password);
+  const databaseAdmin = await getDatabaseAdminUser(submittedUsername);
+
+  if (databaseAdmin) {
+    if (databaseAdmin.is_active === false) {
+      return false;
+    }
+
+    try {
+      const isValid = await bcrypt.compare(
+        submittedPassword,
+        normalizeBcryptHash(databaseAdmin.password_hash),
+      );
+
+      if (isValid) {
+        await touchDatabaseAdminLogin(databaseAdmin.username);
+      }
+
+      return isValid;
+    } catch {
+      return false;
+    }
+  }
+
   const expectedUsername = getAdminUsername();
   const expectedHash = getAdminPasswordHash();
 
@@ -444,7 +539,7 @@ export async function verifyAdminCredentials(username, password) {
   }
 
   try {
-    return await bcrypt.compare(String(password), normalizeBcryptHash(expectedHash));
+    return await bcrypt.compare(submittedPassword, normalizeBcryptHash(expectedHash));
   } catch {
     return false;
   }
