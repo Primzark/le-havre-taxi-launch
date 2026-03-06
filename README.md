@@ -19,6 +19,26 @@ Optional frontend env (contact email shown on the site):
 VITE_CONTACT_EMAIL=bureautaxi@gmail.com
 ```
 
+For production-parity local env, pull the current Vercel production variables into
+an ignored `.env.local` file:
+
+```sh
+npm run env:pull:prod
+```
+
+Use the Vite dev server when you only need the frontend:
+
+```sh
+npm run dev
+```
+
+Use Vercel dev when you want the Vercel Functions + Supabase path that matches
+production:
+
+```sh
+npm run dev:vercel
+```
+
 If you need PHP endpoints locally:
 
 ```sh
@@ -41,6 +61,12 @@ Generate an admin password hash:
 ```sh
 php -r 'echo password_hash("your-strong-password", PASSWORD_DEFAULT), PHP_EOL;'
 ```
+
+Local secret-bearing files are intentionally ignored:
+- `.env.local` for Vercel/Vite env sync
+- `api/config.php` for legacy PHP fallback config
+
+Use `.env.example` as a non-secret reference only.
 
 ## API endpoints
 - `GET/POST /api/contact.php`

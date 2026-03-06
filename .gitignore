@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 .vercel
+.env
+.env.*
+!.env.example
+api/config.php
 *.local
 
 # Editor directories and files
@@ -25,3 +29,4 @@ dist-ssr
 *.sw?
 
 .git.backup
+.env*.local

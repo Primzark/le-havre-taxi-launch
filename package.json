@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:vercel": "vercel dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "env:pull:prod": "vercel env pull .env.local --environment=production --yes",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
