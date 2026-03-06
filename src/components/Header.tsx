@@ -120,13 +120,13 @@ const Header = () => {
     <>
       {/* Top bar - phone CTA */}
       <div className="bg-primary text-primary-foreground">
-        <div className="container flex min-h-9 items-center justify-between gap-3 py-1 text-sm">
+        <div className="container relative flex min-h-9 items-center justify-center gap-3 py-1 text-sm">
           <a
             href={`tel:${CONTACT_PHONE_LINK}`}
-            className="inline-flex min-w-0 items-center gap-2 font-heading font-semibold transition hover:opacity-90"
+            className="inline-flex max-w-full items-center justify-center gap-2 text-center font-heading font-semibold transition hover:opacity-90 lg:max-w-[calc(100%-12rem)]"
           >
             <Phone className="h-4 w-4" />
-            <span className="truncate">
+            <span>
               Centrale de réservation :{" "}
               <span
                 className={`inline-block tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
@@ -135,7 +135,7 @@ const Header = () => {
               </span>
             </span>
           </a>
-          <div className="hidden lg:flex items-center gap-4 shrink-0">
+          <div className="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center gap-4 lg:flex">
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Instagram</a>
             <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Facebook</a>
           </div>
@@ -148,7 +148,7 @@ const Header = () => {
           <Link
             to="/"
             aria-label="Accueil Radio Taxi Le Havre"
-            className="relative z-10 shrink-0 -my-1 flex translate-y-[0.35rem] items-center md:-my-2 md:translate-y-[0.7rem]"
+            className="relative z-10 shrink-0 -my-1 flex translate-y-[0.15rem] items-center md:-my-2 md:translate-y-[0.45rem]"
           >
             <span className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white shadow-[0_16px_34px_-16px_hsl(var(--primary)/0.75)] sm:h-28 sm:w-28 md:h-32 md:w-32">
               <img
