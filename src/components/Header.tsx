@@ -120,7 +120,7 @@ const Header = () => {
     <>
       {/* Top bar - phone CTA */}
       <div className="bg-primary text-primary-foreground">
-        <div className="container flex min-h-10 items-center justify-between gap-3 py-1.5 text-sm">
+        <div className="container flex min-h-9 items-center justify-between gap-3 py-1 text-sm">
           <a
             href={`tel:${CONTACT_PHONE_LINK}`}
             className="inline-flex min-w-0 items-center gap-2 font-heading font-semibold transition hover:opacity-90"
@@ -144,15 +144,15 @@ const Header = () => {
 
       {/* Main nav */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b shadow-sm">
-        <div className="container flex h-24 md:h-28 items-center gap-3">
-          <Link to="/" aria-label="Accueil Radio Taxi Le Havre" className="shrink-0 flex items-center">
-            <span className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white shadow-[0_12px_28px_-14px_hsl(var(--primary)/0.7)] sm:h-24 sm:w-24 md:h-28 md:w-28">
+        <div className="container flex h-20 md:h-24 items-center gap-3 overflow-visible">
+          <Link to="/" aria-label="Accueil Radio Taxi Le Havre" className="relative z-10 shrink-0 -my-2 flex items-center md:-my-3">
+            <span className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white shadow-[0_16px_34px_-16px_hsl(var(--primary)/0.75)] sm:h-28 sm:w-28 md:h-32 md:w-32">
               <img
                 src="/images/logo-taxi-le-havre.webp"
                 alt="Radio Taxi Le Havre"
                 width={1024}
                 height={1024}
-                className="h-full w-full object-contain p-1 md:p-1.5"
+                className="h-full w-full object-contain p-1"
               />
             </span>
           </Link>
