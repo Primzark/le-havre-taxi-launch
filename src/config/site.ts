@@ -7,7 +7,7 @@ export const CONTACT_PHONE_LINK = "+33235258181";
 export const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL ?? "bureautaxi@gmail.com";
 
 export const INSTAGRAM_URL = "https://www.instagram.com/lehavretaxi";
-export const FACEBOOK_URL = "https://www.facebook.com/taxilehavre";
+export const FACEBOOK_URL = "https://www.facebook.com/TaxiLeHavre";
 
 export const APPLE_STORE_URL =
   "https://itunes.apple.com/fr/app/taxi-le-havre/id1129251535?mt=8";

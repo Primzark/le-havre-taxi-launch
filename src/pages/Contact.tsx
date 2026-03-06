@@ -743,7 +743,7 @@ const Contact = () => {
                   Instagram : lehavretaxi
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Facebook : taxilehavre
+                  Facebook : TaxiLeHavre
                 </p>
                 <div className="flex gap-3 mt-2">
                   <a

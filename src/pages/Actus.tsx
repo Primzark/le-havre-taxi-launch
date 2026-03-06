@@ -86,7 +86,7 @@ const socialProfiles: SocialProfile[] = [
   {
     href: FACEBOOK_URL,
     label: "Facebook",
-    handle: "@taxilehavre",
+    handle: "@TaxiLeHavre",
     description: "Communiqués, relais de service et temps forts du réseau centralisés en un seul point d'accès.",
     icon: Facebook,
     surfaceClass: "from-sky-50 via-white to-cyan-50",
@@ -118,14 +118,14 @@ const sourceAppearance: Record<
 const defaultCards: NewsCard[] = [
   {
     id: "instagram-1",
-    title: "Publication Instagram",
+    title: "BÉTON LE HAVRE 2025",
     image: "/images/actus-instagram-1.webp",
     sourceUrl: INSTAGRAM_URL,
     sourceName: "Instagram",
   },
   {
     id: "facebook-1",
-    title: "Publication Facebook",
+    title: "Profil Facebook TaxiLeHavre",
     image: "/images/actus-facebook-1.webp",
     sourceUrl: FACEBOOK_URL,
     sourceName: "Facebook",
