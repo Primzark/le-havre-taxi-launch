@@ -144,11 +144,11 @@ const Header = () => {
 
       {/* Main nav */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b shadow-sm">
-        <div className="container flex h-[4.5rem] md:h-[5.35rem] items-center gap-3 overflow-visible">
+        <div className="container flex h-[4.35rem] md:h-[5.15rem] items-center gap-3 overflow-visible">
           <Link
             to="/"
             aria-label="Accueil Radio Taxi Le Havre"
-            className="relative z-10 shrink-0 -my-1 flex translate-y-1 items-center md:-my-2 md:translate-y-2"
+            className="relative z-10 shrink-0 -my-1 flex translate-y-[0.35rem] items-center md:-my-2 md:translate-y-[0.7rem]"
           >
             <span className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white shadow-[0_16px_34px_-16px_hsl(var(--primary)/0.75)] sm:h-28 sm:w-28 md:h-32 md:w-32">
               <img
