@@ -4,50 +4,6 @@
   "outputDirectory": "dist",
   "redirects": [
     {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "taxihavre.com"
-        }
-      ],
-      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.taxihavre.com"
-        }
-      ],
-      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "taxis-lehavre.com"
-        }
-      ],
-      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.taxis-lehavre.com"
-        }
-      ],
-      "destination": "https://le-havre-taxi-launch.vercel.app/:path*",
-      "permanent": true
-    },
-    {
       "source": "/nous-contact",
       "destination": "/",
       "permanent": true

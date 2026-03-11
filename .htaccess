@@ -7,10 +7,6 @@ RedirectMatch 404 /\.
 RewriteRule ^favicon\.ico$ favicon.ico [L]
 RewriteRule ^favicon\.png$ favicon.png [L]
 
-# Permanent redirect from legacy/non-www domains to primary www domain.
-RewriteCond %{HTTP_HOST} ^(taxihavre\.com|www\.taxihavre\.com|taxis-lehavre\.com)$ [NC]
-RewriteRule ^ https://www.taxis-lehavre.com%{REQUEST_URI} [R=301,L,NE]
-
 # Avoid browser/favicon DB stale cache for icon assets.
 <IfModule mod_headers.c>
   <FilesMatch "^favicon\.(ico|png)$">

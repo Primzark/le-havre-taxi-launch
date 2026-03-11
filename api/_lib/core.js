@@ -738,8 +738,8 @@ export function getMailFromEmail(req) {
   const explicit = env("MAIL_FROM_EMAIL");
   if (explicit) return explicit;
 
-  const host = (getHeader(req, "host") || "taxis-lehavre.com").replace(/[^a-zA-Z0-9.-]/g, "");
-  return `no-reply@${host || "taxis-lehavre.com"}`;
+  const host = (getHeader(req, "host") || "le-havre-taxi-launch.vercel.app").replace(/[^a-zA-Z0-9.-]/g, "");
+  return `no-reply@${host || "le-havre-taxi-launch.vercel.app"}`;
 }
 
 export function getMailFromName() {

@@ -130,15 +130,13 @@ npm run admin:sync
 ### Vercel routing in this repo
 - `/api/*.php` -> Vercel Functions (`api/*.php.js`)
 - `/uploads/*` -> rewritten to `/api/uploads.php` then redirected to Supabase public storage URL
-- SPA fallback and canonical host redirects are handled in `vercel.json`
+- SPA fallback and legacy path redirects are handled in `vercel.json`
 
 ### DNS / domains
 - Public site on Vercel:
-  - `le-havre-taxi-launch.vercel.app` (primary)
-  - `taxis-lehavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
-  - `www.taxis-lehavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
-  - `taxihavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
-  - `www.taxihavre.com` -> redirect to `le-havre-taxi-launch.vercel.app`
+  - `le-havre-taxi-launch.vercel.app`
+- Old production domains are intentionally not configured in this repo.
+- If `taxihavre.com` still resolves publicly, it must be removed at DNS/hosting level outside this codebase.
 
 ### Legacy PHP backend (temporary only)
 - Old PHP endpoints remain in `api/*.php` for migration fallback/cutover.

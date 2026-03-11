@@ -81,7 +81,7 @@ describe("Actus admin flow", () => {
             id: "news-test",
             title: "Nouvelle actualité",
             image: "/images/actus-instagram-1.webp",
-            sourceUrl: "https://www.taxis-lehavre.com/actus/nouvelle-actualite",
+            sourceUrl: "https://le-havre-taxi-launch.vercel.app/actus/nouvelle-actualite",
             sourceName: "Actualite",
           },
         });
@@ -113,7 +113,7 @@ describe("Actus admin flow", () => {
     fireEvent.change(screen.getByLabelText(/Titre/i), { target: { value: "Nouvelle actualité" } });
     fireEvent.change(screen.getByLabelText(/URL image/i), { target: { value: "/images/actus-instagram-1.webp" } });
     fireEvent.change(screen.getByLabelText(/Lien de l'actualité/i), {
-      target: { value: "https://www.taxis-lehavre.com/actus/nouvelle-actualite" },
+      target: { value: "https://le-havre-taxi-launch.vercel.app/actus/nouvelle-actualite" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: /Publier l'actualité/i }));

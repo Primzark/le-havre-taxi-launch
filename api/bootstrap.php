@@ -442,8 +442,8 @@ function get_mail_from_email(): string
         return trim($fromEnv);
     }
 
-    $host = preg_replace('/[^a-zA-Z0-9.-]/', '', (string) ($_SERVER["HTTP_HOST"] ?? "taxis-lehavre.com"));
-    return "no-reply@" . ($host !== "" ? $host : "taxis-lehavre.com");
+    $host = preg_replace('/[^a-zA-Z0-9.-]/', '', (string) ($_SERVER["HTTP_HOST"] ?? "le-havre-taxi-launch.vercel.app"));
+    return "no-reply@" . ($host !== "" ? $host : "le-havre-taxi-launch.vercel.app");
 }
 
 function get_mail_from_name(): string
