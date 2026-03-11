@@ -4,7 +4,8 @@ export const PRIMARY_DOMAIN = "https://le-havre-taxi-launch.vercel.app";
 export const CONTACT_PHONE_NUMBER = "0235258181";
 export const CONTACT_PHONE_DISPLAY = "02 35 25 81 81";
 export const CONTACT_PHONE_LINK = "+33235258181";
-export const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL ?? "bureautaxi@gmail.com";
+export const CONTACT_EMAIL =
+  (import.meta.env.VITE_CONTACT_EMAIL ?? "bureautaxi@gmail.com").trim();
 
 export const INSTAGRAM_URL = "https://www.instagram.com/lehavretaxi";
 export const FACEBOOK_URL = "https://www.facebook.com/TaxiLeHavre";

@@ -4,6 +4,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router-dom";
 import AvisClients from "@/pages/AvisClients";
 
+vi.mock("@/components/Layout", () => ({
+  default: ({ children }: { children: any }) => <div>{children}</div>,
+}));
+
+vi.mock("@/components/PageHero", () => ({
+  default: ({ title }: { title: string }) => <div>{title}</div>,
+}));
+
+vi.mock("@/hooks/use-seo", () => ({
+  useSEO: () => {},
+}));
+
 const jsonResponse = (payload: unknown, ok = true, status = 200) =>
   Promise.resolve({
     ok,
@@ -88,9 +100,7 @@ describe("AvisClients", () => {
       </QueryClientProvider>,
     );
 
-    await waitFor(() => {
-      expect(screen.getByText(/Sophie Martin/i)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(/Sophie Martin/i)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.queryByText(/Camille Lucas/i)).not.toBeInTheDocument();
