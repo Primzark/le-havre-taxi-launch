@@ -74,7 +74,7 @@ type SimulatorRoute = {
 };
 
 type PeriodMode = TariffPeriodMode;
-type TourSortMode = "price-asc" | "price-desc" | "duration-asc";
+type TourSortMode = "number-asc" | "price-asc" | "price-desc" | "duration-asc";
 
 const PREFECTORAL_DECREE_PDF_URL = "/documents/arrete-prefectoral-taxi-2026-02-09.pdf";
 const PREFECTORAL_DECREE_DATE_LABEL = "9 février 2026";
@@ -154,6 +154,7 @@ const luggageOptions = [
 ];
 
 const tourSortOptions: Array<{ id: TourSortMode; label: string }> = [
+  { id: "number-asc", label: "Numéro de circuit" },
   { id: "price-asc", label: "Prix croissant" },
   { id: "price-desc", label: "Prix décroissant" },
   { id: "duration-asc", label: "Durée la plus courte" },
@@ -223,7 +224,7 @@ const Tarifs = () => {
 
   const [tourQuery, setTourQuery] = useState("");
   const [maxBudget, setMaxBudget] = useState<number[]>([maxTourPrice]);
-  const [tourSortMode, setTourSortMode] = useState<TourSortMode>("price-asc");
+  const [tourSortMode, setTourSortMode] = useState<TourSortMode>("number-asc");
 
   const selectedRoute = useMemo(
     () =>
@@ -308,20 +309,13 @@ const Tarifs = () => {
         return parseDurationHours(a.duration) - parseDurationHours(b.duration);
       }
 
-      return a.price - b.price;
+      if (tourSortMode === "price-asc") {
+        return a.price - b.price;
+      }
+
+      return a.id - b.id;
     });
   }, [maxBudget, tourQuery, tourSortMode]);
-
-  const filteredAveragePrice =
-    filteredTours.length > 0
-      ? filteredTours.reduce((total, tour) => total + tour.price, 0) /
-        filteredTours.length
-      : 0;
-
-  const cheapestFilteredTour =
-    filteredTours.length > 0
-      ? [...filteredTours].sort((a, b) => a.price - b.price)[0]
-      : null;
 
   useSEO({
     title: "Tarifs et estimation",
@@ -766,9 +760,6 @@ const Tarifs = () => {
                   Tous les prix officiels en une vue, avec recherche rapide.
                 </p>
               </div>
-              <p className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-                13 tours aller-retour
-              </p>
             </div>
 
             <div className="mt-5 grid gap-3 lg:grid-cols-[1.05fr_0.55fr_0.4fr]">
@@ -819,37 +810,6 @@ const Tarifs = () => {
                 step={10}
                 aria-label="Budget maximum pour les circuits"
               />
-            </div>
-
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-xl border border-primary/10 bg-background/75 p-4">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Circuits affichés
-                </p>
-                <p className="mt-1 text-2xl font-extrabold">
-                  {filteredTours.length}
-                </p>
-              </div>
-              <div className="rounded-xl border border-primary/10 bg-background/75 p-4">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Prix moyen filtré
-                </p>
-                <p className="mt-1 text-2xl font-extrabold text-primary">
-                  {filteredTours.length > 0
-                    ? formatEuro(filteredAveragePrice)
-                    : "--"}
-                </p>
-              </div>
-              <div className="rounded-xl border border-primary/10 bg-background/75 p-4">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Prix le plus bas
-                </p>
-                <p className="mt-1 text-2xl font-extrabold">
-                  {cheapestFilteredTour
-                    ? formatEuro(cheapestFilteredTour.price)
-                    : "--"}
-                </p>
-              </div>
             </div>
 
             <div className="mt-5 overflow-hidden rounded-xl border border-border/70">
@@ -912,7 +872,7 @@ const Tarifs = () => {
                     onClick={() => {
                       setTourQuery("");
                       setMaxBudget([maxTourPrice]);
-                      setTourSortMode("price-asc");
+                      setTourSortMode("number-asc");
                     }}
                   >
                     Réinitialiser

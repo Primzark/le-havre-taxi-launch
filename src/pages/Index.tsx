@@ -29,6 +29,13 @@ type StatDefinition = {
   groupDigits?: boolean;
 };
 
+type HomeSlide = {
+  title: string;
+  image: string;
+  renderMode?: "cover" | "framed";
+  objectPosition?: string;
+};
+
 const stats: StatDefinition[] = [
   { icon: Clock, label: "Depuis", target: 1976 },
   { icon: Car, label: "Taxis dans le réseau", target: 115 },
@@ -136,7 +143,7 @@ const appFeatures = [
   },
 ];
 
-const homeSlides = [
+const homeSlides: HomeSlide[] = [
   {
     title: "Mairie du Havre",
     image: "/images/home-mairie.webp",
@@ -152,6 +159,8 @@ const homeSlides = [
   {
     title: "La Catène de containers",
     image: "/images/home-catene.webp",
+    renderMode: "framed",
+    objectPosition: "center 38%",
   },
 ];
 
@@ -321,8 +330,8 @@ const Index = () => {
                   className="w-full min-[390px]:w-auto px-4 min-[390px]:px-8 border-primary-foreground/70 bg-transparent text-primary-foreground hover:border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-primary-foreground font-heading transition-colors"
                   asChild
                 >
-                  <Link to="/contact">
-                    <MapPin className="h-5 w-5 mr-2" /> Envoyez-nous un message
+                  <Link to="/liens">
+                    <ArrowRight className="h-5 w-5 mr-2" /> Liens utiles
                   </Link>
                 </Button>
               </div>
@@ -361,7 +370,7 @@ const Index = () => {
             <Button type="submit" className="h-11 px-7">Rechercher</Button>
           </form>
           <p className="max-w-3xl mx-auto mt-2 text-xs text-muted-foreground">
-            Exemples : transport médical, tarif 2025, station gare, circuit Étretat.
+            Exemples : transport médical, tarif 2026, station gare, circuit Étretat.
           </p>
           {searchFeedback && (
             <p className="max-w-3xl mx-auto mt-2 text-sm text-destructive" role="status" aria-live="polite">
@@ -404,15 +413,43 @@ const Index = () => {
               {homeSlides.map((slide, index) => (
                 <CarouselItem key={slide.title} className="pl-0">
                   <div className="relative overflow-hidden rounded-xl border shadow-sm">
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className={`w-full h-[300px] sm:h-[380px] md:h-[480px] object-cover transform-gpu transition-transform ease-linear ${
-                        activeSlideIndex === index ? "scale-110" : "scale-100"
-                      }`}
-                      style={{ transitionDuration: "5000ms" }}
-                      loading="lazy"
-                    />
+                    {slide.renderMode === "framed" ? (
+                      <div className="relative h-[300px] sm:h-[380px] md:h-[480px] bg-slate-950">
+                        <img
+                          src={slide.image}
+                          alt=""
+                          aria-hidden="true"
+                          className={`absolute inset-0 h-full w-full object-cover blur-xl transition-transform ease-linear ${
+                            activeSlideIndex === index ? "scale-[1.22]" : "scale-[1.1]"
+                          }`}
+                          style={{
+                            transitionDuration: "5000ms",
+                            objectPosition: slide.objectPosition,
+                          }}
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.34)_0%,rgba(2,6,23,0.08)_35%,rgba(2,6,23,0.32)_100%)]" />
+                        <img
+                          src={slide.image}
+                          alt={slide.title}
+                          className={`relative h-full w-full object-cover transition-transform duration-700 ease-out md:object-contain md:px-10 md:py-8 lg:px-16 ${
+                            activeSlideIndex === index ? "scale-[1.03]" : "scale-100"
+                          }`}
+                          style={{ objectPosition: slide.objectPosition }}
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={slide.image}
+                        alt={slide.title}
+                        className={`w-full h-[300px] sm:h-[380px] md:h-[480px] object-cover transform-gpu transition-transform ease-linear ${
+                          activeSlideIndex === index ? "scale-110" : "scale-100"
+                        }`}
+                        style={{ transitionDuration: "5000ms" }}
+                        loading="lazy"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                     <p className="absolute bottom-4 left-4 text-white font-heading font-semibold text-base md:text-lg">
                       {slide.title}
@@ -569,11 +606,11 @@ const Index = () => {
               </h3>
               <p className="text-muted-foreground text-sm">Consultez les prix indicatifs, simples et transparents.</p>
             </Link>
-            <Link to="/liens" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
+            <Link to="/contact" className="group bg-card border rounded-xl p-6 hover:shadow-md transition">
               <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
-                Liens utiles <ArrowRight className="inline h-4 w-4 ml-1" />
+                Contact <ArrowRight className="inline h-4 w-4 ml-1" />
               </h3>
-              <p className="text-muted-foreground text-sm">Tous les raccourcis utiles : contact, tarifs, applis et réseaux sociaux.</p>
+              <p className="text-muted-foreground text-sm">Écrivez-nous pour une réservation, un devis ou une demande spécifique.</p>
             </Link>
           </div>
         </div>

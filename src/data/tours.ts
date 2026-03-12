@@ -48,9 +48,9 @@ export const toursData: Tour[] = [
           "Le Havre, patrimoine UNESCO.",
         ),
         slide(
-          "/images/circuits/tour-01-le-havre-01.jpg",
-          "Vue maritime du Havre.",
-          "Ambiance portuaire du Havre.",
+          "/images/circuits/tour-01-pole-croisiere.webp",
+          "Pôle croisière et front maritime du Havre.",
+          "Pôle croisière et vue sur le front de mer.",
         ),
         slide(
           "/images/circuits/tour-01-le-havre-02.jpg",
@@ -113,11 +113,6 @@ export const toursData: Tour[] = [
           "Balade sur les hauteurs.",
         ),
         slide(
-          "/images/tour-08-cote-albatre.webp",
-          "Falaises de la Côte d'Albâtre.",
-          "Extension possible vers la Côte d'Albâtre.",
-        ),
-        slide(
           "/images/tour-05-honfleur.webp",
           "Port normand typique.",
           "Prolongement vers Honfleur possible.",
@@ -153,9 +148,9 @@ export const toursData: Tour[] = [
           "Passage par le Pont de Normandie.",
         ),
         slide(
-          "/images/circuits/tour-03-normandie-02.jpg",
-          "Architecture normande traditionnelle.",
-          "Demeures typiques de la région.",
+          "/images/home-bassin-commerce.webp",
+          "Vue du Havre et du Bassin du Commerce.",
+          "Le Havre et le Bassin du Commerce.",
         ),
         slide(
           "/images/circuits/tour-03-normandie-03.jpg",
@@ -168,9 +163,9 @@ export const toursData: Tour[] = [
           "Étape à Honfleur.",
         ),
         slide(
-          "/images/tour-09-cote-fleurie.webp",
-          "Littoral de la Côte Fleurie.",
-          "Côte Fleurie et Deauville.",
+          "/images/tour-09-deauville-planches.webp",
+          "Les Planches de Deauville en bord de mer.",
+          "Deauville et ses Planches.",
         ),
       ],
     },
@@ -283,11 +278,6 @@ export const toursData: Tour[] = [
           "Rouen historique.",
         ),
         slide(
-          "/images/circuits/tour-06-rouen-01.jpg",
-          "Le Gros-Horloge à Rouen.",
-          "Le Gros-Horloge.",
-        ),
-        slide(
           "/images/circuits/tour-06-rouen-02.jpg",
           "Abbaye Saint-Ouen à Rouen.",
           "Abbaye Saint-Ouen.",
@@ -378,9 +368,9 @@ export const toursData: Tour[] = [
           "Étape à Étretat.",
         ),
         slide(
-          "/images/tour-03-normandie.webp",
-          "Paysages normands.",
-          "Retour par le Pays de Caux.",
+          "/images/circuits/tour-02-etretat-01.jpg",
+          "Falaises emblématiques de la Côte d'Albâtre.",
+          "Panorama sur les falaises.",
         ),
       ],
     },
@@ -390,7 +380,7 @@ export const toursData: Tour[] = [
     name: "La côte Fleurie",
     duration: "5h00",
     price: 250,
-    image: "/images/tour-09-cote-fleurie.webp",
+    image: "/images/tour-09-deauville-planches.webp",
     story: {
       title: "La côte Fleurie entre charme et élégance",
       intro:
@@ -403,9 +393,9 @@ export const toursData: Tour[] = [
       ],
       gallery: [
         slide(
-          "/images/tour-09-cote-fleurie.webp",
-          "Station balnéaire sur la Côte Fleurie.",
-          "Côte Fleurie.",
+          "/images/tour-09-deauville-planches.webp",
+          "Les Planches de Deauville en bord de mer.",
+          "Deauville et les Planches.",
         ),
         slide(
           "/images/tour-05-honfleur.webp",

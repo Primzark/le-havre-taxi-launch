@@ -11,6 +11,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import {
+  ACTUS_ADMIN_PATH,
   ACTUS_API_URL,
   ACTUS_UPLOAD_API_URL,
   ADMIN_API_URL,
@@ -510,7 +511,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
         ? {
             title: "Gestion des actualités",
             description: "Dashboard d'administration des actualités du site Taxi Le Havre.",
-            canonicalPath: "/gestion-actus",
+            canonicalPath: ACTUS_ADMIN_PATH,
             robots: "noindex, nofollow",
             ogImage: "/images/home-catene.webp",
             keywords: ["gestion actualites taxi le havre", "admin news taxi le havre"],

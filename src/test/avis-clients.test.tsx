@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -5,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import AvisClients from "@/pages/AvisClients";
 
 vi.mock("@/components/Layout", () => ({
-  default: ({ children }: { children: any }) => <div>{children}</div>,
+  default: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock("@/components/PageHero", () => ({

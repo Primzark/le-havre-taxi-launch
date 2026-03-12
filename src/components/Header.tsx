@@ -1,7 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Phone, Menu, X, Download, Search } from "lucide-react";
+import { Download, Facebook, Instagram, Menu, Phone, Play, Search, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   APPLE_STORE_URL,
@@ -16,6 +17,13 @@ import { resolveMenuSearch } from "@/utils/menu-search";
 const PHONE_ANIMATION_DURATION_MS = 1800;
 const PHONE_DIGITS = CONTACT_PHONE_DISPLAY.replace(/\D/g, "");
 const MENU_VIDEO_URL = "https://player.vimeo.com/video/340638002?dnt=1&title=0&byline=0&portrait=0";
+const ANNIVERSARY_VIDEO_URL = "/videos/50-ans-au-coeur-du-havre.mp4";
+const ANNIVERSARY_BADGE_IMAGE_URL = "/images/anniversary-50-ans-badge.webp";
+
+const socialLinks = [
+  { href: INSTAGRAM_URL, label: "Instagram", Icon: Instagram },
+  { href: FACEBOOK_URL, label: "Facebook", Icon: Facebook },
+] as const;
 
 const formatPhoneDisplay = (digits: string) =>
   (digits.match(/\d{1,2}/g) ?? []).join(" ");
@@ -33,6 +41,7 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isAnniversaryOpen, setIsAnniversaryOpen] = useState(false);
   const [menuQuery, setMenuQuery] = useState("");
   const [animatedPhoneDisplay, setAnimatedPhoneDisplay] = useState(CONTACT_PHONE_DISPLAY);
   const [phoneAnimationDone, setPhoneAnimationDone] = useState(false);
@@ -118,38 +127,121 @@ const Header = () => {
 
   return (
     <>
-      {/* Top bar - phone CTA */}
       <div className="bg-primary text-primary-foreground">
-        <div className="container relative flex min-h-9 items-center justify-center gap-3 py-1 text-sm">
-          <a
-            href={`tel:${CONTACT_PHONE_LINK}`}
-            className="inline-flex max-w-full items-center justify-center gap-2 text-center font-heading font-semibold transition hover:opacity-90 max-[380px]:gap-1.5 max-[380px]:text-[13px] lg:max-w-[calc(100%-12rem)]"
-          >
-            <Phone className="h-4 w-4 max-[380px]:h-3.5 max-[380px]:w-3.5" />
-            <span>
-              <span className="max-[380px]:hidden">Centrale de réservation : </span>
-              <span className="hidden max-[380px]:inline">Réservation : </span>
-              <span
-                className={`inline-block whitespace-nowrap tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
-              >
-                {animatedPhoneDisplay}
+        <div className="container py-1.5">
+          <div className="hidden min-h-10 items-center gap-4 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto]">
+            <a
+              href={`tel:${CONTACT_PHONE_LINK}`}
+              className="inline-flex items-center gap-2 text-left font-heading text-sm font-semibold transition hover:opacity-90"
+            >
+              <Phone className="h-4 w-4" />
+              <span>
+                Centrale de réservation :{" "}
+                <span
+                  className={`inline-block whitespace-nowrap tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
+                >
+                  {animatedPhoneDisplay}
+                </span>
               </span>
-            </span>
-          </a>
-          <div className="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center gap-4 lg:flex">
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Instagram</a>
-            <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">Facebook</a>
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setIsAnniversaryOpen(true)}
+              className="anniversary-badge justify-self-center"
+              aria-label="Découvrir l'animation 50 ans au coeur du Havre"
+            >
+              <span className="anniversary-badge__glow" aria-hidden="true" />
+              <span className="anniversary-badge__shimmer" aria-hidden="true" />
+              <span className="anniversary-badge__route" aria-hidden="true" />
+              <span className="anniversary-badge__dot" aria-hidden="true" />
+              <img
+                src={ANNIVERSARY_BADGE_IMAGE_URL}
+                alt=""
+                aria-hidden="true"
+                width={120}
+                height={120}
+                className="anniversary-badge__logo"
+              />
+              <span className="anniversary-badge__content">
+                <span className="anniversary-badge__eyebrow">1976 • 2026</span>
+                <span className="anniversary-badge__title">50 ans au coeur du Havre</span>
+                <span className="anniversary-badge__meta">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Voir l'animation anniversaire
+                </span>
+              </span>
+              <span className="anniversary-badge__play" aria-hidden="true">
+                <Play className="h-4 w-4" />
+              </span>
+            </button>
+
+            <div className="flex items-center justify-self-end gap-2">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:-translate-y-0.5 hover:bg-white/18"
+                  aria-label={label}
+                  title={label}
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex min-h-10 flex-col items-center justify-center gap-2 lg:hidden">
+            <a
+              href={`tel:${CONTACT_PHONE_LINK}`}
+              className="inline-flex max-w-full items-center justify-center gap-2 text-center font-heading font-semibold transition hover:opacity-90 max-[380px]:gap-1.5 max-[380px]:text-[13px]"
+            >
+              <Phone className="h-4 w-4 max-[380px]:h-3.5 max-[380px]:w-3.5" />
+              <span>
+                <span className="max-[380px]:hidden">Centrale de réservation : </span>
+                <span className="hidden max-[380px]:inline">Réservation : </span>
+                <span
+                  className={`inline-block whitespace-nowrap tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
+                >
+                  {animatedPhoneDisplay}
+                </span>
+              </span>
+            </a>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsAnniversaryOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white transition hover:bg-white/18"
+              >
+                <Sparkles className="h-3.5 w-3.5 text-secondary" />
+                50 ans
+              </button>
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/18"
+                  aria-label={label}
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main nav */}
-      <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b shadow-sm">
-        <div className="container flex h-[4.35rem] md:h-[5.15rem] items-center gap-3 overflow-visible">
+      <header className="sticky top-0 z-50 border-b bg-card/95 shadow-sm backdrop-blur-sm">
+        <div className="container flex h-[4.35rem] items-center gap-3 overflow-visible md:h-[5.15rem]">
           <Link
             to="/"
             aria-label="Accueil Radio Taxi Le Havre"
-            className="relative z-10 shrink-0 -my-1 flex translate-y-[0.15rem] items-center md:-my-2 md:translate-y-[0.45rem]"
+            className="relative z-10 flex shrink-0 translate-y-[0.15rem] items-center -my-1 md:translate-y-[0.45rem] md:-my-2"
           >
             <span className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white shadow-[0_16px_34px_-16px_hsl(var(--primary)/0.75)] sm:h-28 sm:w-28 md:h-32 md:w-32">
               <img
@@ -162,16 +254,15 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden xl:flex flex-1 items-center justify-center gap-0.5 min-w-0">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-2.5 py-2 rounded-md text-[13px] 2xl:text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`rounded-md px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors 2xl:text-sm ${
                   isActiveLink(link.to)
                     ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
                 {link.label}
@@ -179,7 +270,7 @@ const Header = () => {
             ))}
           </nav>
 
-          <form onSubmit={handleMenuSearch} className="hidden 2xl:flex items-center gap-2">
+          <form onSubmit={handleMenuSearch} className="hidden items-center gap-2 2xl:flex">
             <label htmlFor="menu-search" className="sr-only">Recherche menu</label>
             <div className="relative w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -195,7 +286,7 @@ const Header = () => {
             <Button type="submit" size="sm" variant="outline">OK</Button>
           </form>
 
-          <div className="ml-auto hidden md:flex items-center gap-2 xl:ml-0 shrink-0">
+          <div className="ml-auto hidden shrink-0 items-center gap-2 md:flex xl:ml-0">
             <Button variant="outline" size="sm" asChild>
               <a href={`tel:${CONTACT_PHONE_LINK}`} className="whitespace-nowrap">
                 <Phone className="h-4 w-4 2xl:mr-1" />
@@ -210,9 +301,8 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Mobile toggle */}
           <button
-            className="ml-auto md:ml-0 xl:hidden p-2 rounded-md hover:bg-muted transition shrink-0"
+            className="ml-auto shrink-0 rounded-md p-2 transition hover:bg-muted md:ml-0 xl:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
@@ -222,9 +312,8 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile nav */}
         {mobileOpen && (
-          <nav id="mobile-nav" className="xl:hidden border-t bg-card">
+          <nav id="mobile-nav" className="border-t bg-card xl:hidden">
             <div className="container py-4">
               <form onSubmit={handleMenuSearch} className="flex items-center gap-2">
                 <label htmlFor="menu-search-mobile" className="sr-only">Recherche menu</label>
@@ -251,7 +340,7 @@ const Header = () => {
                     className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
                       isActiveLink(link.to)
                         ? "bg-accent text-accent-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     }`}
                   >
                     {link.label}
@@ -289,16 +378,60 @@ const Header = () => {
 
               <div className="mt-3 flex flex-col gap-2 border-t pt-3 sm:flex-row">
                 <Button variant="outline" size="sm" className="sm:flex-1" asChild>
-                  <a href={`tel:${CONTACT_PHONE_LINK}`}><Phone className="h-4 w-4 mr-1" /> Appeler</a>
+                  <a href={`tel:${CONTACT_PHONE_LINK}`}><Phone className="mr-1 h-4 w-4" /> Appeler</a>
                 </Button>
-                <Button size="sm" className="sm:flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90" asChild>
-                  <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer"><Download className="h-4 w-4 mr-1" /> L'App</a>
+                <Button size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 sm:flex-1" asChild>
+                  <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer"><Download className="mr-1 h-4 w-4" /> L'App</a>
                 </Button>
               </div>
             </div>
           </nav>
         )}
       </header>
+
+      <Dialog open={isAnniversaryOpen} onOpenChange={setIsAnniversaryOpen}>
+        <DialogContent className="w-[92vw] max-w-[980px] overflow-hidden border-none bg-[#0d1f34] p-0 text-white shadow-[0_32px_90px_-48px_rgba(2,6,23,0.92)]">
+          <DialogTitle className="sr-only">50 ans au coeur du Havre</DialogTitle>
+          <div className="grid gap-0 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="relative overflow-hidden bg-[linear-gradient(180deg,#0f3f78_0%,#0d1f34_100%)] p-6 lg:p-8">
+              <div className="absolute -left-10 top-6 h-32 w-32 rounded-full bg-secondary/35 blur-3xl" aria-hidden="true" />
+              <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-sky-300/20 blur-3xl" aria-hidden="true" />
+              <div className="relative">
+                <img
+                  src={ANNIVERSARY_BADGE_IMAGE_URL}
+                  alt=""
+                  aria-hidden="true"
+                  width={160}
+                  height={160}
+                  className="h-20 w-20 rounded-full border-4 border-white/75 bg-white object-cover shadow-xl lg:h-24 lg:w-24"
+                />
+                <p className="mt-5 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/80">
+                  Edition anniversaire
+                </p>
+                <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight lg:text-4xl">
+                  50 ans au coeur du Havre
+                </h2>
+                <p className="mt-4 max-w-md text-sm leading-relaxed text-white/80 lg:text-base">
+                  Découvrez la création anniversaire de Radio Taxi Le Havre et l'identité visuelle imaginée pour célébrer la coopérative depuis 1976.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-black">
+              <video
+                src={ANNIVERSARY_VIDEO_URL}
+                poster={ANNIVERSARY_BADGE_IMAGE_URL}
+                className="h-full max-h-[78vh] w-full object-contain bg-black"
+                controls
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

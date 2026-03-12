@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigationType } from "react-router-dom";
 import { serviceLegacyRedirects } from "./data/services";
+import { ACTUS_ADMIN_PATH } from "./config/site";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
@@ -56,7 +57,8 @@ const App = () => (
           <Route path="/avis-clients" element={<AvisClients />} />
           <Route path="/devenir-taxi" element={<DevenirTaxi />} />
           <Route path="/actus" element={<Actus />} />
-          <Route path="/gestion-actus" element={<Actus adminMode />} />
+          <Route path={ACTUS_ADMIN_PATH} element={<Actus adminMode />} />
+          <Route path="/gestion-actus" element={<Navigate to="/actus" replace />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/nous-contact" element={<Navigate to="/contact" replace />} />
           <Route path="/nous-contacter" element={<Navigate to="/contact" replace />} />
