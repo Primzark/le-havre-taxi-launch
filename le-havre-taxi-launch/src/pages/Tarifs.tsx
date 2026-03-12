@@ -41,7 +41,7 @@ type QuickFare = {
 
 type PeriodMode = "jour" | "nuit";
 type DurationFilter = "all" | "express" | "demi-journee" | "journee" | "grand-format";
-type TourSortMode = "price-asc" | "price-desc" | "duration-asc";
+type TourSortMode = "number-asc" | "price-asc" | "price-desc" | "duration-asc";
 
 const quickFares: QuickFare[] = [
   {
@@ -98,12 +98,13 @@ const durationFilters: Array<{ id: DurationFilter; label: string }> = [
 ];
 
 const tourSortOptions: Array<{ id: TourSortMode; label: string }> = [
+  { id: "number-asc", label: "Numéro de circuit" },
   { id: "price-asc", label: "Prix croissant" },
   { id: "price-desc", label: "Prix décroissant" },
   { id: "duration-asc", label: "Durée la plus courte" },
 ];
 
-const lastTariffUpdateDate = "1er janvier 2025";
+const lastTariffUpdateDate = "24/02/2026";
 const routeScaleMax = Math.max(...quickFares.map((route) => route.basePrice));
 const minTourPrice = Math.min(...toursData.map((tour) => tour.price));
 const maxTourPrice = Math.max(...toursData.map((tour) => tour.price));
@@ -141,7 +142,7 @@ const Tarifs = () => {
   const [tourQuery, setTourQuery] = useState("");
   const [maxBudget, setMaxBudget] = useState<number[]>([maxTourPrice]);
   const [durationFilter, setDurationFilter] = useState<DurationFilter>("all");
-  const [tourSortMode, setTourSortMode] = useState<TourSortMode>("price-asc");
+  const [tourSortMode, setTourSortMode] = useState<TourSortMode>("number-asc");
 
   const selectedRoute = useMemo(
     () => quickFares.find((route) => route.id === selectedRouteId) ?? quickFares[0],
@@ -209,21 +210,13 @@ const Tarifs = () => {
         return parseDurationHours(a.duration) - parseDurationHours(b.duration);
       }
 
-      return a.price - b.price;
+      if (tourSortMode === "price-asc") {
+        return a.price - b.price;
+      }
+
+      return a.id - b.id;
     });
   }, [durationFilter, maxBudget, tourQuery, tourSortMode]);
-
-  const filteredAveragePrice =
-    filteredTours.length > 0
-      ? filteredTours.reduce((total, tour) => total + tour.price, 0) / filteredTours.length
-      : 0;
-
-  const shortestFilteredTour =
-    filteredTours.length > 0
-      ? [...filteredTours].sort(
-          (a, b) => parseDurationHours(a.duration) - parseDurationHours(b.duration),
-        )[0]
-      : null;
 
   useSEO({
     title: "Tarifs et estimation",
@@ -236,7 +229,7 @@ const Tarifs = () => {
       "prix taxi le havre",
       "estimateur taxi havre",
       "circuit touristique taxi prix",
-      "arrêté préfectoral taxi 2025",
+      "arrêté préfectoral taxi 2026",
     ],
     structuredData: [
       {
@@ -646,31 +639,6 @@ const Tarifs = () => {
                   ))}
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border bg-background/70 p-4">
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                      Circuits affichés
-                    </p>
-                    <p className="mt-2 text-2xl font-extrabold">{filteredTours.length}</p>
-                  </div>
-                  <div className="rounded-xl border bg-background/70 p-4">
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                      Prix moyen filtré
-                    </p>
-                    <p className="mt-2 text-2xl font-extrabold text-primary">
-                      {filteredTours.length > 0 ? formatEuro(filteredAveragePrice) : "--"}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border bg-background/70 p-4">
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                      Circuit le plus court
-                    </p>
-                    <p className="mt-2 text-2xl font-extrabold">
-                      {shortestFilteredTour ? shortestFilteredTour.duration : "--"}
-                    </p>
-                  </div>
-                </div>
-
                 {filteredTours.length > 0 ? (
                   <div className="grid gap-4 md:grid-cols-2">
                     {filteredTours.map((tour, index) => (
@@ -719,7 +687,7 @@ const Tarifs = () => {
                         setTourQuery("");
                         setMaxBudget([maxTourPrice]);
                         setDurationFilter("all");
-                        setTourSortMode("price-asc");
+                        setTourSortMode("number-asc");
                       }}
                     >
                       Réinitialiser les filtres
@@ -770,8 +738,8 @@ const Tarifs = () => {
 
             <div className="mt-6 rounded-xl border bg-background/75 p-4 text-sm text-muted-foreground">
               <p>
-                Tarifs indicatifs mis à jour le <strong>{lastTariffUpdateDate}</strong>, en référence à
-                l'arrêté préfectoral 2025.
+                Tarifs indicatifs mis à jour le <strong>{lastTariffUpdateDate}</strong>, selon la brochure
+                {" "}circuits 2026 et l'arrêté préfectoral 09/02/2026.
               </p>
               <p className="mt-2">
                 Pour un chiffrage précis, appelez le{" "}
