@@ -8,7 +8,6 @@ import {
   Download,
   Euro,
   ExternalLink,
-  MapPin,
   Phone,
   Search,
   Users,
@@ -320,7 +319,7 @@ const Tarifs = () => {
   useSEO({
     title: "Tarifs et estimation",
     description:
-      "Trouvez rapidement le tarif taxi au Havre : forfaits essentiels, simulateur clair et grille complète des 13 circuits touristiques.",
+      "Trouvez rapidement le tarif taxi au Havre : forfaits essentiels, simulateur clair et grille officielle des circuits touristiques classee par numero.",
     canonicalPath: "/tarifs",
     ogImage: "/images/logo-taxi-le-havre.webp",
     keywords: [
@@ -386,9 +385,9 @@ const Tarifs = () => {
                 Tarifs clairs, estimation rapide
               </h1>
               <p className="mt-4 max-w-2xl text-base text-foreground/75 md:text-lg">
-                Trouvez un prix en quelques secondes : forfaits immédiats,
-                simulateur simplifié et grille complète des circuits
-                touristiques.
+                Trouvez un prix en quelques secondes : forfaits immediats,
+                simulateur recalibre et grille officielle des circuits triee
+                par numero de circuit.
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -419,11 +418,10 @@ const Tarifs = () => {
                 </div>
                 <div className="rounded-xl border border-border/70 bg-white/80 p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                    Circuits officiels
+                    Tri par defaut
                   </p>
-                  <p className="mt-1 inline-flex items-center gap-1.5 font-heading text-2xl font-extrabold text-foreground">
-                    <MapPin className="h-4 w-4" />
-                    {toursData.length}
+                  <p className="mt-1 font-heading text-2xl font-extrabold text-foreground">
+                    Numero de circuit
                   </p>
                 </div>
               </div>
@@ -757,7 +755,8 @@ const Tarifs = () => {
                   Grille des circuits touristiques
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground md:text-base">
-                  Tous les prix officiels en une vue, avec recherche rapide.
+                  Tous les prix officiels en une vue, classes par numero de
+                  circuit par defaut.
                 </p>
               </div>
             </div>
