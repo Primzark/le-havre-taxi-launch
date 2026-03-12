@@ -1,4 +1,0 @@
-# Only allow API entry-point scripts; block direct access to config/bootstrap.
-<FilesMatch "^(config|config\.sample|bootstrap)\.php$">
-  Require all denied
-</FilesMatch>

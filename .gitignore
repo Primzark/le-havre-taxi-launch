@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 .vercel
+le-havre-taxi-launch/
 .env
 .env.*
 !.env.example
