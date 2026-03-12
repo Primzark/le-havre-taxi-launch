@@ -8,6 +8,7 @@ import {
   Download,
   Euro,
   ExternalLink,
+  MapPin,
   Phone,
   Search,
   Users,
@@ -319,7 +320,7 @@ const Tarifs = () => {
   useSEO({
     title: "Tarifs et estimation",
     description:
-      "Trouvez rapidement le tarif taxi au Havre : forfaits essentiels, simulateur clair et grille officielle des circuits touristiques classée par numéro.",
+      "Trouvez rapidement le tarif taxi au Havre : forfaits essentiels, simulateur clair et grille complète des 13 circuits touristiques.",
     canonicalPath: "/tarifs",
     ogImage: "/images/logo-taxi-le-havre.webp",
     keywords: [
@@ -386,8 +387,8 @@ const Tarifs = () => {
               </h1>
               <p className="mt-4 max-w-2xl text-base text-foreground/75 md:text-lg">
                 Trouvez un prix en quelques secondes : forfaits immédiats,
-                simulateur recalibré et grille officielle des circuits triée
-                par numéro de circuit.
+                simulateur simplifié et grille complète des circuits
+                touristiques.
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -418,10 +419,11 @@ const Tarifs = () => {
                 </div>
                 <div className="rounded-xl border border-border/70 bg-white/80 p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                    Tri par défaut
+                    Circuits officiels
                   </p>
-                  <p className="mt-1 font-heading text-2xl font-extrabold text-foreground">
-                    Numéro de circuit
+                  <p className="mt-1 inline-flex items-center gap-1.5 font-heading text-2xl font-extrabold text-foreground">
+                    <MapPin className="h-4 w-4" />
+                    {toursData.length}
                   </p>
                 </div>
               </div>
@@ -755,13 +757,12 @@ const Tarifs = () => {
                   Grille des circuits touristiques
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground md:text-base">
-                  Tous les prix officiels en une vue, classés par numéro de
-                  circuit par défaut.
+                  Tous les prix officiels en une vue, avec recherche rapide.
                 </p>
               </div>
             </div>
 
-            <div className="mt-5 grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="mt-5 grid gap-3 lg:grid-cols-[1.05fr_0.55fr_0.4fr]">
               <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -789,17 +790,18 @@ const Tarifs = () => {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
 
-            <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-3">
-              <div className="mb-3 flex items-center justify-between gap-3">
+              <div className="rounded-xl border border-border/70 bg-background/70 px-3 py-2">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Budget maximum
+                  Budget max
                 </p>
                 <p className="font-heading text-lg font-bold text-primary">
                   {formatEuro(maxBudget[0])}
                 </p>
               </div>
+            </div>
+
+            <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-3">
               <Slider
                 value={maxBudget}
                 onValueChange={setMaxBudget}
