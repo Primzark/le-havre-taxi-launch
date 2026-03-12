@@ -158,9 +158,7 @@ const homeSlides: HomeSlide[] = [
   },
   {
     title: "La Catène de containers",
-    image: "/images/home-catene.webp",
-    renderMode: "framed",
-    objectPosition: "center 38%",
+    image: "/images/home-catene-wide.webp",
   },
 ];
 
