@@ -390,10 +390,10 @@ const Header = () => {
       </header>
 
       <Dialog open={isAnniversaryOpen} onOpenChange={setIsAnniversaryOpen}>
-        <DialogContent className="w-[92vw] max-w-[980px] overflow-hidden border-none bg-[#0d1f34] p-0 text-white shadow-[0_32px_90px_-48px_rgba(2,6,23,0.92)]">
+        <DialogContent className="w-[calc(100vw-1rem)] max-w-[980px] max-h-[calc(100dvh-1rem)] overflow-hidden border-none bg-[#0d1f34] p-0 text-white shadow-[0_32px_90px_-48px_rgba(2,6,23,0.92)] sm:w-[92vw] sm:max-h-[calc(100dvh-2rem)]">
           <DialogTitle className="sr-only">50 ans au coeur du Havre</DialogTitle>
-          <div className="grid gap-0 lg:grid-cols-[0.8fr_1.2fr]">
-            <div className="relative overflow-hidden bg-[linear-gradient(180deg,#0f3f78_0%,#0d1f34_100%)] p-6 lg:p-8">
+          <div className="grid max-h-[calc(100dvh-1rem)] gap-0 overflow-y-auto overscroll-contain lg:max-h-[calc(100dvh-2rem)] lg:grid-cols-[minmax(320px,0.8fr)_minmax(0,1.2fr)] lg:overflow-hidden">
+            <div className="relative overflow-hidden bg-[linear-gradient(180deg,#0f3f78_0%,#0d1f34_100%)] p-5 pr-14 sm:p-6 sm:pr-16 lg:p-8 lg:pr-8">
               <div className="absolute -left-10 top-6 h-32 w-32 rounded-full bg-secondary/35 blur-3xl" aria-hidden="true" />
               <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-sky-300/20 blur-3xl" aria-hidden="true" />
               <div className="relative">
@@ -403,25 +403,25 @@ const Header = () => {
                   aria-hidden="true"
                   width={160}
                   height={160}
-                  className="h-20 w-20 rounded-full border-4 border-white/75 bg-white object-cover shadow-xl lg:h-24 lg:w-24"
+                  className="h-16 w-16 rounded-full border-4 border-white/75 bg-white object-cover shadow-xl sm:h-20 sm:w-20 lg:h-24 lg:w-24"
                 />
-                <p className="mt-5 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/80">
+                <p className="mt-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/80 sm:mt-5 sm:text-[11px] sm:tracking-[0.24em]">
                   Edition anniversaire
                 </p>
-                <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight lg:text-4xl">
+                <h2 className="mt-3 font-heading text-2xl font-extrabold leading-tight sm:mt-4 sm:text-3xl lg:text-4xl">
                   50 ans au coeur du Havre
                 </h2>
-                <p className="mt-4 max-w-md text-sm leading-relaxed text-white/80 lg:text-base">
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80 sm:mt-4 lg:text-base">
                   Découvrez la création anniversaire de Radio Taxi Le Havre et l'identité visuelle imaginée pour célébrer la coopérative depuis 1976.
                 </p>
               </div>
             </div>
 
-            <div className="bg-black">
+            <div className="relative min-h-[220px] bg-black sm:min-h-[280px] lg:min-h-0">
               <video
                 src={ANNIVERSARY_VIDEO_URL}
                 poster={ANNIVERSARY_BADGE_IMAGE_URL}
-                className="h-full max-h-[78vh] w-full object-contain bg-black"
+                className="h-full max-h-[48dvh] w-full object-contain bg-black sm:max-h-[54dvh] lg:max-h-[calc(100dvh-2rem)]"
                 controls
                 autoPlay
                 muted
