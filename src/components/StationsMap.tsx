@@ -77,8 +77,13 @@ const StationsMap = ({ stations, selectedStationId, onSelect }: StationsMapProps
   );
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-background">
-      <MapContainer center={DEFAULT_CENTER} zoom={12} scrollWheelZoom={false} className="h-[360px] w-full">
+    <div className="isolate overflow-hidden rounded-lg border bg-background">
+      <MapContainer
+        center={DEFAULT_CENTER}
+        zoom={12}
+        scrollWheelZoom={false}
+        className="relative z-0 h-[360px] w-full"
+      >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
