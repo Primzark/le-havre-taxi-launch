@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
-import { Phone, Clock, Users, Car, MapPin, Star, Download, ArrowRight, Search } from "lucide-react";
+import { Phone, Clock, Users, Car, MapPin, Star, Download, ArrowRight, Search, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
@@ -330,6 +330,16 @@ const Index = () => {
                 >
                   <Link to="/liens">
                     <ArrowRight className="h-5 w-5 mr-2" /> Liens utiles
+                  </Link>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full min-[390px]:w-auto px-4 min-[390px]:px-8 border-primary-foreground/70 bg-transparent text-primary-foreground hover:border-secondary hover:bg-secondary hover:text-secondary-foreground focus-visible:ring-primary-foreground font-heading transition-colors"
+                  asChild
+                >
+                  <Link to="/contact">
+                    <Mail className="h-5 w-5 mr-2" /> Envoyer un message
                   </Link>
                 </Button>
               </div>
