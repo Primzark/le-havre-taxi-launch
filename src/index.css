@@ -473,6 +473,107 @@
     background: rgba(255, 255, 255, 0.12);
     color: rgba(255, 255, 255, 0.92);
   }
+
+  .anniversary-dialog {
+    isolation: isolate;
+  }
+
+  .anniversary-dialog__panel,
+  .anniversary-dialog__media {
+    opacity: 0;
+  }
+
+  .anniversary-dialog__panel {
+    transform: translate3d(-24px, 20px, 0) scale(0.985);
+  }
+
+  .anniversary-dialog__panel::after {
+    content: "";
+    position: absolute;
+    left: 18%;
+    right: -10%;
+    bottom: -22%;
+    height: 12rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(252, 211, 77, 0.28), rgba(252, 211, 77, 0));
+    filter: blur(10px);
+    opacity: 0;
+    transform: translate3d(-8%, 16%, 0) scale(0.82);
+    pointer-events: none;
+  }
+
+  .anniversary-dialog__badge,
+  .anniversary-dialog__eyebrow,
+  .anniversary-dialog__title,
+  .anniversary-dialog__copy {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.98);
+    filter: blur(8px);
+  }
+
+  .anniversary-dialog__media {
+    transform: translate3d(28px, 16px, 0) scale(1.02);
+  }
+
+  .anniversary-dialog__media::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      112deg,
+      rgba(13, 31, 52, 0.98) 0%,
+      rgba(13, 31, 52, 0.82) 30%,
+      rgba(13, 31, 52, 0.18) 70%,
+      rgba(13, 31, 52, 0) 100%
+    );
+    opacity: 0.95;
+    transform: scaleX(1);
+    transform-origin: left center;
+    pointer-events: none;
+  }
+
+  .anniversary-dialog__video {
+    transform: scale(1.08);
+    filter: saturate(0.84) brightness(0.82);
+    will-change: transform, filter;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__panel {
+    animation: anniversary-dialog-panel-in 680ms cubic-bezier(0.22, 1, 0.36, 1) 70ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__panel::after {
+    animation: anniversary-dialog-glow-in 1040ms cubic-bezier(0.19, 1, 0.22, 1) 180ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__badge {
+    animation: anniversary-dialog-item-in 540ms cubic-bezier(0.22, 1, 0.36, 1) 170ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__eyebrow {
+    animation: anniversary-dialog-item-in 520ms cubic-bezier(0.22, 1, 0.36, 1) 240ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__title {
+    animation: anniversary-dialog-item-in 620ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__copy {
+    animation: anniversary-dialog-item-in 620ms cubic-bezier(0.22, 1, 0.36, 1) 380ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__media {
+    animation: anniversary-dialog-media-in 760ms cubic-bezier(0.22, 1, 0.36, 1) 130ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__media::before {
+    animation: anniversary-dialog-curtain 980ms cubic-bezier(0.19, 1, 0.22, 1) 180ms both;
+  }
+
+  .anniversary-dialog[data-state="open"] .anniversary-dialog__video {
+    animation: anniversary-dialog-video-in 1280ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both;
+  }
 }
 
 @keyframes tour-card-enter {
@@ -580,6 +681,77 @@
   }
 }
 
+@keyframes anniversary-dialog-panel-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-24px, 20px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes anniversary-dialog-media-in {
+  from {
+    opacity: 0;
+    transform: translate3d(28px, 16px, 0) scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes anniversary-dialog-item-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.98);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes anniversary-dialog-video-in {
+  from {
+    transform: scale(1.08);
+    filter: saturate(0.84) brightness(0.82);
+  }
+  to {
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@keyframes anniversary-dialog-curtain {
+  from {
+    opacity: 0.95;
+    transform: scaleX(1);
+  }
+  55% {
+    opacity: 0.68;
+  }
+  to {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes anniversary-dialog-glow-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-8%, 16%, 0) scale(0.82);
+  }
+  to {
+    opacity: 0.7;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 .actus-anniversary-title {
   background: linear-gradient(95deg, #ffffff 0%, #f7d56f 28%, #ffffff 55%, #f3be3b 78%, #ffffff 100%);
   background-size: 180% 100%;
@@ -678,6 +850,31 @@
   .anniversary-badge__dot,
   .anniversary-badge__title {
     animation: none;
+  }
+
+  .anniversary-dialog__panel,
+  .anniversary-dialog__media,
+  .anniversary-dialog__badge,
+  .anniversary-dialog__eyebrow,
+  .anniversary-dialog__title,
+  .anniversary-dialog__copy,
+  .anniversary-dialog__video {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .anniversary-dialog__panel::after {
+    animation: none !important;
+    opacity: 0.7;
+    transform: none;
+  }
+
+  .anniversary-dialog__media::before {
+    animation: none !important;
+    opacity: 0;
+    transform: scaleX(0);
   }
 
   .actus-anniversary-title,
