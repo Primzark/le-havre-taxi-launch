@@ -43,7 +43,7 @@ const AvisClients = () => {
       "avis taxi le havre",
       "avis google taxi le havre",
       "google reviews taxi le havre",
-      "temoignages taxi le havre",
+      "témoignages taxi le havre",
     ],
     structuredData: {
       "@context": "https://schema.org",

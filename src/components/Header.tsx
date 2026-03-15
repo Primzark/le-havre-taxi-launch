@@ -114,7 +114,7 @@ const Header = () => {
     if (!result.route || !result.autoNavigate) {
       toast({
         title: "Recherche à préciser",
-        description: `${result.message} Suggestions: ${result.suggestions.map((item) => item.label).join(", ")}.`,
+        description: `${result.message} Suggestions : ${result.suggestions.map((item) => item.label).join(", ")}.`,
         variant: "destructive",
       });
       return;
@@ -149,7 +149,7 @@ const Header = () => {
               type="button"
               onClick={() => setIsAnniversaryOpen(true)}
               className="anniversary-badge justify-self-center"
-              aria-label="Découvrir l'animation 50 ans au coeur du Havre"
+              aria-label="Découvrir l'animation 50 ans au cœur du Havre"
             >
               <span className="anniversary-badge__glow" aria-hidden="true" />
               <span className="anniversary-badge__shimmer" aria-hidden="true" />
@@ -165,7 +165,7 @@ const Header = () => {
               />
               <span className="anniversary-badge__content">
                 <span className="anniversary-badge__eyebrow">1976 • 2026</span>
-                <span className="anniversary-badge__title">50 ans au coeur du Havre</span>
+                <span className="anniversary-badge__title">50 ans au cœur du Havre</span>
                 <span className="anniversary-badge__meta">
                   <Sparkles className="h-3.5 w-3.5" />
                   Voir l'animation anniversaire
@@ -365,13 +365,13 @@ const Header = () => {
                 </div>
                 <div className="space-y-1.5 px-3 py-3">
                   <p className="inline-flex rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-foreground">
-                    Video App
+                    Vidéo app
                   </p>
                   <p className="text-sm font-semibold text-foreground">
-                    Decouvrez l'application Taxi Le Havre
+                    Découvrez l'application Taxi Le Havre
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Visionnez la video puis telechargez l'app en un clic.
+                    Visionnez la vidéo puis téléchargez l'app en un clic.
                   </p>
                 </div>
               </section>
@@ -391,7 +391,7 @@ const Header = () => {
 
       <Dialog open={isAnniversaryOpen} onOpenChange={setIsAnniversaryOpen}>
         <DialogContent className="anniversary-dialog w-[calc(100vw-1rem)] max-w-[980px] max-h-[calc(100dvh-1rem)] overflow-hidden border-none bg-[#0d1f34] p-0 text-white shadow-[0_32px_90px_-48px_rgba(2,6,23,0.92)] sm:w-[92vw] sm:max-h-[calc(100dvh-2rem)]">
-          <DialogTitle className="sr-only">50 ans au coeur du Havre</DialogTitle>
+          <DialogTitle className="sr-only">50 ans au cœur du Havre</DialogTitle>
           <div className="anniversary-dialog__layout grid max-h-[calc(100dvh-1rem)] gap-0 overflow-y-auto overscroll-contain lg:max-h-[calc(100dvh-2rem)] lg:grid-cols-[minmax(320px,0.8fr)_minmax(0,1.2fr)] lg:overflow-hidden">
             <div className="anniversary-dialog__panel relative overflow-hidden bg-[linear-gradient(180deg,#0f3f78_0%,#0d1f34_100%)] p-5 pr-14 sm:p-6 sm:pr-16 lg:p-8 lg:pr-8">
               <div className="absolute -left-10 top-6 h-32 w-32 rounded-full bg-secondary/35 blur-3xl" aria-hidden="true" />
@@ -406,10 +406,10 @@ const Header = () => {
                   className="anniversary-dialog__badge h-16 w-16 rounded-full border-4 border-white/75 bg-white object-cover shadow-xl sm:h-20 sm:w-20 lg:h-24 lg:w-24"
                 />
                 <p className="anniversary-dialog__eyebrow mt-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/80 sm:mt-5 sm:text-[11px] sm:tracking-[0.24em]">
-                  Edition anniversaire
+                  Édition anniversaire
                 </p>
                 <h2 className="anniversary-dialog__title mt-3 font-heading text-2xl font-extrabold leading-tight sm:mt-4 sm:text-3xl lg:text-4xl">
-                  50 ans au coeur du Havre
+                  50 ans au cœur du Havre
                 </h2>
                 <p className="anniversary-dialog__copy mt-3 max-w-md text-sm leading-relaxed text-white/80 sm:mt-4 lg:text-base">
                   Découvrez la création anniversaire de Radio Taxi Le Havre et l'identité visuelle imaginée pour célébrer la coopérative depuis 1976.

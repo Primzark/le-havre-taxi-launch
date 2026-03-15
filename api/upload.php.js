@@ -71,14 +71,14 @@ export default async function handler(req, res) {
     } catch (error) {
       jsonResponse(res, 422, {
         success: false,
-        error: error instanceof Error ? error.message : "Upload error",
+        error: error instanceof Error ? error.message : "Erreur de téléversement",
       });
       return;
     }
 
     const file = pickUploadedFile(parsed.files);
     if (!file) {
-      jsonResponse(res, 422, { success: false, error: "Missing uploaded file" });
+      jsonResponse(res, 422, { success: false, error: "Fichier téléversé manquant" });
       return;
     }
 
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     if (!size || size > maxBytes) {
       jsonResponse(res, 413, {
         success: false,
-        error: `File too large. Max ${Math.floor(maxBytes / 1024 / 1024)} MB`,
+        error: `Fichier trop volumineux. Maximum ${Math.floor(maxBytes / 1024 / 1024)} Mo`,
       });
       return;
     }
@@ -95,14 +95,14 @@ export default async function handler(req, res) {
     if (mimeType !== "image/webp") {
       jsonResponse(res, 422, {
         success: false,
-        error: "Unsupported image type. Use WebP.",
+        error: "Type d'image non pris en charge. Utilisez du WebP.",
       });
       return;
     }
 
     const filepath = String(file.filepath || "");
     if (!filepath) {
-      jsonResponse(res, 422, { success: false, error: "Invalid upload payload" });
+      jsonResponse(res, 422, { success: false, error: "Charge utile de téléversement invalide" });
       return;
     }
 
@@ -130,7 +130,7 @@ export default async function handler(req, res) {
       });
       jsonResponse(res, 500, {
         success: false,
-        error: "Unable to store uploaded file",
+        error: "Impossible d'enregistrer le fichier téléversé",
       });
       return;
     }

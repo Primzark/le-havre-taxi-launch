@@ -490,12 +490,20 @@ const Contact = () => {
           ? error.message
           : "Erreur réseau pendant l'envoi.";
       const normalizedMessage = errorMessage.trim();
+      const displayErrorMessage =
+        /failed to fetch|network/i.test(normalizedMessage)
+          ? "Erreur réseau pendant l'envoi."
+          : /not found/i.test(normalizedMessage)
+            ? "API de contact introuvable."
+            : /cors/i.test(normalizedMessage)
+              ? "Accès bloqué par la politique de sécurité du navigateur."
+              : normalizedMessage;
       const isRateLimited = /too many requests|retry later|429/i.test(
         normalizedMessage,
       );
-      const isPathIssue = /not found/i.test(normalizedMessage);
+      const isPathIssue = /not found|introuvable/i.test(normalizedMessage);
       const shouldTryFallback =
-        /not found|failed to fetch|network|cors|request failed \(404\)|endpoint api introuvable/i.test(
+        /not found|failed to fetch|network|cors|request failed \(404\)|endpoint api introuvable|api de contact introuvable|introuvable|réseau/i.test(
           normalizedMessage.toLowerCase(),
         );
 
@@ -540,12 +548,12 @@ const Contact = () => {
       const feedbackMessage = isRateLimited
         ? "Trop de tentatives en peu de temps. Réessayez dans quelques instants."
         : isPathIssue
-          ? `Envoi direct indisponible. Endpoint API introuvable (${normalizedMessage}).`
-          : `Envoi direct indisponible. ${normalizedMessage}`;
+          ? "Envoi direct indisponible. API de contact introuvable."
+          : `Envoi direct indisponible. ${displayErrorMessage}`;
 
       toast({
         title: "Envoi impossible",
-        description: `Le message n'a pas pu être transmis automatiquement. ${normalizedMessage}`,
+        description: `Le message n'a pas pu être transmis automatiquement. ${displayErrorMessage}`,
         variant: "destructive",
       });
 

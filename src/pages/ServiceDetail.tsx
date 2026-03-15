@@ -738,7 +738,7 @@ const SERVICE_GALLERY_FALLBACKS: Record<string, ServiceGalleryItem[]> = {
   "navette-aeroport": [
     {
       src: "/images/home-pont-normandie.webp",
-      alt: "Pont de Normandie sur un itineraire de transfert depuis Le Havre.",
+      alt: "Pont de Normandie sur un itinéraire de transfert depuis Le Havre.",
       caption: "Trajets fluides vers les axes principaux",
     },
     {
@@ -748,75 +748,75 @@ const SERVICE_GALLERY_FALLBACKS: Record<string, ServiceGalleryItem[]> = {
     },
     {
       src: "/images/service-station.webp",
-      alt: "Station de taxis prete pour un depart planifie.",
-      caption: "Depart confirme et ponctuel",
+      alt: "Station de taxis prête pour un départ planifié.",
+      caption: "Départ confirmé et ponctuel",
     },
   ],
   mariage: [
     {
       src: "/images/home-mairie.webp",
-      alt: "Mairie du Havre pour les deplacements ceremonie.",
-      caption: "Liaisons mairie et reception",
+      alt: "Mairie du Havre pour les déplacements cérémonie.",
+      caption: "Liaisons mairie et réception",
     },
     {
       src: "/images/home-catene.webp",
-      alt: "Vue de la Catene au Havre pour illustrer les trajets de la journee.",
-      caption: "Accompagnement sur toute la journee",
+      alt: "Vue de la Catène au Havre pour illustrer les trajets de la journée.",
+      caption: "Accompagnement sur toute la journée",
     },
     {
       src: "/images/home-bassin-commerce.webp",
-      alt: "Bassin du Commerce au Havre pour trajets invites.",
-      caption: "Rotations invitees organisees",
+      alt: "Bassin du Commerce au Havre pour trajets invités.",
+      caption: "Rotations invitées organisées",
     },
   ],
   "navette-transport-sanitaire": [
     {
       src: "/images/service-station.webp",
-      alt: "Station de taxis pour prise en charge medicale planifiee.",
-      caption: "Prises en charge regulieres",
+      alt: "Station de taxis pour prise en charge médicale planifiée.",
+      caption: "Prises en charge régulières",
     },
     {
       src: "/images/home-mairie.webp",
-      alt: "Vue urbaine du Havre pour trajets medicaux locaux.",
-      caption: "Trajets medicaux locaux",
+      alt: "Vue urbaine du Havre pour trajets médicaux locaux.",
+      caption: "Trajets médicaux locaux",
     },
     {
       src: "/images/home-bassin-commerce.webp",
-      alt: "Vue du Havre pour illustrer les retours a domicile.",
-      caption: "Aller-retour coordonne selon vos soins",
+      alt: "Vue du Havre pour illustrer les retours à domicile.",
+      caption: "Aller-retour coordonné selon vos soins",
     },
   ],
   "navette-classe-affaire": [
     {
       src: "/images/services/transport-entreprise.webp",
       alt: "Passager professionnel lors d'un transfert entreprise.",
-      caption: "Prise en charge business structuree",
+      caption: "Prise en charge business structurée",
     },
     {
       src: "/images/home-bassin-commerce.webp",
       alt: "Quartier d'affaires au Havre.",
-      caption: "Efficacite sur vos deplacements urbains",
+      caption: "Efficacité sur vos déplacements urbains",
     },
     {
       src: "/images/home-pont-normandie.webp",
-      alt: "Axe regional pour deplacements professionnels.",
+      alt: "Axe régional pour déplacements professionnels.",
       caption: "Longues liaisons professionnelles",
     },
   ],
   "navette-transport-scolaire": [
     {
       src: "/images/service-station.webp",
-      alt: "Station de taxis prete pour des departs scolaires.",
-      caption: "Routines quotidiennes fiabilisees",
+      alt: "Station de taxis prête pour des départs scolaires.",
+      caption: "Routines quotidiennes fiabilisées",
     },
     {
       src: "/images/home-mairie.webp",
-      alt: "Centre-ville du Havre pour deplacements vers etablissements.",
-      caption: "Liaisons ecole et activites",
+      alt: "Centre-ville du Havre pour déplacements vers établissements.",
+      caption: "Liaisons école et activités",
     },
     {
       src: "/images/home-catene.webp",
-      alt: "Vue urbaine pour trajets eleves et etudiants.",
+      alt: "Vue urbaine pour trajets élèves et étudiants.",
       caption: "Organisation souple sur la semaine",
     },
   ],
@@ -828,29 +828,29 @@ const SERVICE_GALLERY_FALLBACKS: Record<string, ServiceGalleryItem[]> = {
     },
     {
       src: "/images/home-pont-normandie.webp",
-      alt: "Axe de circulation normand pour deplacements entreprise.",
-      caption: "Deplacements regionaux optimises",
+      alt: "Axe de circulation normand pour déplacements entreprise.",
+      caption: "Déplacements régionaux optimisés",
     },
     {
       src: "/images/home-bassin-commerce.webp",
       alt: "Zone centrale du Havre pour rendez-vous professionnels.",
-      caption: "Trajets inter-sites planifies",
+      caption: "Trajets inter-sites planifiés",
     },
   ],
   "personne-a-mobilite-reduite": [
     {
       src: "/images/service-station.webp",
-      alt: "Zone de prise en charge adaptee au Havre.",
-      caption: "Accompagnement des le depart",
+      alt: "Zone de prise en charge adaptée au Havre.",
+      caption: "Accompagnement dès le départ",
     },
     {
       src: "/images/home-mairie.webp",
-      alt: "Centre-ville pour deplacements administratifs PMR.",
+      alt: "Centre-ville pour déplacements administratifs PMR.",
       caption: "Trajets personnels et administratifs",
     },
     {
       src: "/images/home-bassin-commerce.webp",
-      alt: "Vue urbaine pour deplacements PMR planifies.",
+      alt: "Vue urbaine pour déplacements PMR planifiés.",
       caption: "Confort et attention continue",
     },
   ],
@@ -862,30 +862,30 @@ const SERVICE_GALLERY_FALLBACKS: Record<string, ServiceGalleryItem[]> = {
     },
     {
       src: "/images/home-bassin-commerce.webp",
-      alt: "Bassin du Commerce pour deplacements passagers.",
-      caption: "Liaisons rapides vers points cles",
+      alt: "Bassin du Commerce pour déplacements passagers.",
+      caption: "Liaisons rapides vers points clés",
     },
     {
       src: "/images/tour-01-le-havre.webp",
-      alt: "Vue du Havre pour prolonger une escale croisiere.",
+      alt: "Vue du Havre pour prolonger une escale croisière.",
       caption: "Escale courte ou tour local",
     },
   ],
   "transport-groupes": [
     {
       src: "/images/tour-03-normandie.webp",
-      alt: "Circuit normand adapte aux deplacements collectifs.",
+      alt: "Circuit normand adapté aux déplacements collectifs.",
       caption: "Sorties groupe et excursions",
     },
     {
       src: "/images/tour-09-cote-fleurie.webp",
-      alt: "Paysage cotier pour trajets collectifs longue distance.",
-      caption: "Confort groupe sur trajets etendus",
+      alt: "Paysage côtier pour trajets collectifs longue distance.",
+      caption: "Confort groupe sur trajets étendus",
     },
     {
       src: "/images/service-station.webp",
       alt: "Point de rendez-vous collectif au Havre.",
-      caption: "Depart commun, organisation simple",
+      caption: "Départ commun, organisation simple",
     },
   ],
 };
@@ -899,17 +899,17 @@ const GENERIC_GALLERY_FALLBACKS: ServiceGalleryItem[] = [
   {
     src: "/images/home-mairie.webp",
     alt: "Vue de la mairie du Havre.",
-    caption: "Deplacements urbains facilites",
+    caption: "Déplacements urbains facilités",
   },
   {
     src: "/images/home-catene.webp",
-    alt: "Vue de la Catene au Havre.",
-    caption: "Trajets adaptes a votre contexte",
+    alt: "Vue de la Catène au Havre.",
+    caption: "Trajets adaptés à votre contexte",
   },
   {
     src: "/images/home-bassin-commerce.webp",
     alt: "Bassin du Commerce au Havre.",
-    caption: "Coordination claire avant depart",
+    caption: "Coordination claire avant départ",
   },
 ];
 

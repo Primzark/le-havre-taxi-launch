@@ -273,7 +273,7 @@ const Index = () => {
       setSearchSuggestions(result.suggestions);
       toast({
         title: "Recherche à préciser",
-        description: `${result.message} Suggestions: ${result.suggestions.map((item) => item.label).join(", ")}.`,
+        description: `${result.message} Suggestions : ${result.suggestions.map((item) => item.label).join(", ")}.`,
         variant: "destructive",
       });
       return;

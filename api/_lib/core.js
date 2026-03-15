@@ -100,16 +100,16 @@ export async function withApiHandler(req, res, handler) {
       message: error instanceof Error ? error.message : "Unknown error",
     });
 
-    jsonResponse(res, 500, { success: false, error: "Internal server error" });
+    jsonResponse(res, 500, { success: false, error: "Erreur interne du serveur" });
   }
 }
 
 export function methodNotAllowed() {
-  throw new ApiHttpError(405, "Method not allowed");
+  throw new ApiHttpError(405, "Méthode non autorisée");
 }
 
 export function unauthorized() {
-  throw new ApiHttpError(401, "Unauthorized");
+  throw new ApiHttpError(401, "Non autorisé");
 }
 
 export function badRequest(message, extra = {}) {
@@ -158,7 +158,7 @@ export async function readRawBody(req, maxBytes = 2_000_000) {
       const bufferChunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
       total += bufferChunk.length;
       if (total > maxBytes) {
-        reject(new ApiHttpError(413, "Payload too large"));
+        reject(new ApiHttpError(413, "Charge utile trop volumineuse"));
         req.destroy();
         return;
       }
@@ -186,7 +186,7 @@ export async function getRequestPayload(req) {
       const decoded = JSON.parse(raw.toString("utf8"));
       return decoded && typeof decoded === "object" ? decoded : {};
     } catch {
-      throw new ApiHttpError(400, "Invalid JSON payload");
+      throw new ApiHttpError(400, "Charge utile JSON invalide");
     }
   }
 
@@ -298,7 +298,7 @@ function env(name) {
 export function requireEnv(name) {
   const value = env(name);
   if (!value) {
-    throw new ApiHttpError(500, `Missing server configuration: ${name}`);
+    throw new ApiHttpError(500, `Configuration serveur manquante : ${name}`);
   }
   return value;
 }
@@ -322,7 +322,7 @@ export function getSupabaseAdminClient() {
   if (!url || !serviceRoleKey) {
     throw new ApiHttpError(
       500,
-      "Supabase backend is not configured (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY).",
+      "Le backend Supabase n'est pas configuré (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY).",
     );
   }
 
@@ -581,7 +581,7 @@ function signSessionPayload(payloadBase64) {
   if (!secret) {
     throw new ApiHttpError(
       500,
-      "Missing server configuration: ADMIN_SESSION_SECRET or ACTUS_ADMIN_PASSWORD_HASH",
+      "Configuration serveur manquante : ADMIN_SESSION_SECRET ou ACTUS_ADMIN_PASSWORD_HASH",
     );
   }
 
@@ -757,7 +757,7 @@ export async function sendContactEmail(req, { to, subject, body, replyTo }) {
     return {
       delivered: false,
       provider,
-      error: "MAIL_PROVIDER=mail is not supported on Vercel. Configure MAIL_PROVIDER=resend.",
+      error: "MAIL_PROVIDER=mail n'est pas pris en charge sur Vercel. Configurez MAIL_PROVIDER=resend.",
     };
   }
 
@@ -766,7 +766,7 @@ export async function sendContactEmail(req, { to, subject, body, replyTo }) {
     return {
       delivered: false,
       provider: "resend",
-      error: "RESEND_API_KEY is not configured",
+      error: "RESEND_API_KEY n'est pas configurée",
     };
   }
 
@@ -793,7 +793,7 @@ export async function sendContactEmail(req, { to, subject, body, replyTo }) {
       return {
         delivered: false,
         provider: "resend",
-        error: `Resend request failed: HTTP ${response.status}${text ? ` (${text.slice(0, 200)})` : ""}`,
+        error: `Échec de la requête Resend : HTTP ${response.status}${text ? ` (${text.slice(0, 200)})` : ""}`,
       };
     }
 
@@ -802,7 +802,7 @@ export async function sendContactEmail(req, { to, subject, body, replyTo }) {
     return {
       delivered: false,
       provider: "resend",
-      error: error instanceof Error ? error.message : "Resend request failed",
+      error: error instanceof Error ? error.message : "Échec de la requête Resend",
     };
   }
 }

@@ -6,7 +6,7 @@ require_once __DIR__ . "/bootstrap.php";
 header("Cache-Control: s-maxage=900, stale-while-revalidate=86400");
 
 if (($_SERVER["REQUEST_METHOD"] ?? "GET") !== "GET") {
-    json_response(["success" => false, "error" => "Method not allowed"], 405);
+    json_response(["success" => false, "error" => "Méthode non autorisée"], 405);
 }
 
 const GOOGLE_REVIEW_SEARCH_URL = "https://www.google.com/search?q=Taxi+Le+Havre+avis+google";
@@ -33,7 +33,7 @@ function build_fallback_reviews_payload(array $overrides = []): array
                 "id" => "camille-lucas",
                 "source" => "Avis Google",
                 "author" => "Camille Lucas",
-                "quote" => "Le chauffeur est arrivé à l'heure! Très agréable et polis à la discussion. Très serviable, j'étais en béquilles avec des difficultés à marcher et le chauffeur m'a aidé avec mes sacs. Je recommande là 100%.",
+                "quote" => "Le chauffeur est arrivé à l'heure ! Très agréable et poli dans la discussion. Très serviable, j'étais en béquilles avec des difficultés à marcher et le chauffeur m'a aidé avec mes sacs. Je recommande à 100 %.",
                 "avatar" => "/images/reviews/camille-lucas.png",
                 "rating" => 5,
                 "publishedAt" => null,
@@ -46,7 +46,7 @@ function build_fallback_reviews_payload(array $overrides = []): array
                 "id" => "niels",
                 "source" => "Avis Google",
                 "author" => "Niels",
-                "quote" => "Très bien, demande au dernier moment et pourtant ponctuel et efficace, prix raisonnable Merci",
+                "quote" => "Très bien : demande au dernier moment et pourtant ponctuel et efficace. Prix raisonnable, merci.",
                 "avatar" => "/images/reviews/niels.png",
                 "rating" => 5,
                 "publishedAt" => null,
@@ -59,7 +59,7 @@ function build_fallback_reviews_payload(array $overrides = []): array
                 "id" => "raph-lm",
                 "source" => "Avis Google",
                 "author" => "Raph LM",
-                "quote" => "J'ai appelé à minuit pour réserver un taxi à 6h15 le lendemain. Tout simplement parfait, à l'heure!",
+                "quote" => "J'ai appelé à minuit pour réserver un taxi à 6h15 le lendemain. Tout simplement parfait, à l'heure !",
                 "avatar" => "/images/reviews/raph-lm.png",
                 "rating" => 5,
                 "publishedAt" => null,

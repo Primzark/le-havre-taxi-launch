@@ -514,7 +514,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
             canonicalPath: ACTUS_ADMIN_PATH,
             robots: "noindex, nofollow",
             ogImage: "/images/home-catene.webp",
-            keywords: ["gestion actualites taxi le havre", "admin news taxi le havre"],
+            keywords: ["gestion actualités taxi le havre", "admin news taxi le havre"],
             breadcrumbs: false as const,
           }
         : {
@@ -734,7 +734,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
     }
 
     if (uploadFile.type && uploadFile.type !== "image/webp") {
-      setStatusMessage("Format non supporte. Televersez une image WebP.");
+      setStatusMessage("Format non supporté. Téléversez une image WebP.");
       return;
     }
 
@@ -920,7 +920,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
               <div className="relative">
                 <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-600 shadow-sm">
                   <Globe2 className="h-3.5 w-3.5 text-amber-500" />
-                  Actus en un coup d'oeil
+                  Actus en un coup d'œil
                 </div>
 
                 <h2 className="mt-5 max-w-3xl font-heading text-4xl font-extrabold leading-tight text-slate-950 md:text-5xl">

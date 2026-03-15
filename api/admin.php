@@ -29,7 +29,7 @@ switch ($method) {
     case "POST":
         break;
     default:
-        json_response(["success" => false, "error" => "Method not allowed"], 405);
+        json_response(["success" => false, "error" => "Méthode non autorisée"], 405);
 }
 
 enforce_rate_limit("admin_login", get_login_rate_limit_max(), get_login_rate_limit_window_seconds());
@@ -39,12 +39,12 @@ $username = sanitize_text((string) ($payload["username"] ?? ""), 80);
 $password = (string) ($payload["password"] ?? "");
 
 if ($username === "" || $password === "") {
-    json_response(["success" => false, "error" => "Missing credentials"], 422);
+    json_response(["success" => false, "error" => "Identifiants manquants"], 422);
 }
 
 if (!login_admin_user($username, $password)) {
     api_log("warning", "admin_login_failed", ["username" => $username, "client_ip" => get_client_ip()]);
-    json_response(["success" => false, "error" => "Invalid credentials"], 401);
+    json_response(["success" => false, "error" => "Identifiants invalides"], 401);
 }
 
 api_log("info", "admin_login_success", ["username" => $username, "client_ip" => get_client_ip()]);

@@ -73,15 +73,15 @@ export default async function handler(req, res) {
     const message = sanitizeMultilineText(payload.message ?? "", 2000);
 
     if (!name || !email || !subject || !message) {
-      badRequest("Missing required fields");
+      badRequest("Champs obligatoires manquants");
     }
 
     if (!/^\S+@\S+\.\S+$/.test(email)) {
-      badRequest("Invalid email");
+      badRequest("Adresse e-mail invalide");
     }
 
     if (message.length < 10) {
-      badRequest("Message is too short");
+      badRequest("Le message est trop court");
     }
 
     const recipient = getContactEmail();
@@ -139,7 +139,7 @@ export default async function handler(req, res) {
       });
 
       serviceUnavailable(
-        mailResult.error || "Email delivery failed",
+        mailResult.error || "Échec de l'envoi de l'e-mail",
         {
           recipient,
           delivered: false,

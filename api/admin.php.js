@@ -64,13 +64,13 @@ export default async function handler(req, res) {
     const password = String(payload.password ?? "");
 
     if (!username || !password) {
-      badRequest("Missing credentials");
+      badRequest("Identifiants manquants");
     }
 
     const isValid = await verifyAdminCredentials(username, password);
     if (!isValid) {
       await apiLog("warning", "admin_login_failed", { username });
-      jsonResponse(res, 401, { success: false, error: "Invalid credentials" });
+      jsonResponse(res, 401, { success: false, error: "Identifiants invalides" });
       return;
     }
 

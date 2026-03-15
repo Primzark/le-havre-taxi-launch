@@ -32,15 +32,15 @@ function extractNewsFields(payload = {}, fallback = {}) {
 
 function validateNewsFields(fields) {
   if (!fields.title || !fields.image || !fields.sourceUrl) {
-    badRequest("Missing required fields");
+    badRequest("Champs obligatoires manquants");
   }
 
   if (!isValidNewsImageReference(fields.image)) {
-    badRequest("Invalid image reference");
+    badRequest("Référence d'image invalide");
   }
 
   if (!isValidHttpUrl(fields.sourceUrl)) {
-    badRequest("Invalid source URL");
+    badRequest("URL source invalide");
   }
 }
 
@@ -122,7 +122,7 @@ export default async function handler(req, res) {
     if (method === "DELETE") {
       const id = sanitizeText(payload.id ?? "", 100);
       if (!id) {
-        badRequest("Missing id");
+        badRequest("Identifiant manquant");
       }
 
       const { data: existing, error: findError } = await supabase
@@ -135,7 +135,7 @@ export default async function handler(req, res) {
         throw new Error(`Unable to read item: ${findError.message}`);
       }
       if (!existing) {
-        jsonResponse(res, 404, { success: false, error: "Item not found" });
+        jsonResponse(res, 404, { success: false, error: "Élément introuvable" });
         return;
       }
 
@@ -158,7 +158,7 @@ export default async function handler(req, res) {
     if (method === "PUT") {
       const id = sanitizeText(payload.id ?? "", 100);
       if (!id) {
-        badRequest("Missing id");
+        badRequest("Identifiant manquant");
       }
 
       const { data: existing, error: findError } = await supabase
@@ -171,7 +171,7 @@ export default async function handler(req, res) {
         throw new Error(`Unable to read item: ${findError.message}`);
       }
       if (!existing) {
-        jsonResponse(res, 404, { success: false, error: "Item not found" });
+        jsonResponse(res, 404, { success: false, error: "Élément introuvable" });
         return;
       }
 

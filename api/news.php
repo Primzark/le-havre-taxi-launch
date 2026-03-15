@@ -134,15 +134,15 @@ function extract_news_fields(array $payload, array $fallback = []): array
 function validate_news_fields(array $fields): void
 {
     if ($fields["title"] === "" || $fields["image"] === "" || $fields["sourceUrl"] === "") {
-        json_response(["success" => false, "error" => "Missing required fields"], 422);
+        json_response(["success" => false, "error" => "Champs obligatoires manquants"], 422);
     }
 
     if (!is_valid_news_image_reference($fields["image"])) {
-        json_response(["success" => false, "error" => "Invalid image reference"], 422);
+        json_response(["success" => false, "error" => "Référence d'image invalide"], 422);
     }
 
     if (!is_valid_http_url($fields["sourceUrl"])) {
-        json_response(["success" => false, "error" => "Invalid source URL"], 422);
+        json_response(["success" => false, "error" => "URL source invalide"], 422);
     }
 }
 
@@ -187,7 +187,7 @@ if ($method === "POST") {
 if ($method === "DELETE") {
     $id = sanitize_text((string) ($payload["id"] ?? ""), 100);
     if ($id === "") {
-        json_response(["success" => false, "error" => "Missing id"], 422);
+        json_response(["success" => false, "error" => "Identifiant manquant"], 422);
     }
 
     $deletedImage = "";
@@ -204,7 +204,7 @@ if ($method === "DELETE") {
     }
 
     if (!$found) {
-        json_response(["success" => false, "error" => "Item not found"], 404);
+        json_response(["success" => false, "error" => "Élément introuvable"], 404);
     }
 
     write_news($paths["news"], array_values($filtered));
@@ -218,7 +218,7 @@ if ($method === "DELETE") {
 if ($method === "PUT") {
     $id = sanitize_text((string) ($payload["id"] ?? ""), 100);
     if ($id === "") {
-        json_response(["success" => false, "error" => "Missing id"], 422);
+        json_response(["success" => false, "error" => "Identifiant manquant"], 422);
     }
 
     $updated = [];
@@ -251,7 +251,7 @@ if ($method === "PUT") {
     }
 
     if (!$found) {
-        json_response(["success" => false, "error" => "Item not found"], 404);
+        json_response(["success" => false, "error" => "Élément introuvable"], 404);
     }
 
     write_news($paths["news"], $updated);
@@ -261,4 +261,4 @@ if ($method === "PUT") {
     json_response(["success" => true, "items" => $updated]);
 }
 
-json_response(["success" => false, "error" => "Method not allowed"], 405);
+json_response(["success" => false, "error" => "Méthode non autorisée"], 405);

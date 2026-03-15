@@ -14,7 +14,7 @@ if ($method === "GET") {
 }
 
 if ($method !== "POST") {
-    json_response(["success" => false, "error" => "Method not allowed"], 405);
+    json_response(["success" => false, "error" => "Méthode non autorisée"], 405);
 }
 
 enforce_rate_limit("contact_form", get_contact_rate_limit_max(), get_contact_rate_limit_window_seconds());
@@ -38,15 +38,15 @@ $subject = sanitize_text((string) ($payload["subject"] ?? ""), 200);
 $message = sanitize_multiline_text((string) ($payload["message"] ?? ""), 2000);
 
 if ($name === "" || $email === "" || $subject === "" || $message === "") {
-    json_response(["success" => false, "error" => "Missing required fields"], 422);
+    json_response(["success" => false, "error" => "Champs obligatoires manquants"], 422);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    json_response(["success" => false, "error" => "Invalid email"], 422);
+    json_response(["success" => false, "error" => "Adresse e-mail invalide"], 422);
 }
 
 if (mb_strlen($message, "UTF-8") < 10) {
-    json_response(["success" => false, "error" => "Message is too short"], 422);
+    json_response(["success" => false, "error" => "Le message est trop court"], 422);
 }
 
 $recipient = get_contact_email();
@@ -97,7 +97,7 @@ if (!$mailResult["delivered"]) {
         "recipient" => $recipient,
         "delivered" => false,
         "provider" => $mailResult["provider"],
-        "error" => $mailResult["error"] !== "" ? $mailResult["error"] : "Email delivery failed",
+        "error" => $mailResult["error"] !== "" ? $mailResult["error"] : "Échec de l'envoi de l'e-mail",
     ], 503);
 } else {
     api_log("info", "contact_email_delivered", [

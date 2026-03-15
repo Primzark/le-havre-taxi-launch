@@ -110,7 +110,7 @@ const StationsMap = ({ stations, selectedStationId, onSelect }: StationsMapProps
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Itineraire
+                Itinéraire
               </a>
             </Popup>
           </Marker>

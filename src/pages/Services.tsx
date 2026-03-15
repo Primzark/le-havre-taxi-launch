@@ -22,7 +22,7 @@ const Services = () => {
     ogImage: "/images/services/navette-aeroport.webp",
     keywords: [
       "services taxi le havre",
-      "navette aeroport le havre",
+      "navette aéroport le havre",
       "taxi pmr le havre",
       "transport sanitaire assis le havre",
       "transport entreprise le havre",

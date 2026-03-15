@@ -33,7 +33,7 @@ export const fallbackClientReviews: ClientReview[] = [
     source: "Avis Google",
     author: "Camille Lucas",
     quote:
-      "Le chauffeur est arrivé à l'heure! Très agréable et polis à la discussion. Très serviable, j'étais en béquilles avec des difficultés à marcher et le chauffeur m'a aidé avec mes sacs. Je recommande là 100%.",
+      "Le chauffeur est arrivé à l'heure ! Très agréable et poli dans la discussion. Très serviable, j'étais en béquilles avec des difficultés à marcher et le chauffeur m'a aidé avec mes sacs. Je recommande à 100 %.",
     avatar: "/images/reviews/camille-lucas.png",
     rating: 5,
     publishedAt: null,
@@ -47,7 +47,7 @@ export const fallbackClientReviews: ClientReview[] = [
     source: "Avis Google",
     author: "Niels",
     quote:
-      "Très bien, demande au dernier moment et pourtant ponctuel et efficace, prix raisonnable Merci",
+      "Très bien : demande au dernier moment et pourtant ponctuel et efficace. Prix raisonnable, merci.",
     avatar: "/images/reviews/niels.png",
     rating: 5,
     publishedAt: null,
@@ -61,7 +61,7 @@ export const fallbackClientReviews: ClientReview[] = [
     source: "Avis Google",
     author: "Raph LM",
     quote:
-      "J'ai appelé à minuit pour réserver un taxi à 6h15 le lendemain. Tout simplement parfait, à l'heure!",
+      "J'ai appelé à minuit pour réserver un taxi à 6h15 le lendemain. Tout simplement parfait, à l'heure !",
     avatar: "/images/reviews/raph-lm.png",
     rating: 5,
     publishedAt: null,

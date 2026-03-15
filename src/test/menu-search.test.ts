@@ -4,7 +4,7 @@ import { resolveMenuSearch, resolveMenuSearchRoute } from "@/utils/menu-search";
 describe("menu search resolution", () => {
   it("navigates directly for clear correct inputs", () => {
     const service = resolveMenuSearch("service medical");
-    const tarif = resolveMenuSearch("tarif 2025");
+    const tarif = resolveMenuSearch("tarif 2026");
     const station = resolveMenuSearch("station proche");
     const circuit = resolveMenuSearch("circuit etretat");
 
@@ -23,7 +23,7 @@ describe("menu search resolution", () => {
 
   it("detects typo queries but requires suggestion selection", () => {
     const serviceTypo = resolveMenuSearch("servics");
-    const tarifTypo = resolveMenuSearch("tarf 2025");
+    const tarifTypo = resolveMenuSearch("tarf 2026");
     const stationTypo = resolveMenuSearch("stasion proche");
     const circuitTypo = resolveMenuSearch("cirkuit etreta");
 

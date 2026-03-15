@@ -62,8 +62,8 @@ const MENU_SEARCH_TARGETS: MenuSearchTarget[] = [
   {
     route: "/tarifs",
     label: "Tarifs",
-    example: "tarif 2025",
-    keywords: ["tarif", "tarifs", "tarif 2025", "prix", "coût", "décret", "arrêté", "préfectoral"],
+    example: "tarif 2026",
+    keywords: ["tarif", "tarifs", "tarif 2026", "prix", "coût", "décret", "arrêté", "préfectoral"],
   },
   {
     route: "/contact",
@@ -451,7 +451,7 @@ export const resolveMenuSearch = (query: string): MenuSearchResolution => {
       confidence: "none",
       intentLabel: null,
       matchedKeyword: null,
-      message: "Aucun résultat net. Essayez : transport médical, tarif 2025, station proche ou circuit Étretat.",
+      message: "Aucun résultat net. Essayez : transport médical, tarif 2026, station proche ou circuit Étretat.",
       suggestions: buildSuggestions(ranked),
     };
   }

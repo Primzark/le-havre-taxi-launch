@@ -10,14 +10,14 @@ if ($method === "OPTIONS") {
 }
 
 if ($method !== "POST") {
-    json_response(["success" => false, "error" => "Method not allowed"], 405);
+    json_response(["success" => false, "error" => "Méthode non autorisée"], 405);
 }
 
 require_admin_auth();
 enforce_rate_limit("news_upload", 40, 3600);
 
 if (!isset($_FILES["image"]) || !is_array($_FILES["image"])) {
-    json_response(["success" => false, "error" => "Missing uploaded file"], 422);
+    json_response(["success" => false, "error" => "Fichier téléversé manquant"], 422);
 }
 
 $file = $_FILES["image"];
@@ -25,18 +25,18 @@ $errorCode = (int) ($file["error"] ?? UPLOAD_ERR_NO_FILE);
 
 if ($errorCode !== UPLOAD_ERR_OK) {
     $errors = [
-        UPLOAD_ERR_INI_SIZE => "File exceeds server limit",
-        UPLOAD_ERR_FORM_SIZE => "File exceeds form limit",
-        UPLOAD_ERR_PARTIAL => "File upload was interrupted",
-        UPLOAD_ERR_NO_FILE => "No file uploaded",
-        UPLOAD_ERR_NO_TMP_DIR => "Missing temporary folder",
-        UPLOAD_ERR_CANT_WRITE => "Failed to write file",
-        UPLOAD_ERR_EXTENSION => "Upload stopped by extension",
+        UPLOAD_ERR_INI_SIZE => "Le fichier dépasse la limite du serveur",
+        UPLOAD_ERR_FORM_SIZE => "Le fichier dépasse la limite du formulaire",
+        UPLOAD_ERR_PARTIAL => "Le téléversement du fichier a été interrompu",
+        UPLOAD_ERR_NO_FILE => "Aucun fichier téléversé",
+        UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant",
+        UPLOAD_ERR_CANT_WRITE => "Écriture du fichier impossible",
+        UPLOAD_ERR_EXTENSION => "Téléversement arrêté par une extension",
     ];
 
     json_response([
         "success" => false,
-        "error" => $errors[$errorCode] ?? "Upload error",
+        "error" => $errors[$errorCode] ?? "Erreur de téléversement",
     ], 422);
 }
 
@@ -45,14 +45,14 @@ $originalName = sanitize_text((string) ($file["name"] ?? "image"), 150);
 $size = (int) ($file["size"] ?? 0);
 
 if ($tmpPath === "" || !is_uploaded_file($tmpPath)) {
-    json_response(["success" => false, "error" => "Invalid upload payload"], 422);
+    json_response(["success" => false, "error" => "Charge utile de téléversement invalide"], 422);
 }
 
 $maxBytes = get_upload_max_bytes();
 if ($size <= 0 || $size > $maxBytes) {
     json_response([
         "success" => false,
-        "error" => "File too large. Max " . (int) floor($maxBytes / 1024 / 1024) . " MB",
+        "error" => "Fichier trop volumineux. Maximum " . (int) floor($maxBytes / 1024 / 1024) . " Mo",
     ], 413);
 }
 
@@ -67,7 +67,7 @@ $allowed = [
 ];
 
 if (!isset($allowed[$mimeType])) {
-    json_response(["success" => false, "error" => "Unsupported image type. Use WebP."], 422);
+    json_response(["success" => false, "error" => "Type d'image non pris en charge. Utilisez du WebP."], 422);
 }
 
 $extension = $allowed[$mimeType];
@@ -81,7 +81,7 @@ $destination = $publicDirectory . "/" . $filename;
 
 if (!move_uploaded_file($tmpPath, $destination)) {
     api_log("error", "upload_move_failed", ["tmp" => $tmpPath, "dest" => $destination]);
-    json_response(["success" => false, "error" => "Unable to store uploaded file"], 500);
+    json_response(["success" => false, "error" => "Impossible d'enregistrer le fichier téléversé"], 500);
 }
 
 $dimensions = @getimagesize($destination);

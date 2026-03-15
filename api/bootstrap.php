@@ -356,7 +356,7 @@ function get_authenticated_admin_username(): string
 function require_admin_auth(): void
 {
     if (!is_admin_authenticated()) {
-        json_response(["success" => false, "error" => "Unauthorized"], 401);
+        json_response(["success" => false, "error" => "Non autorisé"], 401);
     }
 }
 
@@ -521,7 +521,7 @@ function send_email_with_resend(string $to, string $subject, string $body, strin
         return [
             "delivered" => false,
             "provider" => "resend",
-            "error" => "RESEND_API_KEY is not configured",
+            "error" => "RESEND_API_KEY n'est pas configurée",
         ];
     }
 
@@ -541,7 +541,7 @@ function send_email_with_resend(string $to, string $subject, string $body, strin
         return [
             "delivered" => false,
             "provider" => "resend",
-            "error" => "Unable to initialize cURL",
+            "error" => "Impossible d'initialiser cURL",
         ];
     }
 
@@ -564,7 +564,7 @@ function send_email_with_resend(string $to, string $subject, string $body, strin
         return [
             "delivered" => false,
             "provider" => "resend",
-            "error" => "Resend request failed: " . $message,
+            "error" => "Échec de la requête Resend : " . $message,
         ];
     }
 
@@ -800,6 +800,6 @@ set_exception_handler(static function (Throwable $exception): void {
 
     json_response([
         "success" => false,
-        "error" => "Internal server error",
+        "error" => "Erreur interne du serveur",
     ], 500);
 });
