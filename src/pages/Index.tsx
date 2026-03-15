@@ -360,6 +360,36 @@ const Index = () => {
         </div>
       </section>
 
+      <section id="app-download" className="bg-muted py-16 md:py-20">
+        <div className="container">
+          <div className="max-w-2xl mx-auto text-center">
+            <Download className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">L'app officielle sur iPhone et Android</h2>
+            <p className="text-muted-foreground mb-6">
+              Réservez en quelques clics, puis suivez les infos pratiques directement depuis votre téléphone.
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-4">
+              <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/images/google-play-badge.webp"
+                  alt="Télécharger sur Google Play"
+                  className="h-12 w-auto object-contain"
+                  loading="lazy"
+                />
+              </a>
+              <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/images/apple-store-badge.webp"
+                  alt="Télécharger sur l'App Store"
+                  className="h-12 w-auto object-contain"
+                  loading="lazy"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-card border-b py-6">
         <div className="container">
           <form onSubmit={handleSearch} className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-3">
@@ -564,36 +594,6 @@ const Index = () => {
                   allowFullScreen
                 />
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="app-download" className="bg-muted py-16 md:py-20">
-        <div className="container">
-          <div className="max-w-2xl mx-auto text-center">
-            <Download className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">L'app officielle sur iPhone et Android</h2>
-            <p className="text-muted-foreground mb-6">
-              Réservez en quelques clics, puis suivez les infos pratiques directement depuis votre téléphone.
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-4">
-              <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer">
-                <img
-                  src="/images/google-play-badge.webp"
-                  alt="Télécharger sur Google Play"
-                  className="h-12 w-auto object-contain"
-                  loading="lazy"
-                />
-              </a>
-              <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer">
-                <img
-                  src="/images/apple-store-badge.webp"
-                  alt="Télécharger sur l'App Store"
-                  className="h-12 w-auto object-contain"
-                  loading="lazy"
-                />
-              </a>
             </div>
           </div>
         </div>
