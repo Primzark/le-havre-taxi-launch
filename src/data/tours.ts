@@ -80,7 +80,7 @@ export const toursData: Tour[] = [
     name: "Étretat",
     duration: "3h00",
     price: 170,
-    image: "/images/tour-02-etretat.webp",
+    image: "/images/circuits/tour-03-normandie-03.jpg",
     story: {
       title: "Étretat, les falaises et le circuit de l'aiguille",
       intro:
@@ -93,7 +93,7 @@ export const toursData: Tour[] = [
       ],
       gallery: [
         slide(
-          "/images/tour-02-etretat.webp",
+          "/images/circuits/tour-03-normandie-03.jpg",
           "Falaises d'Étretat et mer.",
           "Étretat, site emblématique.",
         ),
