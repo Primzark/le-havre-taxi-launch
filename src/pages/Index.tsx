@@ -570,7 +570,7 @@ const Index = () => {
               </p>
               <h2 className="font-heading font-bold text-2xl md:text-3xl mb-3">L'application Taxi Le Havre en images</h2>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                Retrouvez la meme video que sur l'ancien site pour decouvrir rapidement l'experience de reservation et les fonctions clefs.
+                Regardez cette vidéo pour découvrir rapidement l'expérience de réservation et les fonctionnalités clés.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
