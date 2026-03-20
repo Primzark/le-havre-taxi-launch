@@ -515,10 +515,13 @@ const Contact = () => {
         normalizedMessage,
       );
       const isPathIssue = /not found|introuvable/i.test(normalizedMessage);
+      const isDeliveryProviderIssue = /request failed \(503\)|échec de la requête resend|mail_from_email|resend|échec de l'envoi de l'e-mail/i.test(
+        normalizedMessage.toLowerCase(),
+      );
       const shouldTryFallback =
         /not found|failed to fetch|network|cors|request failed \(404\)|endpoint api introuvable|api de contact introuvable|introuvable|réseau/i.test(
           normalizedMessage.toLowerCase(),
-        );
+        ) || isDeliveryProviderIssue;
 
       if (shouldTryFallback) {
         try {

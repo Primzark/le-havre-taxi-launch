@@ -166,6 +166,63 @@ describe("Contact page", () => {
     fetchMock.mockRestore();
   }, 15000);
 
+  it("falls back to FormSubmit when the contact API is available but delivery fails", async () => {
+    const fetchMock = vi.spyOn(global, "fetch").mockImplementation(async (input) => {
+      const url = String(input);
+
+      if (url === CONTACT_API_URL) {
+        return {
+          ok: false,
+          status: 503,
+          json: async () => ({ success: false, error: "Échec de la requête Resend : HTTP 403" }),
+        } as unknown as Response;
+      }
+
+      if (url.startsWith(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`)) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ success: "true" }),
+        } as unknown as Response;
+      }
+
+      return {
+        ok: false,
+        status: 404,
+        json: async () => ({ success: false, error: `Contact API not found at ${url}` }),
+      } as unknown as Response;
+    });
+
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByLabelText(/Nom \*/i), { target: { value: "QA Provider Fallback" } });
+    fireEvent.change(screen.getByLabelText(/Téléphone/i), { target: { value: "0123456789" } });
+    fireEvent.change(screen.getByLabelText(/Email \*/i), { target: { value: "qa-provider-fallback@example.com" } });
+    fireEvent.change(screen.getByLabelText(/Sujet \*/i), { target: { value: "Fallback provider error" } });
+    fireEvent.change(screen.getByLabelText(/Message \*/i), {
+      target: { value: "Ce message vérifie le fallback quand l'API principale est joignable mais que l'envoi échoue côté fournisseur." },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /Envoyer le message/i }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`),
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(`Message envoyé à ${CONTACT_EMAIL}.`)).toBeInTheDocument();
+    });
+
+    fetchMock.mockRestore();
+  }, 15000);
+
   it("keeps trying local API candidates after an unrelated 405 response", async () => {
     const fetchMock = vi.spyOn(global, "fetch").mockImplementation(async (input) => {
       const url = String(input);
