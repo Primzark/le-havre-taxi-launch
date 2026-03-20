@@ -38,6 +38,14 @@ type ContactPayload = {
   _captcha: string;
 };
 
+type ContactApiResult = {
+  success?: boolean;
+  recipient?: string;
+  delivered?: boolean;
+  provider?: string;
+  error?: string;
+};
+
 const distanceInKm = (
   fromLat: number,
   fromLng: number,
@@ -153,10 +161,36 @@ const buildContactApiCandidates = (): string[] => {
       );
       addCandidate("http://localhost:8888/api/contact.php");
       addCandidate("http://127.0.0.1:8888/api/contact.php");
+      addCandidate("http://localhost:8090/api/contact.php");
+      addCandidate("http://127.0.0.1:8090/api/contact.php");
     }
   }
 
   return candidates;
+};
+
+const isRecognizableContactApiResponse = (value: ContactApiResult) =>
+  typeof value.success === "boolean" ||
+  typeof value.error === "string" ||
+  typeof value.recipient === "string" ||
+  typeof value.provider === "string";
+
+const isRetriableContactApiCandidateFailure = (
+  status: number,
+  value: ContactApiResult,
+) => {
+  if (status === 404) {
+    return true;
+  }
+
+  if (!isRecognizableContactApiResponse(value)) {
+    return true;
+  }
+
+  return (
+    status === 405 &&
+    /méthode non autorisée|method not allowed/i.test(String(value.error ?? ""))
+  );
 };
 
 const sendViaFormSubmitFallback = async (
@@ -407,13 +441,7 @@ const Contact = () => {
 
     try {
       const apiCandidates = buildContactApiCandidates();
-      let result: {
-        success?: boolean;
-        recipient?: string;
-        delivered?: boolean;
-        provider?: string;
-        error?: string;
-      } = {};
+      let result: ContactApiResult = {};
       let response: Response | null = null;
       let lastError: string | null = null;
 
@@ -428,13 +456,9 @@ const Contact = () => {
             body: JSON.stringify(payload),
             signal: abortController.signal,
           });
-          const parsed = (await attempt.json().catch(() => ({}))) as {
-            success?: boolean;
-            recipient?: string;
-            delivered?: boolean;
-            provider?: string;
-            error?: string;
-          };
+          const parsed = (await attempt.json().catch(
+            () => ({}),
+          )) as ContactApiResult;
 
           if (attempt.ok && parsed.success === true) {
             response = attempt;
@@ -442,26 +466,15 @@ const Contact = () => {
             break;
           }
 
-          if (parsed.success === false) {
-            throw new Error(
-              parsed.error || `Contact API request failed (${attempt.status})`,
-            );
+          if (isRetriableContactApiCandidateFailure(attempt.status, parsed)) {
+            lastError =
+              parsed.error || `Contact API not found at ${apiUrl}`;
+            continue;
           }
 
-          if (attempt.status !== 404) {
-            // Some hosting setups rewrite unknown paths to index.html (HTTP 200).
-            // Keep trying candidates until we hit the real API endpoint.
-            if (attempt.ok && parsed.success === undefined && !parsed.error) {
-              lastError = `Contact API not found at ${apiUrl}`;
-              continue;
-            }
-
-            throw new Error(
-              parsed.error || `Contact API request failed (${attempt.status})`,
-            );
-          }
-
-          lastError = parsed.error || `Contact API not found at ${apiUrl}`;
+          throw new Error(
+            parsed.error || `Contact API request failed (${attempt.status})`,
+          );
         } catch (error) {
           const message =
             error instanceof Error

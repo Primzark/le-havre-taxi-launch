@@ -166,6 +166,72 @@ describe("Contact page", () => {
     fetchMock.mockRestore();
   }, 15000);
 
+  it("keeps trying local API candidates after an unrelated 405 response", async () => {
+    const fetchMock = vi.spyOn(global, "fetch").mockImplementation(async (input) => {
+      const url = String(input);
+
+      if (url === "/api/contact.php") {
+        return {
+          ok: false,
+          status: 405,
+          json: async () => {
+            throw new Error("Non-JSON response");
+          },
+        } as unknown as Response;
+      }
+
+      if (url === "/TaxiWebsite/le-havre-taxi-launch/api/contact.php") {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ success: true, recipient: "bureautaxi@gmail.com", delivered: true, provider: "mail" }),
+        } as unknown as Response;
+      }
+
+      return {
+        ok: false,
+        status: 404,
+        json: async () => ({ success: false, error: `Contact API not found at ${url}` }),
+      } as unknown as Response;
+    });
+
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByLabelText(/Nom \*/i), { target: { value: "QA Retry" } });
+    fireEvent.change(screen.getByLabelText(/Téléphone/i), { target: { value: "0123456789" } });
+    fireEvent.change(screen.getByLabelText(/Email \*/i), { target: { value: "qa-retry@example.com" } });
+    fireEvent.change(screen.getByLabelText(/Sujet \*/i), { target: { value: "Retry after 405" } });
+    fireEvent.change(screen.getByLabelText(/Message \*/i), {
+      target: { value: "Ce message vérifie le passage au candidat suivant après une réponse 405 non pertinente." },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /Envoyer le message/i }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/contact.php",
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/TaxiWebsite/le-havre-taxi-launch/api/contact.php",
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(`Message envoyé à ${CONTACT_EMAIL}.`)).toBeInTheDocument();
+    });
+
+    fetchMock.mockRestore();
+  }, 15000);
+
   it("shows clear activation guidance when FormSubmit is not yet activated", async () => {
     const fetchMock = vi.spyOn(global, "fetch").mockImplementation(async (input) => {
       const url = String(input);
