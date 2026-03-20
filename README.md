@@ -16,7 +16,7 @@ npm run dev
 Optional frontend env (contact email shown on the site):
 
 ```sh
-VITE_CONTACT_EMAIL=bureautaxi@gmail.com
+VITE_CONTACT_EMAIL=contact@example.com
 ```
 
 For production-parity local env, pull the current Vercel production variables into
@@ -47,13 +47,18 @@ php -S 127.0.0.1:8090 -t .
 
 ## API configuration
 
-1. Copy `api/config.sample.php` to `api/config.php`.
-2. Set production values for:
+PHP endpoints now read the project `.env.local` file automatically. Use
+`api/config.php` only if you need a PHP-only override layer outside `.env.local`.
+
+Set production values for:
 - Frontend build env `VITE_CONTACT_EMAIL=contact@radiotaxi-lehavre.com`
 - `CONTACT_FORM_EMAIL`
 - `ACTUS_ADMIN_USERNAME`
 - `ACTUS_ADMIN_PASSWORD_HASH` (bootstrap / sync source for `public.admin_users`)
-- `MAIL_PROVIDER` + mail provider credentials
+- `MAIL_PROVIDER=resend`
+- `MAIL_FROM_EMAIL`
+- `MAIL_FROM_NAME`
+- `RESEND_API_KEY`
 - Optional alerting (`ALERT_WEBHOOK_URL`, `ALERT_EMAIL`)
 
 Generate an admin password hash:
@@ -67,6 +72,27 @@ Local secret-bearing files are intentionally ignored:
 - `api/config.php` for legacy PHP fallback config
 
 Use `.env.example` as a non-secret reference only.
+
+### Exact Resend setup
+1. In Resend, add and verify a domain or subdomain dedicated to sending mail.
+2. Prefer a subdomain such as `mail.example.com` so website DNS and mail reputation stay isolated.
+3. Create a Resend API key.
+4. Set these env vars in Vercel and in local `.env.local`:
+
+```sh
+CONTACT_FORM_EMAIL=contact@example.com
+VITE_CONTACT_EMAIL=contact@example.com
+MAIL_PROVIDER=resend
+MAIL_FROM_EMAIL=contact@mail.example.com
+MAIL_FROM_NAME="Taxi Le Havre"
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxx
+```
+
+Notes:
+- `CONTACT_FORM_EMAIL` is the inbox that receives form submissions.
+- `MAIL_FROM_EMAIL` must be on the Resend-verified domain or subdomain.
+- Do not use the Vercel preview hostname as the sender domain.
+- The PHP contact API now reads `.env.local`, so local `php -S 127.0.0.1:8090 -t .` can use the same Resend credentials as Vercel dev.
 
 ## API endpoints
 - `GET/POST /api/contact.php`
@@ -99,8 +125,8 @@ Production target:
 - `CONTACT_FORM_EMAIL`
 - `MAIL_PROVIDER=resend`
 - `RESEND_API_KEY`
-- `MAIL_FROM_EMAIL` (recommended)
-- `MAIL_FROM_NAME` (recommended)
+- `MAIL_FROM_EMAIL` (required for Resend, must use your verified sending domain)
+- `MAIL_FROM_NAME`
 - Optional alerts: `ALERT_WEBHOOK_URL`
 - Optional anti-spam tuning:
   - `CONTACT_RATE_LIMIT_MAX`

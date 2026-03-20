@@ -731,11 +731,20 @@ export function getContactEmail() {
 }
 
 export function getMailProvider() {
-  return (env("MAIL_PROVIDER") || "mail").toLowerCase();
+  const configured = env("MAIL_PROVIDER").toLowerCase();
+  if (configured) {
+    return configured;
+  }
+
+  return getResendApiKey() ? "resend" : "mail";
+}
+
+function getConfiguredMailFromEmail() {
+  return env("MAIL_FROM_EMAIL");
 }
 
 export function getMailFromEmail(req) {
-  const explicit = env("MAIL_FROM_EMAIL");
+  const explicit = getConfiguredMailFromEmail();
   if (explicit) return explicit;
 
   const host = (getHeader(req, "host") || "le-havre-taxi-launch.vercel.app").replace(/[^a-zA-Z0-9.-]/g, "");
@@ -748,6 +757,18 @@ export function getMailFromName() {
 
 export function getResendApiKey() {
   return env("RESEND_API_KEY");
+}
+
+export function getResendSenderConfigError(fromEmail) {
+  if (!fromEmail) {
+    return "MAIL_FROM_EMAIL n'est pas configurée. Utilisez une adresse sur votre domaine vérifié Resend (ex: contact@mail.votredomaine.fr).";
+  }
+
+  if (!/^\S+@\S+\.\S+$/.test(fromEmail)) {
+    return "MAIL_FROM_EMAIL est invalide. Utilisez une adresse complète sur votre domaine vérifié Resend.";
+  }
+
+  return "";
 }
 
 export async function sendContactEmail(req, { to, subject, body, replyTo }) {
@@ -770,8 +791,18 @@ export async function sendContactEmail(req, { to, subject, body, replyTo }) {
     };
   }
 
+  const fromEmail = getConfiguredMailFromEmail();
+  const senderConfigError = getResendSenderConfigError(fromEmail);
+  if (senderConfigError) {
+    return {
+      delivered: false,
+      provider: "resend",
+      error: senderConfigError,
+    };
+  }
+
   const payload = {
-    from: `${getMailFromName()} <${getMailFromEmail(req)}>`,
+    from: `${getMailFromName()} <${fromEmail}>`,
     to: [to],
     subject,
     text: body,

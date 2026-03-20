@@ -117,6 +117,73 @@ function is_valid_http_url(string $value): bool
     return $scheme === "http" || $scheme === "https";
 }
 
+function normalize_env_file_value(string $value): string
+{
+    $trimmed = trim($value);
+    if ($trimmed === "") {
+        return "";
+    }
+
+    $quote = $trimmed[0];
+    if (($quote === '"' || $quote === "'") && substr($trimmed, -1) === $quote) {
+        $trimmed = substr($trimmed, 1, -1);
+        if ($quote === '"') {
+            $trimmed = strtr($trimmed, [
+                "\\n" => "\n",
+                "\\r" => "\r",
+                "\\t" => "\t",
+                '\\"' => '"',
+                "\\\\" => "\\",
+            ]);
+        }
+    }
+
+    return $trimmed;
+}
+
+function load_env_file(string $path): void
+{
+    if (!is_file($path) || !is_readable($path)) {
+        return;
+    }
+
+    $lines = file($path, FILE_IGNORE_NEW_LINES);
+    if ($lines === false) {
+        return;
+    }
+
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+        if ($trimmed === "" || $trimmed[0] === "#") {
+            continue;
+        }
+
+        if (str_starts_with($trimmed, "export ")) {
+            $trimmed = trim(substr($trimmed, 7));
+        }
+
+        $separatorPos = strpos($trimmed, "=");
+        if ($separatorPos === false) {
+            continue;
+        }
+
+        $name = trim(substr($trimmed, 0, $separatorPos));
+        if ($name === "" || !preg_match('/^[A-Z0-9_]+$/', $name)) {
+            continue;
+        }
+
+        $existing = getenv($name);
+        if ($existing !== false && $existing !== "") {
+            continue;
+        }
+
+        $value = normalize_env_file_value(substr($trimmed, $separatorPos + 1));
+        putenv($name . "=" . $value);
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+}
+
 function load_api_config(): void
 {
     static $loaded = false;
@@ -125,6 +192,9 @@ function load_api_config(): void
     }
 
     $loaded = true;
+    $rootPath = dirname(__DIR__);
+    load_env_file($rootPath . "/.env.local");
+    load_env_file($rootPath . "/.env");
     $configPath = __DIR__ . "/config.php";
     if (is_file($configPath)) {
         require_once $configPath;
@@ -426,10 +496,14 @@ function get_mail_provider(): string
         return strtolower(trim($fromEnv));
     }
 
+    if (get_resend_api_key() !== "") {
+        return "resend";
+    }
+
     return "mail";
 }
 
-function get_mail_from_email(): string
+function get_configured_mail_from_email(): string
 {
     load_api_config();
 
@@ -440,6 +514,16 @@ function get_mail_from_email(): string
     $fromEnv = getenv("MAIL_FROM_EMAIL");
     if (is_string($fromEnv) && trim($fromEnv) !== "") {
         return trim($fromEnv);
+    }
+
+    return "";
+}
+
+function get_mail_from_email(): string
+{
+    $configured = get_configured_mail_from_email();
+    if ($configured !== "") {
+        return $configured;
     }
 
     $host = preg_replace('/[^a-zA-Z0-9.-]/', '', (string) ($_SERVER["HTTP_HOST"] ?? "le-havre-taxi-launch.vercel.app"));
@@ -473,6 +557,19 @@ function get_resend_api_key(): string
     $fromEnv = getenv("RESEND_API_KEY");
     if (is_string($fromEnv) && trim($fromEnv) !== "") {
         return trim($fromEnv);
+    }
+
+    return "";
+}
+
+function validate_resend_sender_email(string $fromEmail): string
+{
+    if ($fromEmail === "") {
+        return "MAIL_FROM_EMAIL n'est pas configurée. Utilisez une adresse sur votre domaine vérifié Resend (ex: contact@mail.votredomaine.fr).";
+    }
+
+    if (!filter_var($fromEmail, FILTER_VALIDATE_EMAIL)) {
+        return "MAIL_FROM_EMAIL est invalide. Utilisez une adresse complète sur votre domaine vérifié Resend.";
     }
 
     return "";
@@ -525,8 +622,18 @@ function send_email_with_resend(string $to, string $subject, string $body, strin
         ];
     }
 
+    $fromEmail = get_configured_mail_from_email();
+    $senderError = validate_resend_sender_email($fromEmail);
+    if ($senderError !== "") {
+        return [
+            "delivered" => false,
+            "provider" => "resend",
+            "error" => $senderError,
+        ];
+    }
+
     $payload = [
-        "from" => get_mail_from_name() . " <" . get_mail_from_email() . ">",
+        "from" => get_mail_from_name() . " <" . $fromEmail . ">",
         "to" => [$to],
         "subject" => $subject,
         "text" => $body,

@@ -5,8 +5,8 @@ declare(strict_types=1);
  * Copy this file to `api/config.php` and set your own values.
  */
 
-// Contact form destination (production: contact@radiotaxi-lehavre.com).
-define("CONTACT_FORM_EMAIL", "bureautaxi@gmail.com");
+// Contact form destination (the inbox that receives site messages).
+define("CONTACT_FORM_EMAIL", "contact@example.com");
 
 // Admin authentication for actus CRUD/upload.
 define("ACTUS_ADMIN_USERNAME", "admin");
@@ -17,7 +17,8 @@ define("ACTUS_UPLOAD_MAX_MB", 5);
 
 // Mail transport: "resend" (recommended) or "mail".
 define("MAIL_PROVIDER", "resend");
-define("MAIL_FROM_EMAIL", "no-reply@le-havre-taxi-launch.vercel.app");
+// MAIL_FROM_EMAIL must belong to a domain or subdomain you verified in Resend.
+define("MAIL_FROM_EMAIL", "contact@mail.example.com");
 define("MAIL_FROM_NAME", "Taxi Le Havre");
 define("RESEND_API_KEY", "re_xxxxxxxxxxxxxxxxxxxxx");
 
