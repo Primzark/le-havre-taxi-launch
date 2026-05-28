@@ -160,7 +160,7 @@ npm run admin:sync
 
 ### DNS / domains
 - Public site on Vercel:
-  - `le-havre-taxi-launch.vercel.app`
+  - `https://www.taxis-lehavre.com`
 - Old production domains are intentionally not configured in this repo.
 - If `taxihavre.com` still resolves publicly, it must be removed at DNS/hosting level outside this codebase.
 
