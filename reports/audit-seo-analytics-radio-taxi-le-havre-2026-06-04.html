@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit SEO et Analytics - Radio Taxi Le Havre</title>
+  <style>
+    @page { size: A4; margin: 14mm 12mm 16mm; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #172033; background: #f6f4ef; font-size: 10.2pt; line-height: 1.42; }
+    a { color: #116466; text-decoration: none; }
+    .page { max-width: 1040px; margin: 0 auto; background: #fff; }
+    .cover {
+      min-height: 265mm;
+      padding: 30mm 18mm 18mm;
+      background:
+        linear-gradient(135deg, rgba(255, 203, 48, 0.94), rgba(255, 203, 48, 0.58) 28%, rgba(255, 255, 255, 0.94) 28.2%),
+        linear-gradient(160deg, rgba(23, 32, 51, 0.96), rgba(23, 32, 51, 0.76));
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+    .cover::after { content: ""; position: absolute; right: -40mm; bottom: -35mm; width: 140mm; height: 90mm; background: repeating-linear-gradient(45deg, rgba(23,32,51,.18) 0 8px, transparent 8px 16px); transform: rotate(-8deg); }
+    .kicker { display: inline-block; padding: 7px 11px; border: 1.5px solid rgba(23,32,51,.45); border-radius: 999px; font-weight: 700; font-size: 9pt; text-transform: uppercase; letter-spacing: .03em; }
+    h1 { margin: 22mm 0 5mm; font-size: 34pt; line-height: .98; max-width: 180mm; }
+    .subtitle { max-width: 155mm; font-size: 13.5pt; color: #2c3448; margin-bottom: 18mm; }
+    .cover-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; max-width: 160mm; margin-top: 14mm; position: relative; z-index: 1; }
+    .meta-box { border-left: 4px solid #116466; padding: 6mm; background: rgba(255,255,255,.82); border-radius: 6px; }
+    .meta-box strong { display: block; text-transform: uppercase; font-size: 8.4pt; color: #116466; margin-bottom: 2mm; }
+    .section { padding: 9.5mm 16mm; page-break-inside: avoid; }
+    .section.break { page-break-before: always; }
+    h2 { margin: 0 0 4mm; font-size: 18pt; line-height: 1.1; }
+    h2::after { content: ""; display: block; width: 34mm; height: 2px; margin-top: 3mm; background: #ffcb30; }
+    h3 { margin: 0 0 1.8mm; font-size: 12.5pt; line-height: 1.18; }
+    p { margin: 0 0 3mm; }
+    ul { margin: 1.5mm 0 0; padding-left: 5mm; }
+    li { margin-bottom: 1.5mm; }
+    .lead-grid { display: grid; grid-template-columns: 1.12fr .88fr; gap: 6mm; align-items: start; }
+    .callout { background: #f2fbf8; border: 1px solid #b8dad0; border-left: 4px solid #116466; padding: 5mm; border-radius: 6px; }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; margin-top: 5mm; }
+    .score { padding: 5mm; background: #172033; color: #fff; border-radius: 6px; min-height: 26mm; }
+    .score strong { display: block; color: #ffcb30; font-size: 17pt; line-height: 1; margin-bottom: 2mm; }
+    .fix-card, .journey-card { border: 1px solid #d7dce5; border-radius: 7px; padding: 5mm; margin: 4mm 0; page-break-inside: avoid; background: #fff; }
+    .fix-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 5mm; }
+    .muted { color: #687386; font-size: 9.4pt; margin: 0; }
+    .badge { display: inline-block; border-radius: 999px; padding: 2mm 3.5mm; font-size: 8.4pt; font-weight: 700; white-space: nowrap; }
+    .badge.high { background: #ffe9a1; color: #6c4d00; }
+    .badge.medium { background: #e4f4ef; color: #116466; }
+    .badge.low { background: #edf0f5; color: #172033; }
+    .fix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 3mm 0; }
+    .fix-grid div { background: #f8f9fb; border-radius: 5px; padding: 3mm; }
+    .fix-grid strong { display: block; color: #116466; font-size: 8.4pt; text-transform: uppercase; margin-bottom: 1mm; }
+    .fix-grid span { display: block; font-size: 9.2pt; }
+    table { width: 100%; border-collapse: collapse; margin-top: 4mm; font-size: 8.35pt; line-height: 1.3; page-break-inside: auto; }
+    thead { display: table-header-group; }
+    th { background: #172033; color: #fff; text-align: left; padding: 2.2mm 2.7mm; font-size: 8pt; text-transform: uppercase; letter-spacing: .03em; }
+    td { border-bottom: 1px solid #e2e6ec; padding: 2.2mm 2.7mm; vertical-align: top; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+    .box { background: #f8f9fb; border-radius: 7px; padding: 5mm; page-break-inside: avoid; }
+    .sources { columns: 2; column-gap: 10mm; font-size: 9pt; }
+    .sources li { break-inside: avoid; margin-bottom: 2mm; }
+    .small { font-size: 8.8pt; color: #687386; }
+    @media print { body { background: #fff; } .page { max-width: none; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="cover">
+      <span class="kicker">Radio Taxi Le Havre</span>
+      <h1>Audit SEO et Analytics du site web</h1>
+      <p class="subtitle">Audit technique, on-page, local SEO, performance, indexation, tracking GA4/GTM et parcours client avec fil d'Ariane recommandé.</p>
+      <div class="cover-meta">
+        <div class="meta-box"><strong>Préparé le</strong>4 juin 2026</div>
+        <div class="meta-box"><strong>Périmètre</strong>Code local, build Vite, crawl rendu de 35 routes, headers live, sitemap/robots, recherche publique Google et vérification analytics.</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Résumé exécutif</h2>
+      <div class="lead-grid">
+        <div>
+          <p>Le site possède une base on-page correcte après rendu JavaScript: titres uniques, H1 unique sur les pages crawlées, meta descriptions présentes, JSON-LD sur les grands types de pages et liens internes principaux. Le problème le plus important est technique: hors rendu JavaScript, presque toutes les routes servent les mêmes métadonnées que l'accueil, avec canonical vers l'accueil.</p>
+          <p>Les priorités sont donc de stabiliser l'indexation, récupérer les anciens chemins indexés, installer une mesure analytics complète et clarifier le parcours client. Les gains les plus rapides viennent des redirections, du sitemap, de GTM/GA4 et des pages locales très intentionnelles: gare, croisière, aéroport, Étretat, Honfleur, stations et comptes entreprises.</p>
+        </div>
+        <div class="callout">
+          <strong>Diagnostic global</strong>
+          <p>SEO on-page rendu: bon. SEO technique initial: à renforcer. Local SEO: fort potentiel, NAP à harmoniser. Analytics: absent. Conversion: visible mais non mesurée.</p>
+        </div>
+      </div>
+      <div class="score-grid">
+        <div class="score"><strong>35</strong>routes crawlées en rendu production local.</div>
+        <div class="score"><strong>34</strong>routes avec HTML brut non différencié.</div>
+        <div class="score"><strong>0</strong>tag GA4/GTM détecté sur le site live.</div>
+        <div class="score"><strong>17+</strong>URLs historiques visibles dans les résultats publics.</div>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Méthodologie et données disponibles</h2>
+      <div class="two-col">
+        <div class="box">
+          <h3>Contrôles réalisés</h3>
+          <ul><li>Lecture du code: routes, hook SEO, index.html, robots.txt, sitemap.xml, config site/légal.</li><li>Build production Vite réussi et analyse des tailles de bundles.</li><li>Crawl local rendu avec Chrome: titres, descriptions, H1, schema, images, liens, payload.</li><li>Contrôle live des headers, slash final, anciens chemins, sitemap et robots.</li><li>Recherche publique Google avec requêtes site: pour vérifier les surfaces indexées visibles.</li><li>Vérification GA4/GTM côté source et réseau navigateur.</li></ul>
+        </div>
+        <div class="box">
+          <h3>Limites</h3>
+          <ul><li>Aucun accès Google Analytics, Google Search Console ou Google Business Profile n'a été fourni.</li><li>Les métriques trafic réel, acquisition, conversions, taux d'engagement et requêtes GSC ne sont donc pas disponibles.</li><li>PageSpeed Insights était bloqué par quota; les recommandations performance reposent sur build, payload et crawl local.</li><li>Le statut d'indexation définitif doit être confirmé dans Search Console avec l'outil d'inspection d'URL.</li></ul>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Contrôle</th><th>Résultat</th></tr></thead>
+        <tbody>
+          <tr><td>Pages crawlées</td><td>35</td></tr><tr><td>Pages avec 1 seul H1</td><td>35</td></tr><tr><td>Meta descriptions rendues présentes</td><td>35</td></tr><tr><td>Routes HTML brut non différenciées</td><td>34</td></tr><tr><td>Routes manquantes du sitemap</td><td>/avis-clients</td></tr><tr><td>Routes noindex à exclure du sitemap</td><td>/liens</td></tr><tr><td>404 SPA testée</td><td>HTTP 200 en rendu local et live pour URL inconnue sans slash</td></tr><tr><td>GA4/GTM</td><td>Non détectés</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section break">
+      <h2>Priorités SEO</h2>
+      
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>Pré-rendu / SSR</h3>
+            <p class="muted">34 routes sur 35 servent le même HTML initial: title, description, canonical et Open Graph de l'accueil.</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Meilleure indexation, meilleur partage social, crawl plus fiable, moins de dépendance au rendu JavaScript.</span></div>
+          <div><strong>Effort</strong><span>Moyen à fort</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Pré-rendre les pages principales ou passer à SSR/SSG. Minimum: accueil, services, pages service, circuits, tarifs, entreprise, contact, avis.</p>
+      </article>
+    
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>Trailing slash et anciens chemins</h3>
+            <p class="muted">Les URLs avec slash final comme /services/ et /contact/ retournent 404, alors que Google affiche encore des résultats avec slash et anciens chemins.</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Réduction des 404, récupération d'autorité des anciennes URLs, meilleure expérience utilisateur.</span></div>
+          <div><strong>Effort</strong><span>Faible</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Ajouter redirections permanentes slash final -&gt; version sans slash et mapper les anciens chemins WordPress vers les pages actuelles.</p>
+      </article>
+    
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>Analytics</h3>
+            <p class="muted">Aucun GA4, GTM, dataLayer, gtag ou requête analytics détectés.</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Mesure des appels, formulaires, téléchargements app, recherches stations, conversions et sources de trafic.</span></div>
+          <div><strong>Effort</strong><span>Faible à moyen</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Installer GTM, ajouter GA4 dans GTM, puis pousser les événements clés via dataLayer.</p>
+      </article>
+    
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>404 et indexation</h3>
+            <p class="muted">Une URL inconnue sans slash sert index.html en HTTP 200 côté live.</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Risque de soft 404 indexables et signaux de qualité affaiblis.</span></div>
+          <div><strong>Effort</strong><span>Moyen</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Définir une stratégie 404 serveur ou limiter les rewrites aux routes connues, avec noindex et statut 404 réel si possible.</p>
+      </article>
+    
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>Sitemap</h3>
+            <p class="muted">/avis-clients est lié dans le footer et optimisé, mais absent du sitemap. Les lastmod sont datés du 12 février 2026.</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Découverte plus complète et signaux de fraîcheur plus justes.</span></div>
+          <div><strong>Effort</strong><span>Faible</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Ajouter /avis-clients, retirer/noindex /liens du sitemap, automatiser les lastmod après build.</p>
+      </article>
+    
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>NAP et local SEO</h3>
+            <p class="muted">Le site utilise une adresse légale générique, alors que les fiches tourisme indiquent 37 Rue Jules Lecesne, 76600 Le Havre. Email également à harmoniser.</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Confiance locale, cohérence GBP/directories, meilleure compréhension locale par Google.</span></div>
+          <div><strong>Effort</strong><span>Faible</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Valider l'adresse officielle puis l'ajouter dans footer, mentions légales, schema LocalBusiness, GBP et annuaires.</p>
+      </article>
+    
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>Performance</h3>
+            <p class="muted">Les pages circuits chargent 2,3 à 3,7 Mo en transfert local, surtout des images touristiques. Le favicon ICO fait ~130 Ko et le PNG ~207 Ko.</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Meilleur LCP mobile, baisse du poids initial, meilleure conversion.</span></div>
+          <div><strong>Effort</strong><span>Moyen</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Créer miniatures/responsive images, lazy-load galeries, réduire favicon/logo, supprimer le preload global de home-pont-normandie.</p>
+      </article>
+    
+      <article class="fix-card">
+        <div class="fix-head">
+          <div>
+            <h3>Parcours client</h3>
+            <p class="muted">Le fil d'Ariane visuel est souvent Accueil &gt; Page courante, même pour les pages enfants.</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="fix-grid">
+          <div><strong>Impact</strong><span>Meilleure navigation, meilleure compréhension de l'architecture, liens internes plus utiles.</span></div>
+          <div><strong>Effort</strong><span>Faible à moyen</span></div>
+        </div>
+        <p><strong>Action recommandée:</strong> Afficher les vrais chemins: Accueil &gt; Services &gt; Service; Accueil &gt; Circuits touristiques &gt; Destination; Accueil &gt; Contact &gt; Stations.</p>
+      </article>
+    
+    </section>
+
+    <section class="section break">
+      <h2>Audit technique</h2>
+      <p>Le site est une SPA React/Vite servie par Vercel avec réécriture vers index.html. C'est fonctionnel pour l'utilisateur, mais la surface HTML initiale n'est pas optimisée par route. Google peut exécuter JavaScript, mais Google rappelle aussi que les titres, descriptions et canonical doivent aider à identifier clairement la bonne page. Le pré-rendu rend ces signaux immédiats et plus robustes pour tous les crawlers.</p>
+      <div class="two-col">
+        <div class="box">
+          <h3>Points positifs</h3>
+          <ul><li>HTTPS actif et domaine canonique configuré en www dans le code.</li><li>robots.txt accessible, sitemap accessible, API disallow.</li><li>Pages rendues avec un H1 unique et des meta descriptions.</li><li>JSON-LD présent: LocalBusiness, WebPage, BreadcrumbList, Service, TouristTrip, ContactPage, OfferCatalog.</li></ul>
+        </div>
+        <div class="box">
+          <h3>Risques</h3>
+          <ul><li>Canonical brut de toutes les routes vers l'accueil avant rendu JS.</li><li>Slash final en 404 sur des URLs déjà visibles dans Google.</li><li>Anciennes URLs WordPress non mappées vers les pages actuelles.</li><li>URLs inconnues sans slash servies en HTTP 200, risque de soft 404.</li><li>Noindex de l'admin géré uniquement côté JS; préférer une protection/entête serveur.</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Audit on-page</h2>
+      <p>Les pages rendues ont une base propre. Les améliorations doivent surtout porter sur l'intention de recherche locale, la profondeur de contenu et les liens contextuels.</p>
+      <table>
+        <thead><tr><th>Page</th><th>Titre rendu</th><th>Desc.</th><th>H1</th><th>Schema</th></tr></thead>
+        <tbody>
+      <tr>
+        <td>/</td>
+        <td>Accueil | Taxi Le Havre</td>
+        <td>124</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, WebSite</td>
+      </tr>
+    
+      <tr>
+        <td>/services</td>
+        <td>Services | Taxi Le Havre</td>
+        <td>117</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, CollectionPage, ItemList</td>
+      </tr>
+    
+      <tr>
+        <td>/services/navette-aeroport</td>
+        <td>Navette Aéroport | Taxi Le Havre</td>
+        <td>92</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/mariage</td>
+        <td>Mariage | Taxi Le Havre</td>
+        <td>79</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/navette-transport-sanitaire</td>
+        <td>Transport Sanitaire | Taxi Le Havre</td>
+        <td>92</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/navette-classe-affaire</td>
+        <td>Classe Affaire | Taxi Le Havre</td>
+        <td>88</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/navette-transport-scolaire</td>
+        <td>Transport scolaire | Taxi Le Havre</td>
+        <td>77</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/transport-professionnel-et-entreprise</td>
+        <td>Transport professionnel et entreprise | Taxi Le Havre</td>
+        <td>93</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/personne-a-mobilite-reduite</td>
+        <td>Personne à mobilité réduite | Taxi Le Havre</td>
+        <td>83</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/croisieres-port</td>
+        <td>Croisières et port | Taxi Le Havre</td>
+        <td>76</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/services/transport-groupes</td>
+        <td>Transport de groupes | Taxi Le Havre</td>
+        <td>76</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, Service</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques</td>
+        <td>Circuits touristiques | Taxi Le Havre</td>
+        <td>107</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, ItemList</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/1</td>
+        <td>Circuit Le Havre | Taxi Le Havre</td>
+        <td>63</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/2</td>
+        <td>Circuit Étretat | Taxi Le Havre</td>
+        <td>63</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/3</td>
+        <td>Circuit Les charmes de la Normandie | Taxi Le Havre</td>
+        <td>83</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/4</td>
+        <td>Circuit Le Mont Saint-Michel | Taxi Le Havre</td>
+        <td>77</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/5</td>
+        <td>Circuit Honfleur | Taxi Le Havre</td>
+        <td>64</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/6</td>
+        <td>Circuit Rouen | Taxi Le Havre</td>
+        <td>61</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/7</td>
+        <td>Circuit Giverny | Taxi Le Havre</td>
+        <td>63</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/8</td>
+        <td>Circuit La côte d'Albâtre, le musée de Bénédictine | Taxi Le Havre</td>
+        <td>98</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/9</td>
+        <td>Circuit La côte Fleurie | Taxi Le Havre</td>
+        <td>71</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/10</td>
+        <td>Circuit Les plages du débarquement | Taxi Le Havre</td>
+        <td>83</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/11</td>
+        <td>Circuit Paris &quot;Ville Lumière&quot; | Taxi Le Havre</td>
+        <td>79</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/12</td>
+        <td>Circuit Le château de Versailles | Taxi Le Havre</td>
+        <td>81</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/13</td>
+        <td>Circuit Lisieux | Taxi Le Havre</td>
+        <td>64</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, TouristTrip</td>
+      </tr>
+    
+      <tr>
+        <td>/tarifs</td>
+        <td>Tarifs et estimation | Taxi Le Havre</td>
+        <td>130</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, OfferCatalog, ItemList</td>
+      </tr>
+    
+      <tr>
+        <td>/entreprise</td>
+        <td>Entreprise | Taxi Le Havre</td>
+        <td>119</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, AboutPage</td>
+      </tr>
+    
+      <tr>
+        <td>/devenir-taxi</td>
+        <td>Devenir taxi | Taxi Le Havre</td>
+        <td>75</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, WebPage</td>
+      </tr>
+    
+      <tr>
+        <td>/actus</td>
+        <td>Actus | Taxi Le Havre</td>
+        <td>99</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, CollectionPage</td>
+      </tr>
+    
+      <tr>
+        <td>/contact</td>
+        <td>Contact | Taxi Le Havre</td>
+        <td>117</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, ContactPage</td>
+      </tr>
+    
+      <tr>
+        <td>/mentions-legales</td>
+        <td>Mentions légales | Taxi Le Havre</td>
+        <td>45</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList</td>
+      </tr>
+    
+      <tr>
+        <td>/politique-confidentialite</td>
+        <td>Politique de confidentialité | Taxi Le Havre</td>
+        <td>91</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList</td>
+      </tr>
+    
+      <tr>
+        <td>/avis-clients</td>
+        <td>Avis clients | Taxi Le Havre</td>
+        <td>112</td>
+        <td>1</td>
+        <td>LocalBusiness, LocalBusiness, WebPage, BreadcrumbList, ItemList</td>
+      </tr>
+    </tbody>
+      </table>
+    </section>
+
+    <section class="section break">
+      <h2>Local SEO</h2>
+      <div class="two-col">
+        <div class="box">
+          <h3>Forces locales</h3>
+          <ul><li>Marque locale identifiable: Radio Taxi Le Havre / Taxi Le Havre.</li><li>Téléphone visible et appels directs présents sur le header, la home, les pages services et contact.</li><li>35 stations listées avec coordonnées et carte.</li><li>Présence dans des annuaires touristiques officiels, utile pour croisière et tourisme.</li></ul>
+        </div>
+        <div class="box">
+          <h3>Améliorations locales</h3>
+          <ul><li>Harmoniser NAP: nom, adresse, téléphone, email dans site, schema, GBP et annuaires.</li><li>Ajouter adresse, geo, hasMap, openingHoursSpecification, contactPoint et areaServed détaillé au schema LocalBusiness.</li><li>Créer pages locales par intention: gare, terminal croisière, aéroport, Étretat, Honfleur, stations.</li><li>Publier régulièrement sur Google Business Profile: événements, croisières, soirées, offres partenaires.</li><li>Répondre aux avis et mesurer les clics vers l'avis Google.</li></ul>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Page / contenu à créer</th><th>Raison</th><th>Priorité</th></tr></thead>
+        <tbody><tr><td><strong>/taxi-gare-le-havre</strong></td><td>Demande locale forte: gare SNCF, arrivées, départs, correspondances.</td><td>Haute à moyenne</td></tr><tr><td><strong>/taxi-terminal-croisiere-le-havre</strong></td><td>Priorité croisière, escales, hôtels, Étretat, Honfleur.</td><td>Haute à moyenne</td></tr><tr><td><strong>/taxi-aeroport-deauville</strong></td><td>Transferts aéroport et longue distance, requêtes très transactionnelles.</td><td>Haute à moyenne</td></tr><tr><td><strong>/taxi-etretat-depuis-le-havre</strong></td><td>Tourisme et croisiéristes; capter une intention précise.</td><td>Haute à moyenne</td></tr><tr><td><strong>/taxi-honfleur-depuis-le-havre</strong></td><td>Tourisme régional et passagers croisière/hôtels.</td><td>Haute à moyenne</td></tr><tr><td><strong>/stations-taxi-le-havre</strong></td><td>Structurer les 35 stations avec recherche, carte, ancrages et données locales.</td><td>Haute à moyenne</td></tr><tr><td><strong>/taxi-entreprise-le-havre</strong></td><td>Comptes entreprises, facture mensuelle, salons et déplacements clients.</td><td>Haute à moyenne</td></tr><tr><td><strong>/agenda-taxi-le-havre</strong></td><td>Événements, concerts, croisières et demande saisonnière.</td><td>Haute à moyenne</td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="section break">
+      <h2>Performance</h2>
+      <p>Le build production passe. Les principaux leviers de performance sont les images touristiques, les ressources chargées globalement et la taille des favicons/logos. Les mesures locales indiquent environ 1,49 Mo transférés sur l'accueil, 1,15 Mo sur contact et 2,31 Mo sur la page circuits touristiques en viewport mobile local.</p>
+      <table>
+        <thead><tr><th>Route la plus lourde</th><th>Transfert local estimé</th><th>Images</th><th>Issues crawl</th></tr></thead>
+        <tbody>
+      <tr>
+        <td>/circuits-touristiques</td>
+        <td>3738 Ko</td>
+        <td>17</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/10</td>
+        <td>3293 Ko</td>
+        <td>21</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/6</td>
+        <td>3291 Ko</td>
+        <td>21</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/5</td>
+        <td>3250 Ko</td>
+        <td>22</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/4</td>
+        <td>3219 Ko</td>
+        <td>21</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/7</td>
+        <td>3203 Ko</td>
+        <td>22</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/1</td>
+        <td>2824 Ko</td>
+        <td>23</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/3</td>
+        <td>2756 Ko</td>
+        <td>23</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/9</td>
+        <td>2732 Ko</td>
+        <td>20</td>
+        <td>1</td>
+      </tr>
+    
+      <tr>
+        <td>/circuits-touristiques/2</td>
+        <td>2716 Ko</td>
+        <td>22</td>
+        <td>1</td>
+      </tr>
+    </tbody>
+      </table>
+      <div class="callout">
+        <strong>Actions performance recommandées</strong>
+        <ul><li>Créer des miniatures webp/avif dédiées aux cartes de circuits au lieu de charger de grandes images.</li><li>Ajouter srcset/sizes et lazy loading cohérent pour les galeries et carrousels.</li><li>Supprimer le preload global de /images/home-pont-normandie.webp sur les routes qui ne l'utilisent pas en hero.</li><li>Réduire le favicon ICO et PNG; le favicon ne doit pas peser plus que nécessaire.</li><li>Code-splitter les routes React et lazy-loader Leaflet/StationsMap uniquement sur /contact ou la page stations.</li><li>Ajouter display=swap aux Google Fonts ou self-hoster une police sous-ensemble.</li></ul>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Indexation et visibilité</h2>
+      <p>Les résultats publics Google montrent que le domaine et plusieurs pages sont indexés, mais aussi que des URLs anciennes et des versions avec slash final restent visibles. Certaines renvoient aujourd'hui 404 ou redirigent vers l'accueil, ce qui crée une rupture de parcours.</p>
+      <div class="two-col">
+        <div class="box">
+          <h3>Constats live</h3>
+          <ul><li>https://taxis-lehavre.com/ redirige vers https://www.taxis-lehavre.com/.</li><li>/services sans slash répond 200; /services/ répond 404.</li><li>/contact sans slash répond 200; /contact/ répond 404.</li><li>/projects-archive/etretat/ répond 404 alors que Google affiche encore ce type d'URL.</li><li>/nous-contact/ redirige vers l'accueil au lieu de /contact.</li></ul>
+        </div>
+        <div class="box">
+          <h3>Actions Search Console</h3>
+          <ul><li>Vérifier la propriété domaine et la propriété https://www.taxis-lehavre.com/.</li><li>Soumettre /sitemap.xml après correction.</li><li>Inspecter accueil, /services, /contact, /avis-clients, /services/croisieres-port et anciennes URLs.</li><li>Contrôler les rapports Pages, Sitemaps, Améliorations, Core Web Vitals et Requêtes.</li><li>Demander l'indexation des pages corrigées prioritaires.</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Analytics et conversions</h2>
+      <p>Aucun GA4 ou GTM n'est installé. Il n'est donc pas possible de produire un rapport trafic réel depuis les données du site: sessions, utilisateurs, canaux, conversions, engagement et revenus ne sont pas collectés. Le site doit d'abord installer une base de mesure propre.</p>
+      <div class="two-col">
+        <div class="box">
+          <h3>Installation recommandée</h3>
+          <ul><li>Créer un compte GTM web et un conteneur GTM-XXXX.</li><li>Ajouter le snippet GTM haut dans head et le noscript juste après body.</li><li>Créer une propriété GA4 et un flux web G-XXXX.</li><li>Dans GTM, créer une balise Google tag/GA4 config déclenchée sur toutes les pages.</li><li>Configurer les événements dataLayer côté React.</li><li>Marquer generate_lead, phone_click et app_download_click comme événements clés dans GA4.</li></ul>
+        </div>
+        <div class="box">
+          <h3>Rapport Analytics cible</h3>
+          <ul><li>Acquisition: organic search, direct, paid/social, referral, GBP, partenaires UTM.</li><li>Comportement: pages vues, engagement, scroll, recherche menu/stations, navigation services -&gt; contact.</li><li>Conversion: appels, formulaires, téléchargements app, directions stations, clics avis.</li><li>Local: pages gare/croisière/Étretat/Honfleur, partenaires hôtels, événements.</li><li>Qualité: erreurs formulaire, temps avant conversion, pages de sortie.</li></ul>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Événement GA4</th><th>Définition</th><th>Paramètres utiles</th></tr></thead>
+        <tbody><tr><td><strong>phone_click</strong></td><td>Clic sur numéro de téléphone</td><td>Emplacement: header, hero, footer, page service, contact</td></tr><tr><td><strong>contact_form_submit</strong></td><td>Soumission formulaire</td><td>Statut: succès/erreur, type de besoin, page source</td></tr><tr><td><strong>generate_lead</strong></td><td>Conversion GA4 principale</td><td>Déclenchée après succès formulaire ou demande qualifiée</td></tr><tr><td><strong>app_download_click</strong></td><td>Clic App Store / Google Play</td><td>Store, emplacement, page</td></tr><tr><td><strong>station_search</strong></td><td>Recherche ou géolocalisation station</td><td>Terme, station sélectionnée, distance approximative</td></tr><tr><td><strong>directions_click</strong></td><td>Clic itinéraire/station</td><td>Nom station, page, destination</td></tr><tr><td><strong>service_cta_click</strong></td><td>Clic réserver/appeler sur service</td><td>Slug service, type CTA</td></tr><tr><td><strong>tour_booking_click</strong></td><td>Clic réserver un circuit</td><td>ID circuit, destination, prix affiché</td></tr><tr><td><strong>review_click</strong></td><td>Clic laisser/lire avis</td><td>Source: Google, page avis, footer, accueil</td></tr><tr><td><strong>partner_qr_visit</strong></td><td>Arrivée depuis QR partenaire</td><td>Paramètres UTM: partner, venue, event</td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="section break">
+      <h2>Parcours client et fil d'Ariane</h2>
+      <p>Le site doit guider l'utilisateur selon son intention: taxi immédiat, course planifiée, tourisme/croisière, compte entreprise ou preuve de confiance. Le fil d'Ariane doit reprendre la structure réelle, pas seulement Accueil / Page.</p>
+      
+      <article class="journey-card">
+        <h3>1. Besoin immédiat</h3>
+        <p><strong>Parcours:</strong> Accueil -&gt; Appeler; Contact -&gt; Stations; Tarifs -&gt; Estimation</p>
+        <p><strong>Objectif:</strong> Réduire le temps jusqu'à l'appel ou la réservation.</p>
+        <p><strong>À améliorer:</strong> CTA téléphone collant mobile, tracking phone_click, page stations plus directe.</p>
+      </article>
+    
+      <article class="journey-card">
+        <h3>2. Besoin planifié</h3>
+        <p><strong>Parcours:</strong> Accueil -&gt; Services -&gt; Service -&gt; Contact/Appeler</p>
+        <p><strong>Objectif:</strong> Faire comprendre le bon service puis convertir.</p>
+        <p><strong>À améliorer:</strong> Breadcrumb complet, liens vers tarifs, FAQ par service, CTA répété.</p>
+      </article>
+    
+      <article class="journey-card">
+        <h3>3. Tourisme / croisière</h3>
+        <p><strong>Parcours:</strong> Accueil -&gt; Circuits touristiques -&gt; Destination -&gt; Réserver</p>
+        <p><strong>Objectif:</strong> Convertir visiteurs, croisiéristes et hôtels.</p>
+        <p><strong>À améliorer:</strong> Pages croisière/Étretat/Honfleur, contenu bilingue, UTM partenaires.</p>
+      </article>
+    
+      <article class="journey-card">
+        <h3>4. Entreprise</h3>
+        <p><strong>Parcours:</strong> Accueil -&gt; Entreprise -&gt; Compte entreprise -&gt; Formulaire dédié</p>
+        <p><strong>Objectif:</strong> Créer des clients récurrents.</p>
+        <p><strong>À améliorer:</strong> Page compte entreprise, bons taxi événement, suivi generate_lead B2B.</p>
+      </article>
+    
+      <article class="journey-card">
+        <h3>5. Confiance</h3>
+        <p><strong>Parcours:</strong> Accueil -&gt; Avis clients -&gt; Google Business Profile</p>
+        <p><strong>Objectif:</strong> Rassurer avant l'appel.</p>
+        <p><strong>À améliorer:</strong> Ajouter /avis-clients au sitemap, schema Review/LocalBusiness propre, CTA avis.</p>
+      </article>
+    
+      <div class="callout">
+        <strong>Structure cible du fil d'Ariane</strong>
+        <ul><li>Accueil &gt; Services &gt; Navette aéroport</li><li>Accueil &gt; Services &gt; Croisières et port</li><li>Accueil &gt; Circuits touristiques &gt; Étretat</li><li>Accueil &gt; Tarifs &gt; Estimation</li><li>Accueil &gt; Contact &gt; Stations taxi Le Havre</li><li>Accueil &gt; Entreprise &gt; Compte entreprise</li><li>Accueil &gt; Actus &gt; Événement / conseil</li></ul>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Plan d'action 90 jours</h2>
+      <div class="two-col">
+        <div class="box">
+          <h3>0 à 30 jours</h3>
+          <ul><li>Installer GTM + GA4 et événements clés.</li><li>Corriger redirections /nous-contact -&gt; /contact et trailing slash.</li><li>Ajouter /avis-clients au sitemap; retirer les URLs noindex du sitemap.</li><li>Valider NAP officiel et enrichir LocalBusiness schema.</li><li>Compresser favicon/logo et retirer le preload global inadapté.</li></ul>
+        </div>
+        <div class="box">
+          <h3>30 à 60 jours</h3>
+          <ul><li>Pré-rendre/SSG les pages les plus importantes.</li><li>Créer pages gare, croisière, aéroport, Étretat, Honfleur.</li><li>Mapper les anciennes URLs indexées vers les nouvelles pages.</li><li>Mettre en place des UTM pour hôtels, événements et QR partenaires.</li><li>Créer un rapport mensuel GA4 + GSC.</li></ul>
+        </div>
+      </div>
+      <div class="box" style="margin-top:5mm">
+        <h3>60 à 90 jours</h3>
+        <ul><li>Optimiser les galeries/circuits avec miniatures et responsive images.</li><li>Déployer le vrai fil d'Ariane visuel et schema sur les pages enfants.</li><li>Créer page stations taxi Le Havre avec ancres par zone et station.</li><li>Publier une routine Google Business Profile liée aux événements locaux.</li><li>Analyser conversions par canal, page et partenaire; prioriser les contenus qui génèrent appels et leads.</li></ul>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Sources</h2>
+      <ul class="sources"><li><a href="https://www.taxis-lehavre.com/">Site live Radio Taxi Le Havre</a></li><li><a href="https://www.taxis-lehavre.com/robots.txt">Robots.txt live</a></li><li><a href="https://www.taxis-lehavre.com/sitemap.xml">Sitemap live</a></li><li><a href="https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics">Google - principes SEO JavaScript</a></li><li><a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Google - redirects et canonicalisation</a></li><li><a href="https://support.google.com/webmasters/answer/9012289?hl=en">Google - URL Inspection Search Console</a></li><li><a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap">Google - créer et soumettre un sitemap</a></li><li><a href="https://support.google.com/tagmanager/answer/14847097?hl=en">Google - installer Google Tag Manager</a></li><li><a href="https://support.google.com/analytics/answer/9304153?hl=en-EN">Google - configurer GA4 pour un site</a></li><li><a href="https://www.lehavre-etretat-tourisme.com/fr/fiche/le-havre/sca-radio-taxi-le-havre_TFON0012NOR076V524ZML/">Le Havre Étretat Tourisme - fiche SCA Radio Taxi</a></li><li><a href="https://www.normandie-tourisme.fr/commerce/sca-radio-taxi-le-havre/">Normandie Tourisme - fiche SCA Radio Taxi</a></li></ul>
+      <p class="small">Les données locales de crawl sont disponibles dans reports/seo-audit-crawl-results.json.</p>
+    </section>
+  </main>
+</body>
+</html>

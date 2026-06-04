@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
+import { initAnalytics } from "@/lib/analytics";
 import "./index.css";
 import "leaflet/dist/leaflet.css";
 
@@ -78,9 +79,9 @@ const forceTaxiFavicon = () => {
     return;
   }
 
-  const stamp = Date.now();
-  const pngHref = `./favicon.png?v=taxi-runtime-${stamp}`;
-  const icoHref = `./favicon.ico?v=taxi-runtime-${stamp}`;
+  const iconVersion = "20260218-new-logo";
+  const pngHref = `./favicon.png?v=${iconVersion}`;
+  const icoHref = `./favicon.ico?v=${iconVersion}`;
 
   document
     .querySelectorAll<HTMLLinkElement>('link[rel~="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]')
@@ -113,5 +114,6 @@ const forceTaxiFavicon = () => {
 clearStaleBrowserCaches();
 forceTaxiFavicon();
 startLovableBadgeCleanup();
+initAnalytics();
 
 createRoot(document.getElementById("root")!).render(<App />);

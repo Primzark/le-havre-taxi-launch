@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radio Taxi Le Havre - Rapport d'opportunités marketing</title>
+  <style>
+    @page { size: A4; margin: 14mm 12mm 16mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #172033;
+      background: #f6f4ef;
+      font-size: 10.5pt;
+      line-height: 1.42;
+    }
+    a { color: #116466; text-decoration: none; }
+    .page { max-width: 1040px; margin: 0 auto; background: white; }
+    .cover {
+      min-height: 265mm;
+      padding: 30mm 18mm 18mm;
+      background:
+        linear-gradient(135deg, rgba(255, 203, 48, 0.93), rgba(255, 203, 48, 0.6) 28%, rgba(255, 255, 255, 0.94) 28.2%),
+        linear-gradient(160deg, rgba(23, 32, 51, 0.96), rgba(23, 32, 51, 0.76));
+      color: #172033;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      right: -40mm;
+      bottom: -35mm;
+      width: 140mm;
+      height: 90mm;
+      background: repeating-linear-gradient(45deg, rgba(23, 32, 51, 0.18) 0 8px, transparent 8px 16px);
+      transform: rotate(-8deg);
+    }
+    .cover-kicker {
+      display: inline-block;
+      padding: 7px 11px;
+      border: 1.5px solid rgba(23, 32, 51, 0.45);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 9pt;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 22mm 0 5mm;
+      font-size: 34pt;
+      line-height: 0.98;
+      letter-spacing: 0;
+      max-width: 180mm;
+    }
+    .subtitle {
+      max-width: 154mm;
+      font-size: 13.5pt;
+      color: #2c3448;
+      margin-bottom: 18mm;
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm;
+      max-width: 160mm;
+      margin-top: 14mm;
+      position: relative;
+      z-index: 1;
+    }
+    .meta-box {
+      border-left: 4px solid #116466;
+      padding: 6mm;
+      background: rgba(255, 255, 255, 0.82);
+      border-radius: 6px;
+    }
+    .meta-box strong {
+      display: block;
+      text-transform: uppercase;
+      font-size: 8.5pt;
+      color: #116466;
+      margin-bottom: 2mm;
+    }
+    .section { padding: 10mm 16mm; page-break-inside: avoid; }
+    .section.break { page-break-before: always; }
+    h2 { margin: 0 0 4mm; font-size: 18pt; line-height: 1.1; color: #172033; }
+    h2::after {
+      content: "";
+      display: block;
+      width: 34mm;
+      height: 2px;
+      margin-top: 3mm;
+      background: #ffcb30;
+    }
+    h3 { margin: 0 0 1.5mm; font-size: 12.7pt; line-height: 1.18; color: #172033; }
+    h4 {
+      margin: 4mm 0 1mm;
+      font-size: 9.3pt;
+      text-transform: uppercase;
+      color: #566074;
+      letter-spacing: 0.04em;
+    }
+    p { margin: 0 0 3mm; }
+    ul { margin: 1.5mm 0 0; padding-left: 5mm; }
+    li { margin-bottom: 1.6mm; }
+    .lead-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 6mm; align-items: start; }
+    .callout {
+      background: #f2fbf8;
+      border: 1px solid #b8dad0;
+      border-left: 4px solid #116466;
+      padding: 5mm;
+      border-radius: 6px;
+    }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; margin-top: 5mm; }
+    .score {
+      padding: 5mm;
+      background: #172033;
+      color: white;
+      border-radius: 6px;
+      min-height: 26mm;
+    }
+    .score strong { display: block; font-size: 18pt; color: #ffcb30; line-height: 1; margin-bottom: 2mm; }
+    .event-card, .competitor-card, .phase {
+      border: 1px solid #d7dce5;
+      border-radius: 7px;
+      padding: 5mm;
+      margin: 4mm 0;
+      page-break-inside: avoid;
+      background: #fff;
+    }
+    .event-top { display: flex; justify-content: space-between; gap: 5mm; align-items: flex-start; }
+    .muted { color: #687386; font-size: 9.6pt; margin: 0; }
+    .badge, .metric, .small-badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2mm 3.5mm;
+      font-size: 8.6pt;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge.high, .small-badge.high { background: #ffe9a1; color: #6c4d00; }
+    .badge.medium, .small-badge.med { background: #e4f4ef; color: #116466; }
+    .metric { background: #edf0f5; color: #172033; }
+    .facts { display: grid; grid-template-columns: 0.95fr 1.25fr; gap: 3mm; margin: 3mm 0 2mm; }
+    .facts div { background: #f8f9fb; border-radius: 5px; padding: 3.5mm; }
+    .facts strong {
+      display: block;
+      color: #116466;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      margin-bottom: 1mm;
+      letter-spacing: 0.04em;
+    }
+    .facts span { display: block; font-size: 9.5pt; }
+    .source { margin-top: 3mm; font-size: 8.8pt; color: #687386; }
+    .recommendation { margin-top: 3mm; padding: 3mm; background: #fff8dd; border-radius: 5px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 5mm;
+      page-break-inside: auto;
+      font-size: 8.6pt;
+      line-height: 1.3;
+    }
+    thead { display: table-header-group; }
+    th {
+      background: #172033;
+      color: white;
+      text-align: left;
+      padding: 2.2mm 3mm;
+      font-size: 8.6pt;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    td { border-bottom: 1px solid #e2e6ec; padding: 2.1mm 3mm; vertical-align: top; }
+    td span { display: block; margin-top: 0.8mm; color: #5c6678; font-size: 8.1pt; }
+    .priority-table th:nth-child(1), .priority-table td:nth-child(1) { width: 47%; }
+    .priority-table th:nth-child(n+2), .priority-table td:nth-child(n+2) { width: 13.25%; }
+    .strategy-section { padding-top: 7mm; padding-bottom: 7mm; }
+    .strategy-section h2 { font-size: 17pt; margin-bottom: 2mm; }
+    .strategy-section h2::after { margin-top: 2mm; }
+    .strategy-section table { margin-top: 3mm; font-size: 7.8pt; line-height: 1.22; }
+    .strategy-section th { padding: 1.7mm 2.5mm; font-size: 7.8pt; }
+    .strategy-section td { padding: 1.35mm 2.5mm; }
+    .strategy-section td span { font-size: 7.4pt; margin-top: 0.45mm; }
+    .strategy-section .small-badge { padding: 1.4mm 2.6mm; font-size: 7.6pt; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+    .checklist { background: #f8f9fb; border-radius: 7px; padding: 5mm; page-break-inside: avoid; }
+    .checklist h3 { margin-bottom: 3mm; }
+    .sources { columns: 2; column-gap: 10mm; font-size: 9pt; }
+    .sources li { break-inside: avoid; margin-bottom: 2mm; }
+    .footer-note { color: #687386; font-size: 8.8pt; margin-top: 5mm; }
+    @media print { body { background: white; } .page { max-width: none; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="cover">
+      <span class="cover-kicker">Radio Taxi Le Havre</span>
+      <h1>Rapport d'opportunités locales et marketing</h1>
+      <p class="subtitle">Recommandations actionnables pour augmenter les réservations, améliorer la visibilité locale, créer des clients récurrents et renforcer la position concurrentielle.</p>
+      <div class="cover-meta">
+        <div class="meta-box"><strong>Préparé le</strong>4 juin 2026</div>
+        <div class="meta-box"><strong>Périmètre</strong>Le Havre et agglomération, terminal croisière, gare, transferts aéroport, Honfleur, Étretat, tourisme, médical et déplacements professionnels.</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Résumé exécutif</h2>
+      <div class="lead-grid">
+        <div>
+          <p>Radio Taxi Le Havre peut transformer les événements locaux en demande de réservation plus prévisible. Les meilleures opportunités à court terme sont les jours de croisière, la saison touristique estivale, les grands rendez-vous culturels, les spectacles du Carré des Docks, les arrivées étudiantes et les événements professionnels.</p>
+          <p>L'approche la plus rentable consiste à installer une routine marketing événementielle: calendrier hebdomadaire, posts Google Business Profile, pages dédiées par lieu ou par usage, QR codes partenaires pour hôtels/restaurants/lieux, puis suivi des réservations par code source.</p>
+        </div>
+        <div class="callout">
+          <strong>Principe opérationnel</strong>
+          <p>Pour chaque grand événement, répondre avant le client à trois questions: où être pris en charge, comment réserver son retour et pourquoi choisir Radio Taxi ce soir-là.</p>
+        </div>
+      </div>
+      <div class="score-grid">
+        <div class="score"><strong>90 jours</strong>Pour lancer pages, QR partenaires et collecte d'avis.</div>
+        <div class="score"><strong>Fort</strong>Impact attendu sur croisière, tourisme, lieux et comptes B2B.</div>
+        <div class="score"><strong>Faible</strong>Dépense initiale si l'on démarre par posts, pages, outreach et QR cards.</div>
+        <div class="score"><strong>Hebdo</strong>Cadence recommandée pour veille événements et visibilité locale.</div>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Événements locaux à surveiller</h2>
+      <p>Les événements ci-dessous sont priorisés selon leur potentiel de demande taxi: festivals, concerts, tourisme, business, nightlife, croisière, jours fériés et vie étudiante. Les chiffres de fréquentation sont des repères prudents lorsque les données officielles ne sont pas publiées.</p>
+      
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Business Expo Le Havre</h3>
+            <p class="muted">4 juin 2026 | Carré des Docks, Le Havre</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Repère: 150+ exposants et flux de visiteurs B2B</span></div>
+          <div><strong>Demande transport attendue</strong><span>Moyenne à forte: arrivées du matin, déplacements de pause déjeuner et départs entre 16 h et 19 h.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: publier un post LinkedIn et Google Business Profile ciblant exposants, commerciaux et visiteurs venant de la gare ou de l'aéroport.</li><li>Pendant: communiquer un point de prise en charge simple au Carré des Docks et proposer la réservation du retour par téléphone.</li><li>Après: recontacter les exposants avec une offre compte entreprise, facture mensuelle et bons taxi événement.</li></ul>
+        <p class="source">Source: <a href="https://www.dockslehavre.com/evenement/business-expo-le-havre/">Business Expo Le Havre</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Salon de la Croisière et du Voyage</h3>
+            <p class="muted">6 juin 2026 | Carré des Docks, Le Havre</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Entrée libre, public local intéressé par le voyage et la croisière</span></div>
+          <div><strong>Demande transport attendue</strong><span>Moyenne: trajets de journée, questions touristiques, gare, hôtels et terminal croisière.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: mettre en avant les transferts croisière, Étretat, Honfleur, gare et aéroport.</li><li>Pendant: proposer des cartes QR de réservation aux exposants tourisme et voyage.</li><li>Après: publier une offre saisonnière: terminal croisière, gare, hôtels, Étretat et Honfleur.</li></ul>
+        <p class="source">Source: <a href="https://www.dockslehavre.com/">Agenda Carré des Docks</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Tournée France Plastic Odyssey</h3>
+            <p class="muted">16-23 juin 2026 | Escale au Havre</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Public familial, scolaires, visiteurs du port et curieux du tourisme durable</span></div>
+          <div><strong>Demande transport attendue</strong><span>Moyenne: trajets en journée vers le port, la gare, les hôtels et le centre-ville.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: publier des consignes pratiques de prise en charge ville-port en français et en anglais.</li><li>Pendant: suivre les horaires de visite et adapter les messages autour de la gare, du port et des hôtels.</li><li>Après: collecter des avis clients et les réutiliser dans les contenus tourisme.</li></ul>
+        <p class="source">Source: <a href="https://plasticodyssey.org/en/plastic-odyssey-france-tour/">Tournée France Plastic Odyssey</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Fête de la Musique et Salvatore Adamo</h3>
+            <p class="muted">21 juin 2026 | Centre-ville; concert au Carré des Docks</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Animation urbaine + jauge de salle autour de 2 000 places</span></div>
+          <div><strong>Demande transport attendue</strong><span>Forte: retours de soirée, sorties de concert, plage, centre, Docks et gare.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: publier un message 'réservez votre retour avant le concert' avec téléphone et lien de réservation.</li><li>Pendant: diffuser des consignes de prise en charge par quartier et renforcer la disponibilité après 22 h 30.</li><li>Après: envoyer une demande d'avis courte aux clients ayant réservé par téléphone ou formulaire.</li></ul>
+        <p class="source">Source: <a href="https://www.dockslehavre.com/">Agenda Carré des Docks</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Festival Pulaagu / Baaba Maal</h3>
+            <p class="muted">27 juin 2026 | Carré des Docks, Le Havre</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Grand public concert; repère de capacité autour de 2 000+ personnes</span></div>
+          <div><strong>Demande transport attendue</strong><span>Forte: groupes, trajets de fin de soirée et retours vers hôtels, gare et domicile.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: promouvoir les taxis de groupe et les retours réservés, en français et en anglais.</li><li>Pendant: publier un mini-plan de prise en charge près du lieu.</li><li>Après: inviter les passagers à enregistrer le numéro pour les prochains concerts et soirées.</li></ul>
+        <p class="source">Source: <a href="https://www.dockslehavre.com/">Agenda Carré des Docks</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Un Été au Havre</h3>
+            <p class="muted">27 juin-20 septembre 2026 | Parcours artistique et touristique dans la ville</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Très forte saisonnalité touristique; les éditions passées ont attiré plusieurs centaines de milliers de visites</span></div>
+          <div><strong>Demande transport attendue</strong><span>Très forte sur la durée: hôtels, croisières, gare, parcours d'oeuvres, plage, restaurants.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: créer une page 'Taxi Un Été au Havre' avec itinéraires, points de prise en charge et appel à réserver.</li><li>Pendant: publier chaque semaine les trajets utiles et distribuer des QR codes aux hôtels.</li><li>Après: transformer les meilleurs trajets en pages tourisme pérennes vers Étretat, Honfleur et les incontournables du Havre.</li></ul>
+        <p class="source">Source: <a href="https://www.france.fr/fr/evenement/un-ete-au-havre/">Un Été au Havre</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Normandie Impressionniste 2026</h3>
+            <p class="muted">29 mai-27 septembre 2026 | Le Havre, Étretat et itinéraires culturels normands</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Festival régional à forte visibilité touristique</span></div>
+          <div><strong>Demande transport attendue</strong><span>Forte: musées, hôtels, gare, aéroport et circuits côtiers.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: créer des pages bilingues pour les circuits taxi autour de l'impressionnisme.</li><li>Pendant: proposer aux hôtels et guides des demi-journées Le Havre - Étretat - Honfleur.</li><li>Après: demander des avis mentionnant Étretat, Honfleur, Le Havre et la qualité du chauffeur.</li></ul>
+        <p class="source">Source: <a href="https://en.normandie-tourisme.fr/programme/festival-normandie-impressionniste-2026/">Normandie Impressionniste 2026</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Escales croisières au Havre</h3>
+            <p class="muted">Toute l'année 2026 | Terminal croisière, centre-ville et destinations régionales</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>137 escales prévues au Havre en 2026; certains navires transportent plusieurs milliers de passagers</span></div>
+          <div><strong>Demande transport attendue</strong><span>Très forte les jours d'escale: port-centre, port-gare, Étretat, Honfleur, Paris, aéroports.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: tenir un calendrier croisières et publier les disponibilités avant les grosses escales.</li><li>Pendant: afficher des consignes de prise en charge au port et des trajets types en anglais.</li><li>Après: demander des avis aux croisiéristes et enrichir la FAQ avec les questions fréquentes.</li></ul>
+        <p class="source">Source: <a href="https://www.haropaport.com/en/news/sea-cruise-more-200-calls-expected-2026">Perspectives croisières HAROPA 2026</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Fête nationale</h3>
+            <p class="muted">14 juillet 2026 | Plage, centre-ville et zones de feu d'artifice</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Grand rassemblement local de jour férié</span></div>
+          <div><strong>Demande transport attendue</strong><span>Très forte après 23 h: retours groupés, circulation dense et stationnement difficile.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: encourager la réservation du retour et positionner le taxi comme solution de soirée sécurisée.</li><li>Pendant: publier des points de prise en charge simples pour plage, gare et centre.</li><li>Après: réutiliser le message de soirée sécurisée pour les week-ends d'été.</li></ul>
+        <p class="source">Source: Planification saisonnière; vérifier les détails officiels de la ville à l'approche de la date</p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Nuits Suspendues</h3>
+            <p class="muted">16-19 juillet 2026 | Jardins suspendus, Le Havre</p>
+          </div>
+          <span class="badge high">Haute</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Festival sur plusieurs soirées</span></div>
+          <div><strong>Demande transport attendue</strong><span>Très forte: arrivées en soirée et retours tardifs depuis un site moins central.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: publier le point de prise en charge et un rappel de réservation une semaine puis un jour avant.</li><li>Pendant: adapter le dispatch aux horaires de fin de concerts.</li><li>Après: collecter les avis des festivaliers et transformer l'opération en modèle réutilisable.</li></ul>
+        <p class="source">Source: <a href="https://lehavre.fr/actualites/toutes-les-actualites/la-billetterie-est-ouverte-pour-le-festival-nuits-suspendues-2026">Nuits Suspendues au Havre</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Béton et spectacles de septembre</h3>
+            <p class="muted">18-20 septembre 2026 et week-ends de spectacles | Lieux culturels du Havre, dont Carré des Docks</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Public festival et concerts</span></div>
+          <div><strong>Demande transport attendue</strong><span>Forte: soirées et week-ends, avec pics en sortie de spectacle.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: publier un récapitulatif des événements de septembre.</li><li>Pendant: diffuser des posts courts avec consignes de prise en charge par lieu.</li><li>Après: proposer aux lieux d'ajouter un lien Radio Taxi aux confirmations de réservation.</li></ul>
+        <p class="source">Source: <a href="https://www.dockslehavre.com/">Agenda Carré des Docks</a></p>
+      </article>
+    
+      <article class="event-card">
+        <div class="event-top">
+          <div>
+            <h3>Rentrée étudiante et Nuit des Étudiants du Monde</h3>
+            <p class="muted">Fin août-septembre; événement NEM annoncé le 5 novembre 2026 | Campus Le Havre Normandie, résidences, Magic Mirrors</p>
+          </div>
+          <span class="badge medium">Moyenne</span>
+        </div>
+        <div class="facts">
+          <div><strong>Repère de fréquentation</strong><span>Étudiants, nouveaux arrivants et étudiants internationaux</span></div>
+          <div><strong>Demande transport attendue</strong><span>Moyenne à forte: arrivées gare, emménagements, sorties de nuit et retours sécurisés.</span></div>
+        </div>
+        <h4>Actions promotionnelles</h4>
+        <ul><li>Avant: lancer une campagne 'retour de soirée en sécurité' avec QR cards en résidences et associations.</li><li>Pendant: cibler les grandes soirées avec des messages pratiques et un numéro facile à enregistrer.</li><li>Après: proposer un mécanisme de parrainage simple: enregistrer le numéro, le partager, laisser un avis.</li></ul>
+        <p class="source">Source: <a href="https://www.campus-lehavre-normandie.fr/fr/agenda">Agenda Campus Le Havre Normandie</a></p>
+      </article>
+    
+    </section>
+
+    <section class="section break">
+      <h2>Analyse concurrentielle</h2>
+      <p>Les compagnies performantes dans d'autres villes gagnent en visibilité grâce à des offres lisibles, des comptes entreprises, des partenariats locaux, une réservation simple, des mécaniques de fidélisation et une gestion active des avis. Ces méthodes sont adaptables au Havre sans budget de grande métropole.</p>
+      
+      <article class="competitor-card">
+        <div class="event-top">
+          <div>
+            <h3>G7 - Paris</h3>
+            <p class="muted">Site, application, liens sociaux, visibilité Google</p>
+          </div>
+          <span class="metric">Impact fort</span>
+        </div>
+        <ul><li>Promesse de réservation orientée application: suivi, paiement, réservation programmée et catégories de service.</li><li>Offres lisibles: taxi vert, van, VIP, famille, animaux, accessibilité et paiement par tiers.</li><li>Discours de confiance fondé sur la taille de flotte, la fiabilité et la transition environnementale.</li></ul>
+        <div class="recommendation"><strong>Adaptation locale:</strong> Reprendre la clarté des catégories localement: taxi croisière, taxi aéroport, taxi entreprise, taxi PMR, taxi groupe, taxi tourisme.</div>
+        <p class="source">Source: <a href="https://www.g7.fr/en/">Site officiel G7</a></p>
+      </article>
+    
+      <article class="competitor-card">
+        <div class="event-top">
+          <div>
+            <h3>Addison Lee - Londres</h3>
+            <p class="muted">Site, pages corporate, pages partenariats</p>
+          </div>
+          <span class="metric">Impact fort</span>
+        </div>
+        <ul><li>Modèle B2B avec outils de réservation co-marqués, incitations partenaires et transport pour lieux/clients.</li><li>Positionnement fort sur les déplacements professionnels, la fiabilité et le pilotage de compte.</li><li>Cibles partenaires claires: agences de voyage, lieux événementiels, affiliés et entreprises.</li></ul>
+        <div class="recommendation"><strong>Adaptation locale:</strong> Créer un programme partenaires Le Havre pour hôtels, lieux, agences de voyage, croisières et restaurants avec QR codes suivis.</div>
+        <p class="source">Source: <a href="https://www.addisonlee.com/work-with-us-3/brand-partnerships/">Partenariats Addison Lee</a></p>
+      </article>
+    
+      <article class="competitor-card">
+        <div class="event-top">
+          <div>
+            <h3>Central Taxis - Édimbourg</h3>
+            <p class="muted">Référencement touristique, offres corporate et accessibilité</p>
+          </div>
+          <span class="metric">Impact moyen à fort</span>
+        </div>
+        <ul><li>Présence dans les canaux touristiques officiels, utile pour visiteurs et congrès.</li><li>Mise en avant des transferts délégués, accueil aéroport et comptes entreprises.</li><li>Utilisation de l'ancrage local comme avantage de confiance.</li></ul>
+        <div class="recommendation"><strong>Adaptation locale:</strong> Obtenir des listings auprès des acteurs tourisme/congrès et proposer une solution de transfert aux événements du Carré des Docks.</div>
+        <p class="source">Source: <a href="https://edinburgh.org/point-of-interest/central-taxis/">Central Taxis - tourisme Édimbourg</a></p>
+      </article>
+    
+      <article class="competitor-card">
+        <div class="event-top">
+          <div>
+            <h3>Taxiblu - Milan</h3>
+            <p class="muted">Site, app/WhatsApp, programme fidélité</p>
+          </div>
+          <span class="metric">Impact moyen</span>
+        </div>
+        <ul><li>Mécanique fidélité via miles aériens.</li><li>Accès de réservation simple par appTaxi et WhatsApp.</li><li>Mise en avant des trajets aéroport et de la répétition d'usage.</li></ul>
+        <div class="recommendation"><strong>Adaptation locale:</strong> Créer une fidélisation compatible avec le cadre local: priorité de réservation, avantages partenaires, suivi des recommandations et communication clients récurrents.</div>
+        <p class="source">Source: <a href="https://taxiblu.it/en/servizi/loyalty-program/">Programme fidélité Taxiblu</a></p>
+      </article>
+    
+      <article class="competitor-card">
+        <div class="event-top">
+          <div>
+            <h3>C Cabs - Blackpool</h3>
+            <p class="muted">Site, application, fidélité hôtels et entreprises</p>
+          </div>
+          <span class="metric">Impact fort</span>
+        </div>
+        <ul><li>Programme pour hôtels et entreprises avec priorité de réservation et logique de récompense.</li><li>Ciblage des hébergements qui influencent souvent le choix du taxi.</li><li>Relation partenaire suivie plutôt que simple dépôt de cartes.</li></ul>
+        <div class="recommendation"><strong>Adaptation locale:</strong> Lancer un pilote concierge avec 10 hôtels/restaurants et mesurer les courses par code partenaire.</div>
+        <p class="source">Source: <a href="https://www.ccabs.net/our-services/hotel-business-loyalty-scheme/">C Cabs - fidélité hôtels et entreprises</a></p>
+      </article>
+    
+      <article class="competitor-card">
+        <div class="event-top">
+          <div>
+            <h3>United Taxi / Blue Top Cabs - Amérique du Nord</h3>
+            <p class="muted">Pages comptes entreprises</p>
+          </div>
+          <span class="metric">Impact fort</span>
+        </div>
+        <ul><li>Facturation mensuelle, prise en charge des trajets employés/clients, bons taxi et gestion de compte.</li><li>Positionnement adapté aux employeurs, événements, cliniques, familles et clients réguliers.</li><li>Explication B2B simple qui réduit la friction pour les acheteurs récurrents.</li></ul>
+        <div class="recommendation"><strong>Adaptation locale:</strong> Créer des pages 'Compte entreprise taxi Le Havre' et 'Bons taxi événement' avec un formulaire court.</div>
+        <p class="source">Source: <a href="https://www.unitedtaxi.com/corporate-accounts">United Taxi - comptes entreprises</a></p>
+      </article>
+    
+    </section>
+
+    <section class="section break strategy-section">
+      <h2>Stratégies marketing efficaces</h2>
+      <table class="priority-table">
+        <thead>
+          <tr>
+            <th>Stratégie</th>
+            <th>Impact</th>
+            <th>Effort</th>
+            <th>Retour</th>
+            <th>Priorité</th>
+          </tr>
+        </thead>
+        <tbody>
+      <tr>
+        <td><strong>Posts Google Business Profile liés aux événements</strong><span>Publier 2 à 3 fois par semaine autour des croisières, concerts, salons, étudiants et jours fériés.</span></td>
+        <td>Fort</td>
+        <td>Faible</td>
+        <td>Fort</td>
+        <td><span class="small-badge high">Haute</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Pages dédiées événements et lieux</strong><span>Créer des pages pour Carré des Docks, terminal croisière, Magic Mirrors, Jardins suspendus, gare, aéroport, Étretat et Honfleur.</span></td>
+        <td>Fort</td>
+        <td>Moyen</td>
+        <td>Fort</td>
+        <td><span class="small-badge high">Haute</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Programme QR hôtels et concierges</strong><span>Donner aux hôtels/restaurants un QR code, un code partenaire et une carte de réservation bilingue.</span></td>
+        <td>Fort</td>
+        <td>Moyen</td>
+        <td>Fort</td>
+        <td><span class="small-badge high">Haute</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Comptes entreprises et bons taxi événement</strong><span>Proposer facture mensuelle, trajets employés/clients et bons prépayés ou autorisés pour événements.</span></td>
+        <td>Fort</td>
+        <td>Moyen</td>
+        <td>Fort</td>
+        <td><span class="small-badge high">Haute</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Forfaits terminal croisière</strong><span>Packager port-centre, port-gare, Étretat, Honfleur, Paris et aéroport de Deauville.</span></td>
+        <td>Fort</td>
+        <td>Moyen</td>
+        <td>Fort</td>
+        <td><span class="small-badge high">Haute</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Processus de collecte d'avis</strong><span>Après les courses, envoyer une demande d'avis courte et répondre aux avis Google sous 48 h.</span></td>
+        <td>Moyen à fort</td>
+        <td>Faible</td>
+        <td>Fort</td>
+        <td><span class="small-badge high">Haute</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Campagne étudiants retour sécurisé</strong><span>QR cards campus, posts avant les grandes soirées, rappel de partage entre colocataires.</span></td>
+        <td>Moyen</td>
+        <td>Faible</td>
+        <td>Moyen</td>
+        <td><span class="small-badge med">Moyenne</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Circuits taxi touristiques</strong><span>Commercialiser des trajets demi-journée/journée autour du Havre, Étretat, Honfleur, Deauville et des sites impressionnistes.</span></td>
+        <td>Moyen à fort</td>
+        <td>Moyen</td>
+        <td>Moyen à fort</td>
+        <td><span class="small-badge med">Moyenne</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Micro-collaborations influence locale</strong><span>Faire appel à de petits créateurs locaux pour des conseils de prise en charge événement et des itinéraires touristiques.</span></td>
+        <td>Moyen</td>
+        <td>Faible à moyen</td>
+        <td>Moyen</td>
+        <td><span class="small-badge med">Moyenne</span></td>
+      </tr>
+    
+      <tr>
+        <td><strong>Sponsoring communautaire</strong><span>Soutenir des événements locaux avec un message de retour taxi visible.</span></td>
+        <td>Moyen</td>
+        <td>Moyen</td>
+        <td>Moyen</td>
+        <td><span class="small-badge med">Faible à moyenne</span></td>
+      </tr>
+    </tbody>
+      </table>
+    </section>
+
+    <section class="section break">
+      <h2>Opportunités de partenariats</h2>
+      <div class="two-col">
+        <div class="checklist">
+          <h3>Partenaires à plus fort potentiel</h3>
+          <ul><li>Hôtels et concierges: QR cards, numéro direct, scripts port/gare/aéroport.</li><li>Restaurants et bars: retours de soirée, points de prise en charge, rappels week-end.</li><li>Lieux événementiels: plans de pickup, lien taxi dans les confirmations, bons taxi événement.</li><li>Croisière et tourisme: Étretat, Honfleur, Le Havre, Deauville, transferts aéroport.</li><li>Employeurs locaux: facture mensuelle, trajets visiteurs, retours tardifs salariés.</li><li>Structures seniors et santé: transport récurrent planifié et réservation familiale simplifiée.</li></ul>
+        </div>
+        <div class="checklist">
+          <h3>Offre partenaire proposée</h3>
+          <ul><li>QR code ou URL courte dédié à chaque partenaire.</li><li>Carte bilingue: téléphone, réservation, zones de pickup et trajets principaux.</li><li>Bilan mensuel: nombre de courses, horaires de pic, destinations fréquentes.</li><li>Processus de réservation prioritaire pour hôtels, lieux et comptes entreprises.</li><li>Demande d'avis après course, avec mention du contexte quand c'est pertinent.</li><li>Option bons taxi événement pour employeurs, lieux et organisateurs.</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Actions recommandées</h2>
+      
+      <div class="phase">
+        <h3>Semaine 1</h3>
+        <ul><li>Créer une veille événements: Carré des Docks, LeHavre.fr, office de tourisme, HAROPA, Campus Le Havre, Magic Mirrors et lieux culturels.</li><li>Publier les premiers posts Google Business Profile sur les concerts de juin, les croisières et le tourisme d'été.</li><li>Rédiger la carte partenaire pour hôtels, restaurants, bars, lieux événementiels et opérateurs touristiques.</li></ul>
+      </div>
+    
+      <div class="phase">
+        <h3>Semaines 2 à 4</h3>
+        <ul><li>Lancer trois pages: taxi terminal croisière, taxi Carré des Docks, taxi tourisme Étretat/Honfleur.</li><li>Contacter 10 hôtels, 5 restaurants/bars, 2 lieux événementiels et 2 acteurs touristiques avec une proposition QR partenaire.</li><li>Mettre en place une demande d'avis après course pour les réservations téléphone et formulaire.</li></ul>
+      </div>
+    
+      <div class="phase">
+        <h3>Jours 30 à 60</h3>
+        <ul><li>Ajouter les pages comptes entreprises et bons taxi événement; relancer exposants et employeurs locaux.</li><li>Booster localement les posts pour Nuits Suspendues, Fête nationale et gros spectacles.</li><li>Suivre codes partenaires, réservations événement, appels manqués, avis et conversions des pages.</li></ul>
+      </div>
+    
+      <div class="phase">
+        <h3>Jours 60 à 90</h3>
+        <ul><li>Renforcer les catégories de partenaires qui apportent réellement des courses.</li><li>Transformer les routes croisière et tourisme en contenus saisonniers et supports pour comptoirs d'hôtel.</li><li>Installer la veille événements comme routine hebdomadaire commune marketing-dispatch.</li></ul>
+      </div>
+    
+    </section>
+
+    <section class="section break">
+      <h2>Système de veille</h2>
+      <div class="two-col">
+        <div class="checklist">
+          <h3>Sources à suivre chaque semaine</h3>
+          <ul><li>Agenda Carré des Docks pour concerts, salons, conventions et spectacles.</li><li>LeHavre.fr et Le Havre Seine Métropole pour célébrations, événements publics et informations saisonnières.</li><li>Le Havre Étretat Tourisme et France.fr pour saisons touristiques, festivals et campagnes destination.</li><li>HAROPA et sources terminal croisière pour escales et jours à fort volume passagers.</li><li>Campus Le Havre Normandie pour rentrée, soirées étudiantes et événements internationaux.</li><li>Magic Mirrors, Stade Océane, bars, restaurants, musées et lieux culturels pour les pics de demande plus courts.</li></ul>
+        </div>
+        <div class="checklist">
+          <h3>Indicateurs à suivre</h3>
+          <ul><li>Réservations taguées par événement, lieu, navire, partenaire ou campagne.</li><li>Appels, demandes d'itinéraire, vues de photos et interactions des posts Google Business Profile.</li><li>Visites et clics des pages port, gare, aéroport, lieux événementiels et tourisme.</li><li>Scans QR partenaires et réservations avec code partenaire.</li><li>Volume d'avis, note moyenne, délai de réponse et mots-clés cités dans les avis.</li><li>Taux d'appels manqués et temps d'attente dispatch les soirs de forte demande.</li></ul>
+        </div>
+      </div>
+      <p class="footer-note">Rythme conseillé: mettre à jour la veille le lundi, choisir 3 à 5 événements à promouvoir, préparer les consignes dispatch le jeudi, puis analyser les réservations le lundi suivant.</p>
+    </section>
+
+    <section class="section">
+      <h2>Impact business attendu</h2>
+      <p>Sous 30 jours, l'entreprise doit gagner en visibilité Google, capter davantage d'appels liés aux événements et ouvrir les premières discussions partenaires. Sous 60 jours, elle doit mesurer des réservations codées partenaires, des pages croisière/lieux plus visibles et une progression régulière des avis. Sous 90 jours, l'objectif est de créer un flux mesurable de clients récurrents depuis hôtels, lieux, tourisme et comptes entreprises.</p>
+      <div class="callout">
+        <strong>Top 5 priorités</strong>
+        <ul><li>Lancer immédiatement les posts Google Business Profile liés aux événements et croisières.</li><li>Créer les pages terminal croisière, Carré des Docks, gare/aéroport, Étretat et Honfleur.</li><li>Démarrer un pilote QR partenaires avec 15 à 20 hôtels, restaurants et lieux.</li><li>Mettre en place comptes entreprises et bons taxi événement.</li><li>Collecter et répondre aux avis de façon systématique, surtout après les courses tourisme et événements.</li></ul>
+      </div>
+    </section>
+
+    <section class="section break">
+      <h2>Sources</h2>
+      <ul class="sources"><li><a href="https://www.dockslehavre.com/">Agenda Carré des Docks</a></li><li><a href="https://www.dockslehavre.com/evenement/business-expo-le-havre/">Business Expo Le Havre</a></li><li><a href="https://www.france.fr/fr/evenement/un-ete-au-havre/">Un Été au Havre</a></li><li><a href="https://en.normandie-tourisme.fr/programme/festival-normandie-impressionniste-2026/">Normandie Impressionniste 2026</a></li><li><a href="https://www.haropaport.com/en/news/sea-cruise-more-200-calls-expected-2026">Perspectives croisières HAROPA 2026</a></li><li><a href="https://lehavre.fr/actualites/toutes-les-actualites/la-billetterie-est-ouverte-pour-le-festival-nuits-suspendues-2026">Nuits Suspendues au Havre</a></li><li><a href="https://plasticodyssey.org/en/plastic-odyssey-france-tour/">Tournée France Plastic Odyssey</a></li><li><a href="https://www.campus-lehavre-normandie.fr/fr/agenda">Agenda Campus Le Havre Normandie</a></li><li><a href="https://www.g7.fr/en/">Site officiel G7</a></li><li><a href="https://www.g7.fr/en/discover-our-services/g7">Services G7</a></li><li><a href="https://www.addisonlee.com/work-with-us-3/brand-partnerships/">Partenariats Addison Lee</a></li><li><a href="https://edinburgh.org/point-of-interest/central-taxis/">Central Taxis - tourisme Édimbourg</a></li><li><a href="https://taxiblu.it/en/servizi/loyalty-program/">Programme fidélité Taxiblu</a></li><li><a href="https://www.ccabs.net/our-services/hotel-business-loyalty-scheme/">C Cabs - fidélité hôtels et entreprises</a></li><li><a href="https://www.unitedtaxi.com/corporate-accounts">United Taxi - comptes entreprises</a></li><li><a href="https://www.bluetop.com/corporate-accounts/">Blue Top Cabs - comptes entreprises</a></li></ul>
+    </section>
+  </main>
+</body>
+</html>

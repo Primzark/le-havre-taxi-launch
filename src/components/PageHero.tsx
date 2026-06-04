@@ -6,9 +6,64 @@ interface PageHeroProps {
   backgroundImage?: string;
 }
 
+type BreadcrumbItem = {
+  label: string;
+  to?: string;
+};
+
+const staticBreadcrumbLabels: Record<string, string> = {
+  "/services": "Services",
+  "/circuits-touristiques": "Circuits touristiques",
+  "/tarifs": "Tarifs",
+  "/entreprise": "Entreprise",
+  "/avis-clients": "Avis clients",
+  "/devenir-taxi": "Devenir taxi",
+  "/actus": "Actualités",
+  "/contact": "Nous contacter",
+  "/mentions-legales": "Mentions légales",
+  "/politique-confidentialite": "Politique de confidentialité",
+};
+
+const normalizePathname = (pathname: string) => {
+  const normalized = pathname.replace(/\/+$/, "");
+  return normalized || "/";
+};
+
+const buildBreadcrumbs = (pathname: string, title: string): BreadcrumbItem[] => {
+  const normalizedPath = normalizePathname(pathname);
+
+  if (normalizedPath === "/") {
+    return [];
+  }
+
+  const serviceMatch = normalizedPath.match(/^\/services\/([^/]+)$/);
+  if (serviceMatch) {
+    return [
+      { label: "Accueil", to: "/" },
+      { label: "Services", to: "/services" },
+      { label: title },
+    ];
+  }
+
+  const tourMatch = normalizedPath.match(/^\/circuits-touristiques\/([^/]+)$/);
+  if (tourMatch) {
+    return [
+      { label: "Accueil", to: "/" },
+      { label: "Circuits touristiques", to: "/circuits-touristiques" },
+      { label: title },
+    ];
+  }
+
+  return [
+    { label: "Accueil", to: "/" },
+    { label: staticBreadcrumbLabels[normalizedPath] ?? title },
+  ];
+};
+
 const PageHero = ({ title, subtitle, backgroundImage }: PageHeroProps) => {
   const location = useLocation();
-  const showBreadcrumb = location.pathname !== "/";
+  const breadcrumbs = buildBreadcrumbs(location.pathname, title);
+  const showBreadcrumb = breadcrumbs.length > 0;
 
   return (
     <section className="relative overflow-hidden text-primary-foreground">
@@ -36,11 +91,24 @@ const PageHero = ({ title, subtitle, backgroundImage }: PageHeroProps) => {
         <div className={`max-w-3xl ${backgroundImage ? "rounded-2xl border border-white/20 bg-black/20 p-6 md:p-8 shadow-2xl backdrop-blur-sm" : ""}`}>
           {showBreadcrumb && (
             <nav aria-label="Fil d'Ariane" className="mb-3 text-sm opacity-85">
-              <Link to="/" className="hover:opacity-100 underline-offset-2 hover:underline">
-                Accueil
-              </Link>
-              <span className="mx-2">/</span>
-              <span aria-current="page">{title}</span>
+              <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                {breadcrumbs.map((breadcrumb, index) => {
+                  const isCurrent = index === breadcrumbs.length - 1;
+
+                  return (
+                    <li key={`${breadcrumb.label}-${index}`} className="flex items-center gap-2">
+                      {index > 0 && <span aria-hidden="true">/</span>}
+                      {breadcrumb.to && !isCurrent ? (
+                        <Link to={breadcrumb.to} className="hover:opacity-100 underline-offset-2 hover:underline">
+                          {breadcrumb.label}
+                        </Link>
+                      ) : (
+                        <span aria-current={isCurrent ? "page" : undefined}>{breadcrumb.label}</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
             </nav>
           )}
           <h1 className="font-heading font-extrabold text-3xl md:text-4xl lg:text-5xl mb-3">{title}</h1>

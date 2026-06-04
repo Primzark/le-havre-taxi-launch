@@ -2,25 +2,96 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/nous-contact",
-      "destination": "/",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/nous-contact/",
-      "destination": "/",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/nous-contacter",
-      "destination": "/",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/nous-contacter/",
-      "destination": "/",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/le-havre",
+      "destination": "/circuits-touristiques/1",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/le-havre/",
+      "destination": "/circuits-touristiques/1",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/etretat",
+      "destination": "/circuits-touristiques/2",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/etretat/",
+      "destination": "/circuits-touristiques/2",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/honfleur",
+      "destination": "/circuits-touristiques/5",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/honfleur/",
+      "destination": "/circuits-touristiques/5",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/rouen",
+      "destination": "/circuits-touristiques/6",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/rouen/",
+      "destination": "/circuits-touristiques/6",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/giverny",
+      "destination": "/circuits-touristiques/7",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/giverny/",
+      "destination": "/circuits-touristiques/7",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/paris-ville-lumiere",
+      "destination": "/circuits-touristiques/11",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/paris-ville-lumiere/",
+      "destination": "/circuits-touristiques/11",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/paris",
+      "destination": "/circuits-touristiques/11",
+      "permanent": true
+    },
+    {
+      "source": "/projects-archive/paris/",
+      "destination": "/circuits-touristiques/11",
       "permanent": true
     }
   ],

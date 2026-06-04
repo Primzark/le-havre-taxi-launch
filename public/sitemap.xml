@@ -163,6 +163,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.taxis-lehavre.com/avis-clients</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.taxis-lehavre.com/devenir-taxi</loc>
     <lastmod>2026-02-12</lastmod>
     <changefreq>monthly</changefreq>

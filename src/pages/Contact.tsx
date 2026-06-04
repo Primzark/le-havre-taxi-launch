@@ -22,6 +22,7 @@ import {
 } from "@/config/site";
 import { useSEO } from "@/hooks/use-seo";
 import { Station, stationsData } from "@/data/stations";
+import { trackEvent } from "@/lib/analytics";
 
 const MIN_MESSAGE_LENGTH = 10;
 
@@ -324,6 +325,11 @@ const Contact = () => {
 
   const openDirections = (station: Station) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${station.latitude},${station.longitude}`;
+    trackEvent("directions_click", {
+      station_id: station.id,
+      station_name: station.name,
+      station_address: station.address,
+    });
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -332,6 +338,10 @@ const Contact = () => {
       "https://www.google.com/maps/search/station+taxi+le+havre";
 
     if (!navigator.geolocation) {
+      trackEvent("station_search", {
+        method: "nearest_station",
+        result: "geolocation_unavailable",
+      });
       window.open(fallbackUrl, "_blank", "noopener,noreferrer");
       return;
     }
@@ -356,11 +366,22 @@ const Contact = () => {
         );
 
         if (!nearest) {
+          trackEvent("station_search", {
+            method: "nearest_station",
+            result: "not_found",
+          });
           window.open(fallbackUrl, "_blank", "noopener,noreferrer");
           setIsLocating(false);
           return;
         }
 
+        trackEvent("station_search", {
+          method: "nearest_station",
+          result: "success",
+          station_id: nearest.station.id,
+          station_name: nearest.station.name,
+          distance_km: Number(nearest.distanceKm.toFixed(1)),
+        });
         setSelectedStationId(nearest.station.id);
         openDirections(nearest.station);
         setIsLocating(false);
@@ -371,6 +392,10 @@ const Contact = () => {
         });
       },
       () => {
+        trackEvent("station_search", {
+          method: "nearest_station",
+          result: "geolocation_error",
+        });
         window.open(fallbackUrl, "_blank", "noopener,noreferrer");
         setIsLocating(false);
         toast({
@@ -495,6 +520,14 @@ const Contact = () => {
         description: deliveryMessage,
       });
 
+      trackEvent("contact_form_submit", {
+        status: "success",
+        delivery_provider: result.provider ?? "contact_api",
+      });
+      trackEvent("generate_lead", {
+        method: "contact_form",
+        delivery_provider: result.provider ?? "contact_api",
+      });
       setFeedback({ type: "success", message: deliveryMessage });
       form.reset();
     } catch (error) {
@@ -532,6 +565,14 @@ const Contact = () => {
             title: "Message envoyé",
             description: fallbackMessage,
           });
+          trackEvent("contact_form_submit", {
+            status: "fallback_success",
+            delivery_provider: "formsubmit",
+          });
+          trackEvent("generate_lead", {
+            method: "contact_form",
+            delivery_provider: "formsubmit",
+          });
           setFeedback({ type: "success", message: fallbackMessage });
           form.reset();
           return;
@@ -557,6 +598,11 @@ const Contact = () => {
             type: "error",
             message: fallbackFeedback,
           });
+          trackEvent("contact_form_submit", {
+            status: "error",
+            delivery_provider: "formsubmit",
+            error_type: needsActivation ? "activation_required" : "fallback_failed",
+          });
           return;
         }
       }
@@ -576,6 +622,11 @@ const Contact = () => {
       setFeedback({
         type: "error",
         message: feedbackMessage,
+      });
+      trackEvent("contact_form_submit", {
+        status: "error",
+        delivery_provider: "contact_api",
+        error_type: isRateLimited ? "rate_limited" : isPathIssue ? "api_path" : "delivery_failed",
       });
     } finally {
       window.clearTimeout(timeout);

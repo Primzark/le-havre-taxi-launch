@@ -4,6 +4,11 @@ import {
   CONTACT_PHONE_LINK,
   FACEBOOK_URL,
   INSTAGRAM_URL,
+  LOCAL_BUSINESS_AREAS,
+  LOCAL_BUSINESS_CITY,
+  LOCAL_BUSINESS_COUNTRY,
+  LOCAL_BUSINESS_POSTAL_CODE,
+  LOCAL_BUSINESS_STREET_ADDRESS,
   PRIMARY_DOMAIN,
   SITE_NAME,
 } from "@/config/site";
@@ -162,26 +167,72 @@ export function useSEO({
     const defaultSchemas: Array<Record<string, unknown>> = [
       {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
+        "@type": ["LocalBusiness", "TaxiService"],
+        "@id": `${PRIMARY_DOMAIN}/#local-business`,
         name: SITE_NAME,
         url: PRIMARY_DOMAIN,
         image: absoluteOgImage,
         logo: `${PRIMARY_DOMAIN}/images/logo-taxi-le-havre.webp`,
         telephone: CONTACT_PHONE_LINK,
         email: CONTACT_EMAIL,
-        areaServed: "Le Havre",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: LOCAL_BUSINESS_STREET_ADDRESS,
+          addressLocality: LOCAL_BUSINESS_CITY,
+          postalCode: LOCAL_BUSINESS_POSTAL_CODE,
+          addressCountry: LOCAL_BUSINESS_COUNTRY,
+        },
+        areaServed: LOCAL_BUSINESS_AREAS.map((area) => ({
+          "@type": "Place",
+          name: area,
+        })),
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            telephone: CONTACT_PHONE_LINK,
+            contactType: "customer service",
+            areaServed: LOCAL_BUSINESS_COUNTRY,
+            availableLanguage: ["fr", "en"],
+          },
+        ],
         priceRange: "€€",
         openingHours: "Mo-Su 00:00-23:59",
+        openingHoursSpecification: [
+          {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ],
+            opens: "00:00",
+            closes: "23:59",
+          },
+        ],
         inLanguage: "fr-FR",
         sameAs: [INSTAGRAM_URL, FACEBOOK_URL],
       },
       {
         "@context": "https://schema.org",
         "@type": "WebPage",
+        "@id": `${canonical}#webpage`,
         name: fullTitle,
         description,
         url: canonical,
         inLanguage: "fr-FR",
+        isPartOf: {
+          "@type": "WebSite",
+          "@id": `${PRIMARY_DOMAIN}/#website`,
+          name: SITE_NAME,
+          url: PRIMARY_DOMAIN,
+        },
+        about: {
+          "@id": `${PRIMARY_DOMAIN}/#local-business`,
+        },
       },
     ];
 

@@ -8,6 +8,24 @@ export const CONTACT_PHONE_LINK = "+33235258181";
 export const CONTACT_EMAIL =
   (import.meta.env.VITE_CONTACT_EMAIL ?? "bureautaxi@gmail.com").trim();
 
+export const LOCAL_BUSINESS_STREET_ADDRESS = "37 Rue Jules Lecesne";
+export const LOCAL_BUSINESS_POSTAL_CODE = "76600";
+export const LOCAL_BUSINESS_CITY = "Le Havre";
+export const LOCAL_BUSINESS_COUNTRY = "FR";
+export const LOCAL_BUSINESS_ADDRESS = `${LOCAL_BUSINESS_STREET_ADDRESS}, ${LOCAL_BUSINESS_POSTAL_CODE} ${LOCAL_BUSINESS_CITY}`;
+export const LOCAL_BUSINESS_AREAS = [
+  "Le Havre",
+  "Sainte-Adresse",
+  "Harfleur",
+  "Montivilliers",
+  "Octeville-sur-Mer",
+  "Gonfreville-l'Orcher",
+  "Étretat",
+  "Honfleur",
+  "Deauville",
+  "Normandie",
+];
+
 export const INSTAGRAM_URL = "https://www.instagram.com/lehavretaxi";
 export const FACEBOOK_URL = "https://www.facebook.com/TaxiLeHavre";
 

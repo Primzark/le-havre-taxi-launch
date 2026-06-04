@@ -2,6 +2,13 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KVP785FQ');</script>
+    <!-- End Google Tag Manager -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f5eb6" />
     <meta name="format-detection" content="telephone=no" />
@@ -44,19 +51,40 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap"
     />
-    <link rel="preload" as="image" href="/images/home-pont-normandie.webp" fetchpriority="high" />
 
-    <script type="application/ld+json">
+    <script type="application/ld+json" data-seo-managed="true">
       {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
+        "@type": ["LocalBusiness", "TaxiService"],
+        "@id": "https://www.taxis-lehavre.com/#local-business",
         "name": "Taxi Le Havre",
         "url": "https://www.taxis-lehavre.com/",
         "logo": "https://www.taxis-lehavre.com/images/logo-taxi-le-havre.webp",
         "image": "https://www.taxis-lehavre.com/og-image.webp",
-        "telephone": "02 35 25 81 81",
+        "telephone": "+33235258181",
         "email": "bureautaxi@gmail.com",
-        "areaServed": "Le Havre",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "37 Rue Jules Lecesne",
+          "addressLocality": "Le Havre",
+          "postalCode": "76600",
+          "addressCountry": "FR"
+        },
+        "areaServed": [
+          { "@type": "Place", "name": "Le Havre" },
+          { "@type": "Place", "name": "Sainte-Adresse" },
+          { "@type": "Place", "name": "Harfleur" },
+          { "@type": "Place", "name": "Montivilliers" },
+          { "@type": "Place", "name": "Étretat" },
+          { "@type": "Place", "name": "Honfleur" }
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+33235258181",
+          "contactType": "customer service",
+          "areaServed": "FR",
+          "availableLanguage": ["fr", "en"]
+        },
         "openingHours": "Mo-Su 00:00-23:59",
         "inLanguage": "fr-FR",
         "sameAs": [
@@ -68,6 +96,10 @@
   </head>
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KVP785FQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
