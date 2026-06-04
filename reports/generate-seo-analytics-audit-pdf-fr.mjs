@@ -11,10 +11,10 @@ const { chromium } = require(
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const outDir = __dirname;
-const pdfPath = path.join(outDir, "audit-seo-analytics-radio-taxi-le-havre-2026-06-04.pdf");
-const htmlPath = path.join(outDir, "audit-seo-analytics-radio-taxi-le-havre-2026-06-04.html");
+const pdfPath = path.join(outDir, "audit-seo-analytics-radio-taxi-le-havre-2026-06-05.pdf");
+const htmlPath = path.join(outDir, "audit-seo-analytics-radio-taxi-le-havre-2026-06-05.html");
 const crawl = JSON.parse(fs.readFileSync(path.join(outDir, "seo-audit-crawl-results.json"), "utf8"));
-const reportDate = "4 juin 2026";
+const reportDate = "5 juin 2026";
 
 const sources = [
   ["Site live Radio Taxi Le Havre", "https://www.taxis-lehavre.com/"],
@@ -26,6 +26,7 @@ const sources = [
   ["Google - créer et soumettre un sitemap", "https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap"],
   ["Google - installer Google Tag Manager", "https://support.google.com/tagmanager/answer/14847097?hl=en"],
   ["Google - configurer GA4 pour un site", "https://support.google.com/analytics/answer/9304153?hl=en-EN"],
+  ["Google - créer un événement clé GA4 via Admin API", "https://developers.google.com/analytics/devguides/config/admin/v1/rest/v1beta/properties.keyEvents/create"],
   ["Le Havre Étretat Tourisme - fiche SCA Radio Taxi", "https://www.lehavre-etretat-tourisme.com/fr/fiche/le-havre/sca-radio-taxi-le-havre_TFON0012NOR076V524ZML/"],
   ["Normandie Tourisme - fiche SCA Radio Taxi", "https://www.normandie-tourisme.fr/commerce/sca-radio-taxi-le-havre/"],
 ];
@@ -50,7 +51,7 @@ const pageTypeSummary = [
   ["Routes manquantes du sitemap", "/avis-clients"],
   ["Routes noindex à exclure du sitemap", "/liens"],
   ["404 SPA testée", "HTTP 200 en rendu local et live pour URL inconnue sans slash"],
-  ["GA4/GTM", "Non détectés"],
+  ["GA4/GTM", "GTM-KVP785FQ actif; GA4 G-LMVZ2BD576 actif; MCP connecté à properties/540208943"],
 ];
 
 const priorityFixes = [
@@ -73,10 +74,10 @@ const priorityFixes = [
   {
     priority: "Haute",
     theme: "Analytics",
-    issue: "Aucun GA4, GTM, dataLayer, gtag ou requête analytics détectés.",
+    issue: "GTM et GA4 sont désormais installés, mais generate_lead doit encore être créé comme événement clé avec un compte GA4 disposant du scope analytics.edit.",
     impact: "Mesure des appels, formulaires, téléchargements app, recherches stations, conversions et sources de trafic.",
-    effort: "Faible à moyen",
-    action: "Installer GTM, ajouter GA4 dans GTM, puis pousser les événements clés via dataLayer.",
+    effort: "Faible",
+    action: "Créer generate_lead comme événement clé GA4, puis surveiller les conversions par canal et page.",
   },
   {
     priority: "Haute",
@@ -142,6 +143,21 @@ const analyticsEvents = [
   ["tour_booking_click", "Clic réserver un circuit", "ID circuit, destination, prix affiché"],
   ["review_click", "Clic laisser/lire avis", "Source: Google, page avis, footer, accueil"],
   ["partner_qr_visit", "Arrivée depuis QR partenaire", "Paramètres UTM: partner, venue, event"],
+];
+
+const liveGa4Events = [
+  ["page_view", 14],
+  ["first_visit", 7],
+  ["session_start", 7],
+  ["user_engagement", 3],
+  ["scroll", 2],
+];
+
+const liveKeyEvents = [
+  ["purchase", "Événement clé par défaut, présent"],
+  ["close_convert_lead", "Événement clé personnalisé, présent"],
+  ["qualify_lead", "Événement clé personnalisé, présent"],
+  ["generate_lead", "À créer comme événement clé; l'appel API avec le service account Analyst retourne 403"],
 ];
 
 const customerJourney = [
@@ -256,6 +272,14 @@ const eventRows = analyticsEvents
   .map(([event, definition, params]) => `<tr><td><strong>${esc(event)}</strong></td><td>${esc(definition)}</td><td>${esc(params)}</td></tr>`)
   .join("");
 
+const liveEventRows = liveGa4Events
+  .map(([event, count]) => `<tr><td><strong>${esc(event)}</strong></td><td>${esc(count)}</td></tr>`)
+  .join("");
+
+const liveKeyEventRows = liveKeyEvents
+  .map(([event, status]) => `<tr><td><strong>${esc(event)}</strong></td><td>${esc(status)}</td></tr>`)
+  .join("");
+
 const journeyCards = customerJourney
   .map(
     (journey) => `
@@ -350,8 +374,8 @@ const html = `<!doctype html>
       <h2>Résumé exécutif</h2>
       <div class="lead-grid">
         <div>
-          <p>Le site possède une base on-page correcte après rendu JavaScript: titres uniques, H1 unique sur les pages crawlées, meta descriptions présentes, JSON-LD sur les grands types de pages et liens internes principaux. Le problème le plus important est technique: hors rendu JavaScript, presque toutes les routes servent les mêmes métadonnées que l'accueil, avec canonical vers l'accueil.</p>
-          <p>Les priorités sont donc de stabiliser l'indexation, récupérer les anciens chemins indexés, installer une mesure analytics complète et clarifier le parcours client. Les gains les plus rapides viennent des redirections, du sitemap, de GTM/GA4 et des pages locales très intentionnelles: gare, croisière, aéroport, Étretat, Honfleur, stations et comptes entreprises.</p>
+          <p>Le site possède une base on-page correcte après rendu JavaScript: titres uniques, H1 unique sur les pages crawlées, meta descriptions présentes, JSON-LD sur les grands types de pages et liens internes principaux. Le problème le plus important reste technique: hors rendu JavaScript, presque toutes les routes servent les mêmes métadonnées que l'accueil, avec canonical vers l'accueil.</p>
+          <p>Depuis l'audit initial, GTM-KVP785FQ et GA4 G-LMVZ2BD576 ont été installés, publiés et vérifiés. Le MCP Google Analytics lit maintenant la propriété GA4 540208943. Les priorités restantes sont de créer generate_lead comme événement clé, stabiliser l'indexation, récupérer les anciens chemins indexés et clarifier le parcours client.</p>
         </div>
         <div class="callout">
           <strong>Diagnostic global</strong>
@@ -361,7 +385,7 @@ const html = `<!doctype html>
       <div class="score-grid">
         <div class="score"><strong>35</strong>routes crawlées en rendu production local.</div>
         <div class="score"><strong>34</strong>routes avec HTML brut non différencié.</div>
-        <div class="score"><strong>0</strong>tag GA4/GTM détecté sur le site live.</div>
+        <div class="score"><strong>GA4</strong>GTM actif, GA4 actif, MCP connecté.</div>
         <div class="score"><strong>17+</strong>URLs historiques visibles dans les résultats publics.</div>
       </div>
     </section>
@@ -383,8 +407,9 @@ const html = `<!doctype html>
         <div class="box">
           <h3>Limites</h3>
           ${list([
-            "Aucun accès Google Analytics, Google Search Console ou Google Business Profile n'a été fourni.",
-            "Les métriques trafic réel, acquisition, conversions, taux d'engagement et requêtes GSC ne sont donc pas disponibles.",
+            "L'accès GA4 est désormais disponible via MCP/service account; les données restent très récentes.",
+            "Aucun accès Google Search Console ou Google Business Profile n'a été fourni.",
+            "Les requêtes GSC, impressions organiques, positions et données GBP ne sont donc pas disponibles.",
             "PageSpeed Insights était bloqué par quota; les recommandations performance reposent sur build, payload et crawl local.",
             "Le statut d'indexation définitif doit être confirmé dans Search Console avec l'outil d'inspection d'URL.",
           ])}
@@ -516,30 +541,38 @@ const html = `<!doctype html>
 
     <section class="section break">
       <h2>Analytics et conversions</h2>
-      <p>Aucun GA4 ou GTM n'est installé. Il n'est donc pas possible de produire un rapport trafic réel depuis les données du site: sessions, utilisateurs, canaux, conversions, engagement et revenus ne sont pas collectés. Le site doit d'abord installer une base de mesure propre.</p>
+      <p>GTM-KVP785FQ est installé sur le site live et charge le Google tag GA4 G-LMVZ2BD576. Le MCP Google Analytics est connecté à la propriété 540208943 et retourne les premières données: 14 pages vues, 7 premières visites, 7 démarrages de session, 3 événements d'engagement et 2 scrolls sur la période contrôlée. Les données sont encore jeunes, donc elles servent surtout à valider la collecte.</p>
       <div class="two-col">
         <div class="box">
-          <h3>Installation recommandée</h3>
+          <h3>Installation réalisée</h3>
           ${list([
-            "Créer un compte GTM web et un conteneur GTM-XXXX.",
-            "Ajouter le snippet GTM haut dans head et le noscript juste après body.",
-            "Créer une propriété GA4 et un flux web G-XXXX.",
-            "Dans GTM, créer une balise Google tag/GA4 config déclenchée sur toutes les pages.",
-            "Configurer les événements dataLayer côté React.",
-            "Marquer generate_lead, phone_click et app_download_click comme événements clés dans GA4.",
+            "Compte/propriété GA4 Radio Taxi Le Havre créés; propriété 540208943.",
+            "Flux web GA4 G-LMVZ2BD576 créé pour le site.",
+            "Conteneur GTM-KVP785FQ installé dans head et noscript body.",
+            "Google tag GA4 publié dans GTM sur Initialization - All Pages.",
+            "MCP Google Analytics connecté avec service account ga4-reader.",
+            "Événements React envoyés dans dataLayer; envoi direct GA4 ajouté pour les événements non-pageview.",
           ])}
         </div>
         <div class="box">
-          <h3>Rapport Analytics cible</h3>
+          <h3>À finaliser</h3>
           ${list([
-            "Acquisition: organic search, direct, paid/social, referral, GBP, partenaires UTM.",
-            "Comportement: pages vues, engagement, scroll, recherche menu/stations, navigation services -> contact.",
-            "Conversion: appels, formulaires, téléchargements app, directions stations, clics avis.",
-            "Local: pages gare/croisière/Étretat/Honfleur, partenaires hôtels, événements.",
-            "Qualité: erreurs formulaire, temps avant conversion, pages de sortie.",
+            "Créer generate_lead comme événement clé GA4 avec un compte Administrator/analytics.edit.",
+            "Contrôler les conversions après un vrai envoi de formulaire.",
+            "Ajouter des UTM pour partenaires, hôtels, bars, événements et QR codes.",
+            "Connecter Search Console pour requêtes, impressions, CTR et indexation.",
+            "Créer un tableau mensuel: acquisition, pages d'entrée, appels, leads, stations, partenaires.",
           ])}
         </div>
       </div>
+      <table>
+        <thead><tr><th>Événement collecté GA4</th><th>Nombre observé</th></tr></thead>
+        <tbody>${liveEventRows}</tbody>
+      </table>
+      <table>
+        <thead><tr><th>Événement clé GA4</th><th>Statut</th></tr></thead>
+        <tbody>${liveKeyEventRows}</tbody>
+      </table>
       <table>
         <thead><tr><th>Événement GA4</th><th>Définition</th><th>Paramètres utiles</th></tr></thead>
         <tbody>${eventRows}</tbody>
@@ -570,7 +603,7 @@ const html = `<!doctype html>
         <div class="box">
           <h3>0 à 30 jours</h3>
           ${list([
-            "Installer GTM + GA4 et événements clés.",
+            "Créer generate_lead comme événement clé GA4.",
             "Corriger redirections /nous-contact -> /contact et trailing slash.",
             "Ajouter /avis-clients au sitemap; retirer les URLs noindex du sitemap.",
             "Valider NAP officiel et enrichir LocalBusiness schema.",

@@ -13,8 +13,11 @@ declare global {
 const GTM_ID = String(import.meta.env.VITE_GTM_ID ?? "").trim();
 const GA_MEASUREMENT_ID = String(import.meta.env.VITE_GA_MEASUREMENT_ID ?? "").trim();
 const SITE_GTM_ID = "GTM-KVP785FQ";
+const SITE_GA_MEASUREMENT_ID = "G-LMVZ2BD576";
+const activeGtmId = SITE_GTM_ID || GTM_ID;
+const activeGaMeasurementId = SITE_GA_MEASUREMENT_ID || GA_MEASUREMENT_ID;
 
-export const isAnalyticsConfigured = Boolean(SITE_GTM_ID || GTM_ID || GA_MEASUREMENT_ID);
+export const isAnalyticsConfigured = Boolean(activeGtmId || activeGaMeasurementId);
 
 const canUseBrowser = () =>
   typeof window !== "undefined" && typeof document !== "undefined";
@@ -147,33 +150,32 @@ export const initAnalytics = () => {
 
   window.__taxiAnalyticsInitialized = true;
 
-  const activeGtmId = SITE_GTM_ID || GTM_ID;
+  if (activeGaMeasurementId) {
+    window.gtag = window.gtag ?? ((...args: unknown[]) => {
+      window.dataLayer?.push(args);
+    });
+
+    injectScript(
+      "taxi-ga4",
+      `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(activeGaMeasurementId)}`,
+    );
+    window.gtag("js", new Date());
+    window.gtag("config", activeGaMeasurementId, {
+      send_page_view: false,
+    });
+  }
 
   if (activeGtmId) {
-    if (hasGtmScript(activeGtmId)) {
-      return;
+    if (!hasGtmScript(activeGtmId)) {
+      window.dataLayer.push({
+        "gtm.start": Date.now(),
+        event: "gtm.js",
+      });
+      injectScript("taxi-gtm", `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(activeGtmId)}`);
     }
-
-    window.dataLayer.push({
-      "gtm.start": Date.now(),
-      event: "gtm.js",
-    });
-    injectScript("taxi-gtm", `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(activeGtmId)}`);
     return;
   }
 
-  window.gtag = (...args: unknown[]) => {
-    window.dataLayer?.push(args);
-  };
-
-  injectScript(
-    "taxi-ga4",
-    `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`,
-  );
-  window.gtag("js", new Date());
-  window.gtag("config", GA_MEASUREMENT_ID, {
-    send_page_view: false,
-  });
 };
 
 export const trackEvent = (eventName: string, params: AnalyticsParams = {}) => {
@@ -188,8 +190,16 @@ export const trackEvent = (eventName: string, params: AnalyticsParams = {}) => {
     ...payload,
   });
 
-  if (!SITE_GTM_ID && !GTM_ID && typeof window.gtag === "function") {
-    window.gtag("event", eventName, payload);
+  const shouldSendViaGtag =
+    activeGaMeasurementId &&
+    typeof window.gtag === "function" &&
+    (!activeGtmId || eventName !== "page_view");
+
+  if (shouldSendViaGtag) {
+    window.gtag("event", eventName, {
+      ...payload,
+      send_to: activeGaMeasurementId,
+    });
   }
 };
 
