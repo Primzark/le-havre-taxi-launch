@@ -14,6 +14,19 @@ const memoryRouterFutureConfig = {
 } as const;
 
 describe("Contact page", () => {
+  it("prefills the subject from the contact URL", () => {
+    render(
+      <MemoryRouter
+        initialEntries={["/contact?subject=R%C3%A9servation%20circuit%20N%C2%B02%20-%20%C3%89tretat"]}
+        future={memoryRouterFutureConfig}
+      >
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText(/Sujet \*/i)).toHaveValue("Réservation circuit N°2 - Étretat");
+  });
+
   it("submits the contact form and shows success feedback", async () => {
     const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue({
       ok: true,

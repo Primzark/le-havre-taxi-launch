@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
 import StationsMap from "@/components/StationsMap";
@@ -245,9 +246,15 @@ const sendViaFormSubmitFallback = async (
 
 const Contact = () => {
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const prefilledSubject = useMemo(
+    () => String(searchParams.get("subject") || "").trim().slice(0, 200),
+    [searchParams],
+  );
   const [loading, setLoading] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [stationQuery, setStationQuery] = useState("");
+  const [subject, setSubject] = useState(prefilledSubject);
   const [selectedStationId, setSelectedStationId] = useState<number | null>(
     stationsData[0]?.id ?? null,
   );
@@ -290,6 +297,10 @@ const Contact = () => {
   );
 
   useSEO(contactSEO);
+
+  useEffect(() => {
+    setSubject(prefilledSubject);
+  }, [prefilledSubject]);
 
   const filteredStations = useMemo(() => {
     const needle = stationQuery.trim().toLowerCase();
@@ -530,6 +541,7 @@ const Contact = () => {
       });
       setFeedback({ type: "success", message: deliveryMessage });
       form.reset();
+      setSubject("");
     } catch (error) {
       const errorMessage =
         error instanceof Error
@@ -575,6 +587,7 @@ const Contact = () => {
           });
           setFeedback({ type: "success", message: fallbackMessage });
           form.reset();
+          setSubject("");
           return;
         } catch (fallbackError) {
           const fallbackText =
@@ -900,6 +913,8 @@ const Contact = () => {
                     name="subject"
                     required
                     maxLength={200}
+                    value={subject}
+                    onChange={(event) => setSubject(event.target.value)}
                     placeholder="Ex. : réservation aéroport demain matin"
                   />
                 </div>

@@ -5,7 +5,7 @@ import { toursData } from "@/data/tours";
 import { ArrowLeft, CheckCircle2, Clock, Euro, Expand, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/use-seo";
-import { CONTACT_PHONE_LINK, PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
+import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,10 @@ const TourDetail = () => {
   const [lightboxStartIndex, setLightboxStartIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const currentTourIndex = toursData.findIndex((candidate) => candidate.id === tour?.id);
+  const bookingSubject = tour
+    ? `Réservation circuit N°${tour.id} - ${tour.name}`
+    : "";
+  const bookingContactPath = `/contact?subject=${encodeURIComponent(bookingSubject)}`;
 
   useEffect(() => {
     if (!galleryApi) {
@@ -425,7 +429,7 @@ const TourDetail = () => {
 
           <div className="tour-card-enter text-center mt-8" style={{ animationDelay: "120ms" }}>
             <Button size="lg" asChild>
-              <a href={`tel:${CONTACT_PHONE_LINK}`}>Réserver ce circuit</a>
+              <Link to={bookingContactPath}>Réserver ce circuit</Link>
             </Button>
           </div>
         </div>
