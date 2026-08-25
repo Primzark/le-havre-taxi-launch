@@ -132,6 +132,9 @@ const Header = () => {
           <div className="hidden min-h-10 items-center gap-4 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto]">
             <a
               href={`tel:${CONTACT_PHONE_LINK}`}
+              data-analytics-id="header-top-phone-desktop"
+              data-analytics-location="header_top"
+              data-analytics-intent="booking"
               className="inline-flex items-center gap-2 text-left font-heading text-sm font-semibold transition hover:opacity-90"
             >
               <Phone className="h-4 w-4" />
@@ -196,16 +199,17 @@ const Header = () => {
           <div className="flex min-h-10 flex-col items-center justify-center gap-2 lg:hidden">
             <a
               href={`tel:${CONTACT_PHONE_LINK}`}
+              data-analytics-id="header-top-phone-mobile"
+              data-analytics-location="header_top_mobile"
+              data-analytics-intent="booking"
               className="inline-flex max-w-full items-center justify-center gap-2 text-center font-heading font-semibold transition hover:opacity-90 max-[380px]:gap-1.5 max-[380px]:text-[13px]"
             >
               <Phone className="h-4 w-4 max-[380px]:h-3.5 max-[380px]:w-3.5" />
               <span>
                 <span className="max-[380px]:hidden">Centrale de réservation : </span>
                 <span className="hidden max-[380px]:inline">Réservation : </span>
-                <span
-                  className={`inline-block whitespace-nowrap tabular-nums ${phoneAnimationDone ? "phone-countup-done" : "phone-countup-fade"}`}
-                >
-                  {animatedPhoneDisplay}
+                <span className="inline-block whitespace-nowrap tabular-nums">
+                  {CONTACT_PHONE_DISPLAY}
                 </span>
               </span>
             </a>
@@ -288,7 +292,13 @@ const Header = () => {
 
           <div className="ml-auto hidden shrink-0 items-center gap-2 md:flex xl:ml-0">
             <Button variant="outline" size="sm" asChild>
-              <a href={`tel:${CONTACT_PHONE_LINK}`} className="whitespace-nowrap">
+              <a
+                href={`tel:${CONTACT_PHONE_LINK}`}
+                data-analytics-id="header-call-button-desktop"
+                data-analytics-location="header_navigation"
+                data-analytics-intent="booking"
+                className="whitespace-nowrap"
+              >
                 <Phone className="h-4 w-4 2xl:mr-1" />
                 <span className="hidden 2xl:inline">Appeler</span>
               </a>
@@ -301,8 +311,26 @@ const Header = () => {
             </Button>
           </div>
 
+          <Button
+            variant="outline"
+            size="icon"
+            className="ml-auto h-11 w-11 shrink-0 md:hidden"
+            asChild
+          >
+            <a
+              href={`tel:${CONTACT_PHONE_LINK}`}
+              aria-label={`Appeler Radio Taxi Le Havre au ${CONTACT_PHONE_DISPLAY}`}
+              title={`Appeler le ${CONTACT_PHONE_DISPLAY}`}
+              data-analytics-id="header-call-button-mobile"
+              data-analytics-location="header_sticky_mobile"
+              data-analytics-intent="booking"
+            >
+              <Phone className="h-5 w-5" />
+            </a>
+          </Button>
+
           <button
-            className="ml-auto shrink-0 rounded-md p-2 transition hover:bg-muted md:ml-0 xl:hidden"
+            className="shrink-0 rounded-md p-2 transition hover:bg-muted xl:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
@@ -378,7 +406,14 @@ const Header = () => {
 
               <div className="mt-3 flex flex-col gap-2 border-t pt-3 sm:flex-row">
                 <Button variant="outline" size="sm" className="sm:flex-1" asChild>
-                  <a href={`tel:${CONTACT_PHONE_LINK}`}><Phone className="mr-1 h-4 w-4" /> Appeler</a>
+                  <a
+                    href={`tel:${CONTACT_PHONE_LINK}`}
+                    data-analytics-id="header-mobile-menu-call-button"
+                    data-analytics-location="mobile_menu"
+                    data-analytics-intent="booking"
+                  >
+                    <Phone className="mr-1 h-4 w-4" /> Appeler
+                  </a>
                 </Button>
                 <Button size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 sm:flex-1" asChild>
                   <a href={APPLE_STORE_URL} target="_blank" rel="noopener noreferrer"><Download className="mr-1 h-4 w-4" /> L'App</a>

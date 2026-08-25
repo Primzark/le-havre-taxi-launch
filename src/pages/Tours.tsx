@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
+import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/use-seo";
 import { toursData } from "@/data/tours";
 import { PRIMARY_DOMAIN } from "@/config/site";
 import { ArrowUpRight, Clock3, Sparkles } from "lucide-react";
+
+const practicalContactPath = `/contact?subject=${encodeURIComponent("Renseignements sur un circuit touristique")}`;
 
 const Tours = () => {
   useSEO({
@@ -105,6 +108,26 @@ const Tours = () => {
           <p className="text-muted-foreground text-sm text-center mt-10 max-w-2xl mx-auto">
             Tarif valable pour 1 à 4 personnes, hors suppléments éventuels. Les billets d'entrée, repas et dépenses personnelles restent à votre charge.
           </p>
+
+          <div className="mx-auto mt-12 max-w-4xl border-t border-border/70 pt-8 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+              Informations pratiques
+            </p>
+            <h2 className="mt-2 font-heading text-2xl font-bold">
+              Préparez votre départ depuis Le Havre
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
+              Consultez les tarifs et conditions, puis contactez la centrale pour préciser l'horaire, le point de départ et vos arrêts.
+            </p>
+            <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
+              <Button size="lg" variant="outline" asChild>
+                <Link to="/tarifs">Voir les tarifs pratiques</Link>
+              </Button>
+              <Button size="lg" asChild>
+                <Link to={practicalContactPath}>Contacter la centrale</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
     </Layout>

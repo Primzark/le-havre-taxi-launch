@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Tours from "@/pages/Tours";
 import TourDetail from "@/pages/TourDetail";
@@ -22,7 +22,20 @@ describe("Tours page", () => {
     expect(container.querySelector('a[href="/circuits-touristiques/13"]')).toBeInTheDocument();
   });
 
-  it("links the tour reservation CTA to contact with the selected circuit subject", () => {
+  it("links tours to the practical pricing and contact pages", () => {
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Tours />
+      </MemoryRouter>,
+    );
+
+    const main = screen.getByRole("main");
+
+    expect(main.querySelector('a[href="/tarifs"]')).toBeInTheDocument();
+    expect(main.querySelector('a[href^="/contact?"]')).toBeInTheDocument();
+  });
+
+  it("links a tour to pricing, prefilled contact, and a phone call", () => {
     render(
       <MemoryRouter initialEntries={["/circuits-touristiques/2"]} future={memoryRouterFutureConfig}>
         <Routes>
@@ -37,5 +50,11 @@ describe("Tours page", () => {
 
     expect(href.startsWith("/contact?")).toBe(true);
     expect(subject).toBe("Réservation circuit N°2 - Étretat");
+    const main = screen.getByRole("main");
+
+    expect(main.querySelector('a[href="/tarifs"]')).toBeInTheDocument();
+
+    const callLink = within(main).getByRole("link", { name: /appeler/i });
+    expect(callLink).toHaveAttribute("href", expect.stringMatching(/^tel:/));
   });
 });

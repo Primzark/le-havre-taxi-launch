@@ -464,7 +464,12 @@ const Tarifs = () => {
               </h2>
             </div>
             <Button asChild variant="outline" className="border-primary/30">
-              <a href={`tel:${CONTACT_PHONE_LINK}`}>
+              <a
+                href={`tel:${CONTACT_PHONE_LINK}`}
+                data-analytics-id="tariffs-quick-fares-call-button"
+                data-analytics-location="tariffs_quick_fares"
+                data-analytics-intent="booking"
+              >
                 <Phone className="h-4 w-4" />
                 Appeler la centrale
               </a>
@@ -738,7 +743,12 @@ const Tarifs = () => {
               </div>
 
               <Button asChild className="mt-6 h-auto w-full py-3 text-center">
-                <a href={`tel:${CONTACT_PHONE_LINK}`}>
+                <a
+                  href={`tel:${CONTACT_PHONE_LINK}`}
+                  data-analytics-id="tariffs-estimate-call-button"
+                  data-analytics-location="tariffs_estimate"
+                  data-analytics-intent="booking"
+                >
                   <Phone className="h-4 w-4" />
                   Confirmer ce prix avec la centrale
                 </a>
@@ -1082,6 +1092,9 @@ const Tarifs = () => {
                 <a
                   className="font-semibold text-primary underline-offset-2 hover:underline"
                   href={`tel:${CONTACT_PHONE_LINK}`}
+                  data-analytics-id="tariffs-details-phone-number"
+                  data-analytics-location="tariffs_details"
+                  data-analytics-intent="booking"
                 >
                   {CONTACT_PHONE_DISPLAY}
                 </a>

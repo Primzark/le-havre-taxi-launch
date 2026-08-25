@@ -14,6 +14,21 @@ const memoryRouterFutureConfig = {
 } as const;
 
 describe("Contact page", () => {
+  it("keeps the primary booking call action visible and identifiable", () => {
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    const callLink = screen.getByRole("link", { name: /Appeler ·/i });
+
+    expect(callLink).toHaveAttribute("href", expect.stringMatching(/^tel:/));
+    expect(callLink).toHaveAttribute("data-analytics-id", "contact-primary-call-button");
+    expect(callLink).toHaveAttribute("data-analytics-location", "contact_primary");
+    expect(callLink).toHaveAttribute("data-analytics-intent", "booking");
+  });
+
   it("prefills the subject from the contact URL", () => {
     render(
       <MemoryRouter

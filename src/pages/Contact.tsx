@@ -662,6 +662,22 @@ const Contact = () => {
               <h2 className="font-heading font-bold text-2xl mb-6">
                 Nos coordonnées
               </h2>
+
+              <Button size="lg" className="mb-3 min-h-12 w-full text-sm sm:text-base" asChild>
+                <a
+                  href={`tel:${CONTACT_PHONE_LINK}`}
+                  data-analytics-id="contact-primary-call-button"
+                  data-analytics-location="contact_primary"
+                  data-analytics-intent="booking"
+                >
+                  <Phone className="mr-2 h-5 w-5" />
+                  Appeler · {CONTACT_PHONE_DISPLAY}
+                </a>
+              </Button>
+              <p className="mb-8 text-center text-sm text-muted-foreground">
+                Centrale de réservation joignable 24h/24 et 7j/7
+              </p>
+
               <div className="space-y-5 mb-8">
                 <div className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-primary mt-0.5" />
@@ -669,6 +685,9 @@ const Contact = () => {
                     <p className="font-heading font-semibold">Téléphone</p>
                     <a
                       href={`tel:${CONTACT_PHONE_LINK}`}
+                      data-analytics-id="contact-phone-number"
+                      data-analytics-location="contact_details"
+                      data-analytics-intent="booking"
                       className="text-muted-foreground hover:text-primary transition"
                     >
                       {CONTACT_PHONE_DISPLAY}

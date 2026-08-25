@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { toursData } from "@/data/tours";
-import { ArrowLeft, CheckCircle2, Clock, Euro, Expand, MapPin, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Euro, Expand, MapPin, Phone, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/use-seo";
-import { PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
+import { CONTACT_PHONE_LINK, PRIMARY_DOMAIN, SITE_NAME } from "@/config/site";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
@@ -427,10 +427,33 @@ const TourDetail = () => {
             </p>
           </div>
 
-          <div className="tour-card-enter text-center mt-8" style={{ animationDelay: "120ms" }}>
-            <Button size="lg" asChild>
-              <Link to={bookingContactPath}>Réserver ce circuit</Link>
-            </Button>
+          <div
+            className="tour-card-enter mt-8 border-t border-border/70 pt-8 text-center"
+            style={{ animationDelay: "120ms" }}
+          >
+            <h2 className="font-heading text-2xl font-bold">Préparez votre circuit</h2>
+            <p className="mx-auto mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
+              Retrouvez les informations tarifaires, posez vos questions ou appelez la centrale pour organiser votre départ.
+            </p>
+            <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
+              <Button size="lg" asChild>
+                <Link to={bookingContactPath}>Réserver ce circuit</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link to="/tarifs">Voir les tarifs pratiques</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <a
+                  href={`tel:${CONTACT_PHONE_LINK}`}
+                  data-analytics-id="tour-detail-call-button"
+                  data-analytics-location="tour_detail"
+                  data-analytics-intent="booking"
+                >
+                  <Phone className="mr-2 h-4 w-4" />
+                  Appeler la centrale
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

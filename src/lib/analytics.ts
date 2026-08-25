@@ -70,12 +70,18 @@ const bindJourneyClickTracking = () => {
     const href = target.getAttribute("href") ?? "";
     const label = getLinkLabel(target);
     const pagePath = `${window.location.pathname}${window.location.search}`;
+    const linkId = target.dataset.analyticsId;
+    const linkLocation = target.dataset.analyticsLocation;
+    const intent = target.dataset.analyticsIntent;
 
     if (href.startsWith("tel:")) {
       trackEvent("phone_click", {
         click_url: href,
         link_text: label,
         page_path: pagePath,
+        link_id: linkId,
+        link_location: linkLocation,
+        intent,
       });
       return;
     }

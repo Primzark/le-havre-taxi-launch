@@ -106,7 +106,14 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <Phone className="h-4 w-4 mt-0.5 text-secondary" />
-                <a href={`tel:${CONTACT_PHONE_LINK}`} className="opacity-80 hover:opacity-100">{CONTACT_PHONE_DISPLAY}</a>
+                <a
+                  href={`tel:${CONTACT_PHONE_LINK}`}
+                  data-analytics-id="footer-phone-number"
+                  data-analytics-location="footer"
+                  className="opacity-80 hover:opacity-100"
+                >
+                  {CONTACT_PHONE_DISPLAY}
+                </a>
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 text-secondary" />
