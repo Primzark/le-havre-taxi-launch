@@ -106,6 +106,11 @@ const Header = () => {
   const handleMenuSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!menuQuery.trim()) {
+      toast({
+        title: "Recherche à préciser",
+        description: "Saisissez un terme pour lancer la recherche.",
+        variant: "destructive",
+      });
       return;
     }
 

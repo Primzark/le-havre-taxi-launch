@@ -42,6 +42,52 @@ describe("Contact page", () => {
     expect(screen.getByLabelText(/Sujet \*/i)).toHaveValue("Réservation circuit N°2 - Étretat");
   });
 
+  it("shows structured email feedback after blur and clears it when corrected", () => {
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    const email = screen.getByLabelText(/Email \*/i);
+    fireEvent.change(email, { target: { value: "adresse-invalide" } });
+    expect(email).not.toHaveAttribute("aria-invalid", "true");
+    expect(screen.queryByText(/Vérifiez le format de votre adresse e-mail/i)).not.toBeInTheDocument();
+
+    fireEvent.blur(email);
+    expect(email).toHaveAttribute("aria-invalid", "true");
+    expect(email).toHaveAttribute("aria-describedby", "email-error");
+    expect(screen.getAllByText(/Vérifiez le format de votre adresse e-mail/i)).toHaveLength(2);
+
+    fireEvent.change(email, { target: { value: "qa@example.com" } });
+    expect(email).not.toHaveAttribute("aria-invalid", "true");
+    expect(screen.queryByText(/Vérifiez le format de votre adresse e-mail/i)).not.toBeInTheDocument();
+  });
+
+  it("summarizes and focuses all errors on submit without calling the API", () => {
+    const fetchMock = vi.spyOn(global, "fetch");
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    const form = screen.getByLabelText(/Nom \*/i).closest("form");
+    expect(form).not.toBeNull();
+    fireEvent.submit(form!);
+
+    const summary = screen.getByRole("alert");
+    expect(summary).toHaveTextContent("Corrigez les points suivants avant l'envoi");
+    expect(document.activeElement).toBe(summary);
+    expect(screen.getByLabelText(/Nom \*/i)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/Email \*/i)).toHaveAttribute("aria-describedby", "email-error");
+    expect(screen.getByLabelText(/Sujet \*/i)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/Message \*/i)).toHaveAttribute("aria-invalid", "true");
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    fetchMock.mockRestore();
+  });
+
   it("submits the contact form and shows success feedback", async () => {
     const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue({
       ok: true,
@@ -74,6 +120,53 @@ describe("Contact page", () => {
     await waitFor(() => {
       expect(screen.getByText(`Message envoyé à ${CONTACT_EMAIL}.`)).toBeInTheDocument();
     });
+
+    fetchMock.mockRestore();
+  }, 15000);
+
+  it("blocks repeated submissions while pending and preserves values after a server rejection", async () => {
+    let finishRequest: ((response: Response) => void) | undefined;
+    const fetchMock = vi.spyOn(global, "fetch").mockImplementation(
+      () => new Promise<Response>((resolve) => { finishRequest = resolve; }),
+    );
+
+    render(
+      <MemoryRouter future={memoryRouterFutureConfig}>
+        <Contact />
+      </MemoryRouter>,
+    );
+
+    const name = screen.getByLabelText(/Nom \*/i);
+    const phone = screen.getByLabelText(/Téléphone/i);
+    const email = screen.getByLabelText(/Email \*/i);
+    const subject = screen.getByLabelText(/Sujet \*/i);
+    const message = screen.getByLabelText(/Message \*/i);
+    fireEvent.change(name, { target: { value: "QA Tester" } });
+    fireEvent.change(phone, { target: { value: "0123456789" } });
+    fireEvent.change(email, { target: { value: "qa@example.com" } });
+    fireEvent.change(subject, { target: { value: "Demande de test" } });
+    fireEvent.change(message, { target: { value: "Message de test assez long pour être envoyé." } });
+
+    const form = name.closest("form");
+    fireEvent.submit(form!);
+    expect(form).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByRole("button", { name: /Envoi en cours/i })).toBeDisabled();
+    fireEvent.submit(form!);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    finishRequest?.({
+      ok: false,
+      status: 422,
+      json: async () => ({ success: false, error: "Adresse e-mail invalide" }),
+    } as Response);
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(/Votre message n'a pas pu être envoyé/i);
+    });
+    expect(name).toHaveValue("QA Tester");
+    expect(email).toHaveValue("qa@example.com");
+    expect(subject).toHaveValue("Demande de test");
+    expect(message).toHaveValue("Message de test assez long pour être envoyé.");
 
     fetchMock.mockRestore();
   }, 15000);
@@ -353,7 +446,7 @@ describe("Contact page", () => {
     fireEvent.click(screen.getByRole("button", { name: /Envoyer le message/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/passerelle d'envoi nécessite une activation unique/i)).toBeInTheDocument();
+      expect(screen.getByRole("alert")).toHaveTextContent(/L'envoi automatique n'a pas abouti/i);
     });
 
     fetchMock.mockRestore();

@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PageHero from "@/components/PageHero";
@@ -26,6 +26,39 @@ import { Station, stationsData } from "@/data/stations";
 import { trackEvent } from "@/lib/analytics";
 
 const MIN_MESSAGE_LENGTH = 10;
+
+type ContactField = "name" | "email" | "subject" | "message";
+type ContactFieldErrors = Partial<Record<ContactField, string>>;
+
+const CONTACT_FIELD_LABELS: Record<ContactField, string> = {
+  name: "Nom",
+  email: "Email",
+  subject: "Sujet",
+  message: "Message",
+};
+
+const getContactFieldError = (field: ContactField, value: string) => {
+  const normalizedValue = value.trim();
+
+  if (!normalizedValue) {
+    return {
+      name: "Renseignez votre nom.",
+      email: "Renseignez votre adresse e-mail.",
+      subject: "Indiquez le sujet de votre demande.",
+      message: "Rédigez un message.",
+    }[field];
+  }
+
+  if (field === "email" && !/^\S+@\S+\.\S+$/.test(normalizedValue)) {
+    return "Vérifiez le format de votre adresse e-mail.";
+  }
+
+  if (field === "message" && normalizedValue.length < MIN_MESSAGE_LENGTH) {
+    return `Votre message doit contenir au moins ${MIN_MESSAGE_LENGTH} caractères.`;
+  }
+
+  return "";
+};
 
 const toRadians = (value: number) => (value * Math.PI) / 180;
 
@@ -265,6 +298,11 @@ const Contact = () => {
     type: "idle",
     message: "",
   });
+  const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [focusErrorSummary, setFocusErrorSummary] = useState(false);
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+  const submissionLock = useRef(false);
 
   const contactSEO = useMemo(
     () => ({
@@ -301,6 +339,53 @@ const Contact = () => {
   useEffect(() => {
     setSubject(prefilledSubject);
   }, [prefilledSubject]);
+
+  useEffect(() => {
+    if (!focusErrorSummary || Object.keys(fieldErrors).length === 0) {
+      return;
+    }
+
+    errorSummaryRef.current?.focus();
+    setFocusErrorSummary(false);
+  }, [fieldErrors, focusErrorSummary]);
+
+  const updateContactField = (field: ContactField, value: string) => {
+    if (feedback.type !== "idle") {
+      setFeedback({ type: "idle", message: "" });
+    }
+
+    setFieldErrors((currentErrors) => {
+      if (!hasAttemptedSubmit && !currentErrors[field]) {
+        return currentErrors;
+      }
+
+      const error = getContactFieldError(field, value);
+      const nextErrors = { ...currentErrors };
+      if (error) {
+        nextErrors[field] = error;
+      } else {
+        delete nextErrors[field];
+      }
+      return nextErrors;
+    });
+  };
+
+  const validateContactFieldOnBlur = (field: ContactField, value: string) => {
+    if (!hasAttemptedSubmit && !fieldErrors[field] && (field !== "email" || !value.trim())) {
+      return;
+    }
+
+    setFieldErrors((currentErrors) => {
+      const error = getContactFieldError(field, value);
+      const nextErrors = { ...currentErrors };
+      if (error) {
+        nextErrors[field] = error;
+      } else {
+        delete nextErrors[field];
+      }
+      return nextErrors;
+    });
+  };
 
   const filteredStations = useMemo(() => {
     const needle = stationQuery.trim().toLowerCase();
@@ -422,6 +507,10 @@ const Contact = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (loading || submissionLock.current) {
+      return;
+    }
+
     const form = event.currentTarget;
     const formData = new FormData(form);
 
@@ -440,37 +529,25 @@ const Contact = () => {
       _captcha: "false",
     };
 
-    if (
-      !payload.name ||
-      !payload.email ||
-      !payload.subject ||
-      !payload.message
-    ) {
-      setFeedback({
-        type: "error",
-        message: "Merci de renseigner tous les champs obligatoires.",
-      });
-      return;
-    }
+    const nextErrors: ContactFieldErrors = {};
+    (Object.keys(CONTACT_FIELD_LABELS) as ContactField[]).forEach((field) => {
+      const error = getContactFieldError(field, payload[field]);
+      if (error) {
+        nextErrors[field] = error;
+      }
+    });
 
-    if (!/^\S+@\S+\.\S+$/.test(payload.email)) {
-      setFeedback({
-        type: "error",
-        message: "Merci de saisir une adresse email valide.",
-      });
-      return;
-    }
-
-    if (payload.message.length < MIN_MESSAGE_LENGTH) {
-      setFeedback({
-        type: "error",
-        message: `Le message doit contenir au moins ${MIN_MESSAGE_LENGTH} caractères.`,
-      });
-      return;
-    }
-
-    setLoading(true);
+    setHasAttemptedSubmit(true);
+    setFieldErrors(nextErrors);
     setFeedback({ type: "idle", message: "" });
+
+    if (Object.keys(nextErrors).length > 0) {
+      setFocusErrorSummary(true);
+      return;
+    }
+
+    submissionLock.current = true;
+    setLoading(true);
 
     const abortController = new AbortController();
     const timeout = window.setTimeout(() => abortController.abort(), 12000);
@@ -508,9 +585,8 @@ const Contact = () => {
             continue;
           }
 
-          throw new Error(
-            parsed.error || `Contact API request failed (${attempt.status})`,
-          );
+          lastError = parsed.error || `Contact API request failed (${attempt.status})`;
+          break;
         } catch (error) {
           const message =
             error instanceof Error
@@ -542,20 +618,14 @@ const Contact = () => {
       setFeedback({ type: "success", message: deliveryMessage });
       form.reset();
       setSubject("");
+      setFieldErrors({});
+      setHasAttemptedSubmit(false);
     } catch (error) {
       const errorMessage =
         error instanceof Error
           ? error.message
           : "Erreur réseau pendant l'envoi.";
       const normalizedMessage = errorMessage.trim();
-      const displayErrorMessage =
-        /failed to fetch|network/i.test(normalizedMessage)
-          ? "Erreur réseau pendant l'envoi."
-          : /not found/i.test(normalizedMessage)
-            ? "API de contact introuvable."
-            : /cors/i.test(normalizedMessage)
-              ? "Accès bloqué par la politique de sécurité du navigateur."
-              : normalizedMessage;
       const isRateLimited = /too many requests|retry later|429/i.test(
         normalizedMessage,
       );
@@ -588,6 +658,8 @@ const Contact = () => {
           setFeedback({ type: "success", message: fallbackMessage });
           form.reset();
           setSubject("");
+          setFieldErrors({});
+          setHasAttemptedSubmit(false);
           return;
         } catch (fallbackError) {
           const fallbackText =
@@ -597,14 +669,12 @@ const Contact = () => {
           const needsActivation =
             /activation|activate form|needs activation/i.test(fallbackText);
           const fallbackFeedback = needsActivation
-            ? `La passerelle d'envoi nécessite une activation unique. Ouvrez la boîte ${CONTACT_EMAIL}, cliquez sur "Activate Form", puis réessayez.`
-            : `Envoi direct indisponible. ${fallbackText}`;
+            ? `L'envoi automatique n'a pas abouti. Appelez-nous au ${CONTACT_PHONE_DISPLAY} pour transmettre votre demande.`
+            : `L'envoi automatique est indisponible. Réessayez dans quelques instants ou appelez-nous au ${CONTACT_PHONE_DISPLAY}.`;
 
           toast({
             title: "Envoi impossible",
-            description: needsActivation
-              ? `Activation requise sur ${CONTACT_EMAIL}. Vérifiez votre boîte mail et cliquez sur le lien "Activate Form".`
-              : `L'API principale et la passerelle de secours ont échoué. ${fallbackText}`,
+            description: fallbackFeedback,
             variant: "destructive",
           });
           setFeedback({
@@ -622,13 +692,11 @@ const Contact = () => {
 
       const feedbackMessage = isRateLimited
         ? "Trop de tentatives en peu de temps. Réessayez dans quelques instants."
-        : isPathIssue
-          ? "Envoi direct indisponible. API de contact introuvable."
-          : `Envoi direct indisponible. ${displayErrorMessage}`;
+        : `Votre message n'a pas pu être envoyé. Réessayez dans quelques instants ou appelez-nous au ${CONTACT_PHONE_DISPLAY}.`;
 
       toast({
         title: "Envoi impossible",
-        description: `Le message n'a pas pu être transmis automatiquement. ${displayErrorMessage}`,
+        description: feedbackMessage,
         variant: "destructive",
       });
 
@@ -643,6 +711,7 @@ const Contact = () => {
       });
     } finally {
       window.clearTimeout(timeout);
+      submissionLock.current = false;
       setLoading(false);
     }
   };
@@ -881,7 +950,7 @@ const Contact = () => {
                 Vos messages sont transmis à {CONTACT_EMAIL}.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} noValidate aria-busy={loading} className="space-y-5">
                 <input
                   type="text"
                   name="website"
@@ -890,6 +959,37 @@ const Contact = () => {
                   autoComplete="off"
                 />
 
+                {Object.keys(fieldErrors).length > 0 && (
+                  <div
+                    ref={errorSummaryRef}
+                    id="contact-error-summary"
+                    role="alert"
+                    aria-labelledby="contact-error-summary-title"
+                    tabIndex={-1}
+                    className="rounded-lg border border-destructive/40 bg-destructive/5 p-4 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <p id="contact-error-summary-title" className="font-semibold">
+                      Corrigez les points suivants avant l'envoi :
+                    </p>
+                    <ul className="mt-2 list-inside list-disc space-y-1">
+                      {(Object.keys(CONTACT_FIELD_LABELS) as ContactField[])
+                        .filter((field) => fieldErrors[field])
+                        .map((field) => (
+                          <li key={field}>
+                            <button
+                              type="button"
+                              className="text-left underline underline-offset-2"
+                              onClick={() => document.getElementById(field)?.focus()}
+                            >
+                              {CONTACT_FIELD_LABELS[field]} : {fieldErrors[field]}
+                            </button>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                )}
+
+                <fieldset disabled={loading} className="min-w-0 border-0 p-0 space-y-5">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Nom *</Label>
@@ -899,7 +999,12 @@ const Contact = () => {
                       required
                       maxLength={100}
                       placeholder="Votre nom"
+                      aria-invalid={fieldErrors.name ? true : undefined}
+                      aria-describedby={fieldErrors.name ? "name-error" : undefined}
+                      onChange={(event) => updateContactField("name", event.target.value)}
+                      onBlur={(event) => validateContactFieldOnBlur("name", event.target.value)}
                     />
+                    {fieldErrors.name && <p id="name-error" className="text-sm text-destructive">{fieldErrors.name}</p>}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Téléphone</Label>
@@ -909,6 +1014,9 @@ const Contact = () => {
                       type="tel"
                       maxLength={20}
                       placeholder="Votre téléphone"
+                      onChange={() => {
+                        if (feedback.type !== "idle") setFeedback({ type: "idle", message: "" });
+                      }}
                     />
                   </div>
                 </div>
@@ -922,7 +1030,12 @@ const Contact = () => {
                     required
                     maxLength={255}
                     placeholder="votre@email.com"
+                    aria-invalid={fieldErrors.email ? true : undefined}
+                    aria-describedby={fieldErrors.email ? "email-error" : undefined}
+                    onChange={(event) => updateContactField("email", event.target.value)}
+                    onBlur={(event) => validateContactFieldOnBlur("email", event.target.value)}
                   />
+                  {fieldErrors.email && <p id="email-error" className="text-sm text-destructive">{fieldErrors.email}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -933,9 +1046,16 @@ const Contact = () => {
                     required
                     maxLength={200}
                     value={subject}
-                    onChange={(event) => setSubject(event.target.value)}
                     placeholder="Ex. : réservation aéroport demain matin"
+                    aria-invalid={fieldErrors.subject ? true : undefined}
+                    aria-describedby={fieldErrors.subject ? "subject-error" : undefined}
+                    onChange={(event) => {
+                      setSubject(event.target.value);
+                      updateContactField("subject", event.target.value);
+                    }}
+                    onBlur={(event) => validateContactFieldOnBlur("subject", event.target.value)}
                   />
+                  {fieldErrors.subject && <p id="subject-error" className="text-sm text-destructive">{fieldErrors.subject}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -948,7 +1068,12 @@ const Contact = () => {
                     rows={5}
                     minLength={MIN_MESSAGE_LENGTH}
                     placeholder="Indiquez votre demande, la date et toute précision utile."
+                    aria-invalid={fieldErrors.message ? true : undefined}
+                    aria-describedby={fieldErrors.message ? "message-error" : undefined}
+                    onChange={(event) => updateContactField("message", event.target.value)}
+                    onBlur={(event) => validateContactFieldOnBlur("message", event.target.value)}
                   />
+                  {fieldErrors.message && <p id="message-error" className="text-sm text-destructive">{fieldErrors.message}</p>}
                 </div>
 
                 <Button
@@ -959,12 +1084,20 @@ const Contact = () => {
                 >
                   {loading ? "Envoi en cours..." : "Envoyer le message"}
                 </Button>
+                </fieldset>
+
+                {loading && (
+                  <p role="status" aria-live="polite" className="sr-only">
+                    Envoi de votre message en cours.
+                  </p>
+                )}
 
                 {feedback.message && (
                   <p
                     className={`text-sm ${feedback.type === "error" ? "text-destructive" : "text-primary"}`}
-                    role="status"
-                    aria-live="polite"
+                    role={feedback.type === "error" ? "alert" : "status"}
+                    aria-live={feedback.type === "error" ? "assertive" : "polite"}
+                    aria-atomic="true"
                   >
                     {feedback.message}
                   </p>

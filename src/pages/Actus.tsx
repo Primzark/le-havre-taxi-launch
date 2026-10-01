@@ -39,7 +39,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type NewsSource = "Actualite";
 type SocialPlatform = "Instagram" | "Facebook";
@@ -183,6 +183,56 @@ const isWebpImageReference = (value: string) => {
 
   const normalized = trimmed.split("?")[0].split("#")[0].toLowerCase();
   return normalized.endsWith(".webp");
+};
+
+type NewsFormField = "title" | "sourceUrl" | "image";
+type NewsFormErrors = Partial<Record<NewsFormField, string>>;
+type LoginField = "username" | "password";
+type LoginFieldErrors = Partial<Record<LoginField, string>>;
+
+const NEWS_FORM_FIELD_LABELS: Record<NewsFormField, string> = {
+  title: "Titre",
+  sourceUrl: "Lien de l'actualité",
+  image: "URL image",
+};
+
+const isValidNewsImageInput = (value: string) => {
+  const normalizedValue = value.trim();
+  const usesAllowedPath =
+    normalizedValue.startsWith("/images/") || normalizedValue.startsWith("/uploads/actus/");
+  return isWebpImageReference(normalizedValue) && (usesAllowedPath || isHttpUrl(normalizedValue));
+};
+
+const getNewsFormFieldError = (field: NewsFormField, value: string) => {
+  const normalizedValue = value.trim();
+
+  if (!normalizedValue) {
+    return {
+      title: "Renseignez un titre.",
+      sourceUrl: "Indiquez le lien de l'actualité.",
+      image: "Ajoutez le chemin ou l'adresse de l'image WebP.",
+    }[field];
+  }
+
+  if (field === "sourceUrl" && !isHttpUrl(normalizedValue)) {
+    return "Saisissez une adresse qui commence par http:// ou https://.";
+  }
+
+  if (field === "image" && !isValidNewsImageInput(normalizedValue)) {
+    return "Utilisez une image WebP dans /images/ ou /uploads/actus/, ou une adresse complète.";
+  }
+
+  return "";
+};
+
+const getLoginFieldError = (field: LoginField, value: string) => {
+  if (field === "username" && !value.trim()) {
+    return "Renseignez l'identifiant administrateur.";
+  }
+  if (field === "password" && value.length === 0) {
+    return "Renseignez le mot de passe administrateur.";
+  }
+  return "";
 };
 
 const isAdminManagedNewsRecord = (item: { id?: unknown; sourceName?: unknown }) => {
@@ -493,11 +543,20 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
   const [loginUsername, setLoginUsername] = useState("admin");
   const [loginPassword, setLoginPassword] = useState("");
+  const [loginFieldErrors, setLoginFieldErrors] = useState<LoginFieldErrors>({});
   const [isAuthLoading, setIsAuthLoading] = useState(false);
+  const authSubmissionLock = useRef(false);
+  const loginUsernameRef = useRef<HTMLInputElement>(null);
+  const loginPasswordRef = useRef<HTMLInputElement>(null);
 
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
+  const [newsFormErrors, setNewsFormErrors] = useState<NewsFormErrors>({});
+  const [hasAttemptedNewsSubmit, setHasAttemptedNewsSubmit] = useState(false);
+  const [focusNewsErrorSummary, setFocusNewsErrorSummary] = useState(false);
+  const newsErrorSummaryRef = useRef<HTMLDivElement>(null);
+  const newsSubmissionLock = useRef(false);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -547,6 +606,15 @@ const Actus = ({ adminMode = false }: ActusProps) => {
   const latestNewsLabel = useMemo(() => formatPublishedDate(latestNews?.created_at), [latestNews?.created_at]);
   const isStatusPositive = /active|fermée|publiée|supprimées|réinitialisées|téléversée/i.test(statusMessage);
 
+  useEffect(() => {
+    if (!focusNewsErrorSummary || Object.keys(newsFormErrors).length === 0) {
+      return;
+    }
+
+    newsErrorSummaryRef.current?.focus();
+    setFocusNewsErrorSummary(false);
+  }, [focusNewsErrorSummary, newsFormErrors]);
+
   const boardColumns = useMemo<BoardColumn[]>(
     () => [
       {
@@ -591,6 +659,67 @@ const Actus = ({ adminMode = false }: ActusProps) => {
     setImage("");
     setSourceUrl("");
     setUploadFile(null);
+    setNewsFormErrors({});
+    setHasAttemptedNewsSubmit(false);
+    setFocusNewsErrorSummary(false);
+  };
+
+  const updateNewsField = (field: NewsFormField, value: string) => {
+    setStatusMessage("");
+    if (field === "title") setTitle(value);
+    if (field === "sourceUrl") setSourceUrl(value);
+    if (field === "image") setImage(value);
+
+    setNewsFormErrors((currentErrors) => {
+      if (!hasAttemptedNewsSubmit && !currentErrors[field]) {
+        return currentErrors;
+      }
+
+      const error = getNewsFormFieldError(field, value);
+      const nextErrors = { ...currentErrors };
+      if (error) {
+        nextErrors[field] = error;
+      } else {
+        delete nextErrors[field];
+      }
+      return nextErrors;
+    });
+  };
+
+  const updateLoginField = (field: LoginField, value: string) => {
+    if (field === "username") setLoginUsername(value);
+    if (field === "password") setLoginPassword(value);
+
+    if (Object.keys(loginFieldErrors).length > 0) {
+      const error = getLoginFieldError(field, value);
+      const nextErrors = { ...loginFieldErrors };
+      if (error) {
+        nextErrors[field] = error;
+      } else {
+        delete nextErrors[field];
+      }
+      setLoginFieldErrors(nextErrors);
+      setStatusMessage(Object.values(nextErrors).join(" "));
+    } else if (statusMessage && !isStatusPositive) {
+      setStatusMessage("");
+    }
+  };
+
+  const validateNewsFieldOnBlur = (field: NewsFormField, value: string) => {
+    if (!hasAttemptedNewsSubmit && !newsFormErrors[field] && (field === "title" || !value.trim())) {
+      return;
+    }
+
+    setNewsFormErrors((currentErrors) => {
+      const error = getNewsFormFieldError(field, value);
+      const nextErrors = { ...currentErrors };
+      if (error) {
+        nextErrors[field] = error;
+      } else {
+        delete nextErrors[field];
+      }
+      return nextErrors;
+    });
   };
 
   const jumpToSection = (sectionId: string) => {
@@ -669,13 +798,30 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isAuthLoading || authSubmissionLock.current) {
+      return;
+    }
     setStatusMessage("");
 
-    if (!loginUsername.trim() || !loginPassword.trim()) {
-      setStatusMessage("Renseignez l'identifiant et le mot de passe.");
+    const nextErrors: LoginFieldErrors = {};
+    const usernameError = getLoginFieldError("username", loginUsername);
+    const passwordError = getLoginFieldError("password", loginPassword);
+    if (usernameError) nextErrors.username = usernameError;
+    if (passwordError) nextErrors.password = passwordError;
+
+    if (Object.keys(nextErrors).length > 0) {
+      setLoginFieldErrors(nextErrors);
+      setStatusMessage(Object.values(nextErrors).join(" "));
+      if (nextErrors.username) {
+        loginUsernameRef.current?.focus();
+      } else {
+        loginPasswordRef.current?.focus();
+      }
       return;
     }
 
+    setLoginFieldErrors({});
+    authSubmissionLock.current = true;
     setIsAuthLoading(true);
 
     try {
@@ -688,7 +834,14 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
       const result = (await response.json()) as SessionResponse;
       if (!response.ok || result?.success !== true || !result.authenticated) {
-        setStatusMessage(result?.error || "Connexion admin impossible.");
+        const message = response.status === 401
+          ? "Identifiant ou mot de passe incorrect. Vérifiez vos informations et réessayez."
+          : response.status === 429
+            ? "Trop de tentatives. Réessayez dans quelques instants."
+            : response.status >= 500
+              ? "Le service de connexion est indisponible. Réessayez dans quelques instants."
+              : result?.error || "Connexion admin impossible. Réessayez dans quelques instants.";
+        setStatusMessage(message);
         return;
       }
 
@@ -697,8 +850,9 @@ const Actus = ({ adminMode = false }: ActusProps) => {
       setLoginPassword("");
       setStatusMessage("Connexion admin active.");
     } catch {
-      setStatusMessage("Erreur réseau pendant la connexion admin.");
+      setStatusMessage("Impossible de joindre le service de connexion. Vérifiez votre réseau et réessayez.");
     } finally {
+      authSubmissionLock.current = false;
       setIsAuthLoading(false);
     }
   };
@@ -752,11 +906,17 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
       const result = (await response.json()) as { success?: boolean; url?: string; error?: string };
       if (!response.ok || result?.success !== true || !result.url) {
-        setStatusMessage(result?.error || "Téléversement impossible.");
+        if (response.status === 401 || response.status === 403) {
+          setIsAdmin(false);
+          setAdminUsername("");
+          setStatusMessage("Votre session a expiré. Reconnectez-vous avant de téléverser une image.");
+        } else {
+          setStatusMessage(result?.error || "Téléversement impossible. Réessayez dans quelques instants.");
+        }
         return;
       }
 
-      setImage(result.url);
+      updateNewsField("image", result.url);
       setUploadFile(null);
       setStatusMessage("Image téléversée. URL renseignée automatiquement.");
     } catch {
@@ -768,32 +928,30 @@ const Actus = ({ adminMode = false }: ActusProps) => {
 
   const addNews = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting || isUploading || newsSubmissionLock.current) {
+      return;
+    }
     setStatusMessage("");
 
     if (!requireAdmin("Connexion admin requise pour publier une actualité.")) {
       return;
     }
 
-    if (!title.trim() || !image.trim() || !sourceUrl.trim()) {
-      setStatusMessage("Titre, image et lien de l'actualité sont obligatoires.");
+    const values: Record<NewsFormField, string> = { title, sourceUrl, image };
+    const nextErrors: NewsFormErrors = {};
+    (Object.keys(NEWS_FORM_FIELD_LABELS) as NewsFormField[]).forEach((field) => {
+      const error = getNewsFormFieldError(field, values[field]);
+      if (error) nextErrors[field] = error;
+    });
+
+    setHasAttemptedNewsSubmit(true);
+    setNewsFormErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      setFocusNewsErrorSummary(true);
       return;
     }
 
-    if (!isHttpUrl(sourceUrl.trim())) {
-      setStatusMessage("Lien de l'actualité invalide. Utilisez une URL http(s).");
-      return;
-    }
-
-    if (!image.trim().startsWith("/") && !isHttpUrl(image.trim())) {
-      setStatusMessage("Image invalide. Utilisez une URL http(s) ou un chemin /uploads/... ou /images/...");
-      return;
-    }
-
-    if (!isWebpImageReference(image)) {
-      setStatusMessage("Image invalide. Utilisez une image au format .webp.");
-      return;
-    }
-
+    newsSubmissionLock.current = true;
     setIsSubmitting(true);
 
     try {
@@ -814,7 +972,16 @@ const Actus = ({ adminMode = false }: ActusProps) => {
         : null;
 
       if (!response.ok || result?.success !== true || !normalized) {
-        setStatusMessage(result?.error || "Publication impossible.");
+        const message = response.status === 401 || response.status === 403
+          ? "Votre session a expiré. Reconnectez-vous pour publier cette actualité."
+          : response.status === 422
+            ? "L'image ou le lien ne peut pas être utilisé. Vérifiez les références et réessayez."
+            : "La publication n'a pas abouti. Réessayez dans quelques instants.";
+        if (response.status === 401 || response.status === 403) {
+          setIsAdmin(false);
+          setAdminUsername("");
+        }
+        setStatusMessage(message);
         return;
       }
 
@@ -825,6 +992,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
     } catch {
       setStatusMessage("Erreur réseau pendant la publication.");
     } finally {
+      newsSubmissionLock.current = false;
       setIsSubmitting(false);
     }
   };
@@ -1199,41 +1367,69 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                       </div>
                     </div>
                   ) : (
-                    <form onSubmit={handleLogin} className="mt-6 grid gap-3">
-                      <Input
-                        value={loginUsername}
-                        onChange={(event) => setLoginUsername(event.target.value)}
-                        autoComplete="username"
-                        placeholder="Identifiant admin"
-                        className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/35 focus-visible:ring-white/20"
-                      />
-                      <Input
-                        type="password"
-                        value={loginPassword}
-                        onChange={(event) => setLoginPassword(event.target.value)}
-                        autoComplete="current-password"
-                        placeholder="Mot de passe"
-                        className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/35 focus-visible:ring-white/20"
-                      />
-                      <Button
-                        type="submit"
-                        disabled={isAuthLoading}
-                        className="h-11 rounded-xl bg-white text-slate-950 hover:bg-white/90"
-                      >
-                        {isAuthLoading ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Connexion...
-                          </>
-                        ) : (
-                          "Se connecter"
-                        )}
-                      </Button>
+                    <form onSubmit={handleLogin} noValidate aria-busy={isAuthLoading} className="mt-6 grid gap-3">
+                      <fieldset disabled={isAuthLoading} className="grid gap-3 border-0 p-0">
+                        <div className="grid gap-2">
+                          <Label htmlFor="admin-username" className="sr-only">Identifiant administrateur</Label>
+                          <Input
+                            id="admin-username"
+                            ref={loginUsernameRef}
+                            value={loginUsername}
+                            onChange={(event) => updateLoginField("username", event.target.value)}
+                            autoComplete="username"
+                            maxLength={80}
+                            required
+                            aria-invalid={loginFieldErrors.username ? true : undefined}
+                            aria-describedby={loginFieldErrors.username || (statusMessage && !isStatusPositive) ? "actus-admin-status" : undefined}
+                            placeholder="Identifiant admin"
+                            className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/35 focus-visible:ring-white/20"
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="admin-password" className="sr-only">Mot de passe administrateur</Label>
+                          <Input
+                            id="admin-password"
+                            ref={loginPasswordRef}
+                            type="password"
+                            value={loginPassword}
+                            onChange={(event) => updateLoginField("password", event.target.value)}
+                            autoComplete="current-password"
+                            required
+                            aria-invalid={loginFieldErrors.password ? true : undefined}
+                            aria-describedby={loginFieldErrors.password || (statusMessage && !isStatusPositive) ? "actus-admin-status" : undefined}
+                            placeholder="Mot de passe"
+                            className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/35 focus-visible:ring-white/20"
+                          />
+                        </div>
+                        <Button
+                          type="submit"
+                          disabled={isAuthLoading}
+                          className="h-11 rounded-xl bg-white text-slate-950 hover:bg-white/90"
+                        >
+                          {isAuthLoading ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              Connexion...
+                            </>
+                          ) : (
+                            "Se connecter"
+                          )}
+                        </Button>
+                      </fieldset>
+                      {isAuthLoading && (
+                        <p role="status" aria-live="polite" className="sr-only">
+                          Connexion en cours.
+                        </p>
+                      )}
                     </form>
                   )}
 
                   {statusMessage && (
                     <div
+                      id="actus-admin-status"
+                      role={isStatusPositive ? "status" : "alert"}
+                      aria-live={isStatusPositive ? "polite" : "assertive"}
+                      aria-atomic="true"
                       className={cn(
                         "mt-6 rounded-[24px] border px-4 py-3 text-sm",
                         isStatusPositive
@@ -1317,12 +1513,42 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                       </div>
                     ) : (
                       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)]">
-                        <form onSubmit={addNews} className="rounded-[30px] border border-white/10 bg-white/5 p-6 md:p-8">
+                        <form onSubmit={addNews} noValidate aria-busy={isSubmitting} className="rounded-[30px] border border-white/10 bg-white/5 p-6 md:p-8">
                           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">Composer une actualité</p>
                           <h3 className="mt-3 font-heading text-3xl font-extrabold">Actualité du site</h3>
                           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/65">
                             Renseignez un titre, un lien et un visuel pour publier une nouvelle carte sur la page Actus.
                           </p>
+
+                          {Object.keys(newsFormErrors).length > 0 && (
+                            <div
+                              ref={newsErrorSummaryRef}
+                              id="news-error-summary"
+                              role="alert"
+                              aria-labelledby="news-error-summary-title"
+                              tabIndex={-1}
+                              className="mt-6 rounded-2xl border border-rose-300/40 bg-rose-300/10 p-4 text-sm text-white outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                            >
+                              <p id="news-error-summary-title" className="font-semibold">
+                                Corrigez les champs suivants avant la publication :
+                              </p>
+                              <ul className="mt-2 list-inside list-disc space-y-1">
+                                {(Object.keys(NEWS_FORM_FIELD_LABELS) as NewsFormField[])
+                                  .filter((field) => newsFormErrors[field])
+                                  .map((field) => (
+                                    <li key={field}>
+                                      <button
+                                        type="button"
+                                        className="text-left underline underline-offset-2"
+                                        onClick={() => document.getElementById(`news-${field === "sourceUrl" ? "source-url" : field}`)?.focus()}
+                                      >
+                                        {NEWS_FORM_FIELD_LABELS[field]} : {newsFormErrors[field]}
+                                      </button>
+                                    </li>
+                                  ))}
+                              </ul>
+                            </div>
+                          )}
 
                           <div className="mt-6 grid gap-4 xl:grid-cols-2">
                             <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
@@ -1331,11 +1557,17 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                                 <Input
                                   id="news-title"
                                   value={title}
-                                  onChange={(event) => setTitle(event.target.value)}
+                                  onChange={(event) => updateNewsField("title", event.target.value)}
+                                  onBlur={(event) => validateNewsFieldOnBlur("title", event.target.value)}
                                   placeholder="Ex: Nouvelle organisation du service"
                                   required
+                                  maxLength={160}
+                                  disabled={isSubmitting}
+                                  aria-invalid={newsFormErrors.title ? true : undefined}
+                                  aria-describedby={newsFormErrors.title ? "news-title-error" : undefined}
                                   className="h-11 rounded-xl border-white/10 bg-slate-900/70 text-white placeholder:text-white/35 focus-visible:ring-white/20"
                                 />
+                                {newsFormErrors.title && <p id="news-title-error" className="text-sm text-rose-200">{newsFormErrors.title}</p>}
                               </div>
 
                               <div className="mt-4 space-y-2">
@@ -1344,11 +1576,17 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                                   id="news-source-url"
                                   type="url"
                                   value={sourceUrl}
-                                  onChange={(event) => setSourceUrl(event.target.value)}
+                                  onChange={(event) => updateNewsField("sourceUrl", event.target.value)}
+                                  onBlur={(event) => validateNewsFieldOnBlur("sourceUrl", event.target.value)}
                                   placeholder="https://..."
                                   required
+                                  maxLength={500}
+                                  disabled={isSubmitting}
+                                  aria-invalid={newsFormErrors.sourceUrl ? true : undefined}
+                                  aria-describedby={newsFormErrors.sourceUrl ? "news-source-url-error" : undefined}
                                   className="h-11 rounded-xl border-white/10 bg-slate-900/70 text-white placeholder:text-white/35 focus-visible:ring-white/20"
                                 />
+                                {newsFormErrors.sourceUrl && <p id="news-source-url-error" className="text-sm text-rose-200">{newsFormErrors.sourceUrl}</p>}
                               </div>
                             </div>
 
@@ -1358,11 +1596,17 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                                 <Input
                                   id="news-image"
                                   value={image}
-                                  onChange={(event) => setImage(event.target.value)}
+                                  onChange={(event) => updateNewsField("image", event.target.value)}
+                                  onBlur={(event) => validateNewsFieldOnBlur("image", event.target.value)}
                                   placeholder="/uploads/actus/... .webp ou https://... .webp"
                                   required
+                                  maxLength={500}
+                                  aria-invalid={newsFormErrors.image ? true : undefined}
+                                  aria-describedby={newsFormErrors.image ? "news-image-error" : undefined}
+                                  disabled={isSubmitting || isUploading}
                                   className="h-11 rounded-xl border-white/10 bg-slate-900/70 text-white placeholder:text-white/35 focus-visible:ring-white/20"
                                 />
+                                {newsFormErrors.image && <p id="news-image-error" className="text-sm text-rose-200">{newsFormErrors.image}</p>}
                               </div>
 
                               <div className="mt-4 space-y-2">
@@ -1372,6 +1616,7 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                                   type="file"
                                   accept="image/webp"
                                   onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)}
+                                  disabled={isUploading || isSubmitting}
                                   className="h-11 rounded-xl border-white/10 bg-slate-900/70 text-white file:text-white placeholder:text-white/35 focus-visible:ring-white/20"
                                 />
                               </div>
@@ -1383,7 +1628,8 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                               type="button"
                               variant="outline"
                               onClick={uploadSelectedImage}
-                              disabled={isUploading || !uploadFile}
+                              aria-busy={isUploading}
+                              disabled={isUploading || isSubmitting || !uploadFile}
                               className="h-11 rounded-xl border-white/15 bg-white/5 px-5 text-white hover:bg-white/10 hover:text-white"
                             >
                               {isUploading ? (
@@ -1403,12 +1649,19 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                               type="button"
                               variant="outline"
                               onClick={openDraftPreview}
+                              disabled={isSubmitting || isUploading}
                               className="h-11 rounded-xl border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
                             >
                               <Eye className="h-4 w-4" />
                               Ouvrir l'aperçu
                             </Button>
                           </div>
+
+                          {isUploading && (
+                            <p role="status" aria-live="polite" className="sr-only">
+                              Téléversement de l'image en cours.
+                            </p>
+                          )}
 
                           <div className="mt-6">
                             <Button
@@ -1429,6 +1682,12 @@ const Actus = ({ adminMode = false }: ActusProps) => {
                               )}
                             </Button>
                           </div>
+
+                          {isSubmitting && (
+                            <p role="status" aria-live="polite" className="sr-only">
+                              Publication de l'actualité en cours.
+                            </p>
+                          )}
                         </form>
 
                         <div className="grid gap-6">
